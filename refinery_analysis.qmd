@@ -1,0 +1,454 @@
+---
+title: "Analyzing Refinery Sector Product Flow of Light Liquid Fuels"
+subtitle: "AIDRES, JRC-IDEES, EUROSTAT"
+date: last-modified
+date-format: long
+author: 
+ - name: Partha Das
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
+ - name: Pieter Valkering
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+    toc: true
+    theme: journal
+bibliography: references.bib
+keywords:
+  - AIDRES
+  - EUROSTAT
+  - JRC-IDEES
+license: "CC BY"
+citation: true
+funding: 
+  statement: "EU Project MOPO"
+---
+
+# Introduction
+
+This is a stand-alone quarto document with code chunks and documentation for comparing Refinery sector product flow in AIDRES, EUROSTAT, and JRC-IDEES databases.
+
+This document extracts refinery product flow for certain fuels (to match with Light Liquid Fuel category of AIDRES) from JRC-IDEES, EUROSTAT, and AIDRES database and generate comparison plots and tables to visualize and compare the product flow across those databases.
+
+# Using this file
+
+The files are produced using [R](https://posit.co/download/rstudio-desktop/) and [RStudio](https://posit.co/download/rstudio-desktop/).
+Though this document can be executed using command line, it is recommended to use `RStudio` for rendering.
+
+Clone this repository to your computer. Open the `mopo_repo.Rproj` (`RStudio needs to be installed`) file. Open `refinery_analysis.qmd` and click on `render button` (Crtl + Shift + K).
+
+# Loading libraries
+
+Checking whether the required packages are installed or not. If not, install them and load them. If they are already installed, just load them.
+
+```{r}
+#| warning: false
+
+mypackages <- c('tidyverse', 'readxl', 'janitor', 'archive', 'DBI', 'odbc',
+              'RPostgres', 'eurostat', 'stringr', 'forcats', 'writexl', 'xlsx', 'gt', 'here')
+
+for (p in mypackages){
+  if (!require(p, character.only = TRUE))
+    {
+    install.packages(p)
+    library(p, character.only = TRUE)
+  }
+  }
+```
+
+# Reading country names and codes
+
+This is provided with the repository by default in the `input_data\europe_country_codes` directory by default.
+
+```{r}
+country_codes <- read_xlsx(here('input_data', 'europe_country_codes', 'europe_country_code.xlsx'), sheet = 1)
+
+country_codes
+```
+
+# JRC-IDEES Refinary product flow
+
+## Download IDEES excel files
+
+`JRC‑IDEES provides a consistent set of disaggregated energy-economy-emissions data for each Member State of the European Union, covering all sectors of the energy system for the 2000-2021 period: industry, buildings, transport, and power generation. This data complies with Eurostat energy balances while providing a plausible decomposition of energy consumption into specific processes and end uses` [@jrc-idees_report]. 
+
+Checking whether there is a directory (`./input_data/jrc_idees_2021/energy_balance`) containing JRC-IDEES excel files for energy balance. If not (only checking with `JRC-IDEES-2021_EnergyBalance_AT.xlsx`), creating the directory, downloading the zipped files, and extracting them for each country.
+
+```{r}
+
+idees_data <- here('input_data', 'jrc_idees_2021', 'energy_balance')
+
+if (!dir.exists(idees_data)){
+  
+  print("Directory doesn't exists! Creating one")
+  
+  dir.create(idees_data, recursive = TRUE)
+  
+  print("Downloading files")
+  
+  for(country_code in country_codes$country_iso_code){
+  
+  zip_file <- paste0("https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/JRC-IDEES/JRC-IDEES-2021_v1/JRC-IDEES-2021_", country_code)
+  filename <- paste0("JRC-IDEES-2021_EnergyBalance_", country_code, ".xlsx")
+
+  archive_extract(archive = zip_file,
+                  dir = idees_data,
+                  files = filename)
+  }
+  
+  } else {
+    
+    print(paste('Directory', idees_data,  'already exists!'))
+  
+  if(!file.exists(here(idees_data, 'JRC-IDEES-2021_EnergyBalance_AT.xlsx'))){
+    
+     print("But files does not exists! downloading them")
+  
+    for(country_code in country_codes$country_iso_code){
+  
+  zip_file <- paste0("https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/JRC-IDEES/JRC-IDEES-2021_v1/JRC-IDEES-2021_", country_code)
+  filename <- paste0("JRC-IDEES-2021_EnergyBalance_", country_code, ".xlsx")
+
+  archive_extract(archive = zip_file,
+                  dir = idees_data,
+                  files = filename)
+  }
+  } else {
+    
+    print(paste('Files also already exist inside the directory, not downloading them again!'))
+    
+    }
+}
+```
+
+## Refinary product flow
+
+From the Energy balance excel workbook we focus on the `TO_RPI_RO` sheet.
+
+For the light liquid fuel category we only focus on the following fuels:
+
+-   `Motor gasoline (excluding biofuel portion)`
+-   `Aviation gasoline`
+-   `Gasoline-type jet fuel`
+-   `Kerosene-type jet fuel (excluding biofuel portion)`
+-   `Other kerosene`
+-   `Gas oil and diesel oil (excluding biofuel portion)`
+
+```{r}
+read_data_ref_to <- function(country){
+
+  file_path <- paste0(idees_data, '/JRC-IDEES-2021_EnergyBalance_', country, '.xlsx')
+  
+  read_excel(file_path, sheet = 'TO_RPI_RO', range = 'A2:X135',
+             col_names = c('fuel', 'code', 2000:2021)) |>
+    select(1, 2, 21) |> 
+    mutate(country_code = country) |> 
+    slice(36, 37, 38, 39, 40, 42, ) |> 
+    pivot_longer(cols = `2018`, names_to = 'year', values_to = 'ktoe') |> 
+    mutate(belongs_to = 'TO_RPI_RO') |> 
+    mutate(gj_idees = ktoe * 1000 * 41.87,
+           ktoe = NULL) |>
+    group_by(country_code, fuel, code, belongs_to) |>
+    summarise(gj_idees=sum(gj_idees), .groups = 'drop')
+}
+
+test_list_ref_to <- lapply(country_codes$country_iso_code, read_data_ref_to)
+
+ref_energy_to_idees <- bind_rows(test_list_ref_to, .id = "id") |> select(-id) |> 
+  select(-code, -belongs_to) |> 
+  pivot_wider(names_from = fuel, values_from =  gj_idees) |>
+  clean_names() |> 
+  rename('motor_gasoline' = motor_gasoline_excluding_biofuel_portion,
+         'aviation_gasoline' = aviation_gasoline,
+         'jet_gasoline' = gasoline_type_jet_fuel,
+         'jet_kerosene' = kerosene_type_jet_fuel_excluding_biofuel_portion,
+         'other_kerosene' = other_kerosene,
+         'gas_oil_diesel_oil' = gas_oil_and_diesel_oil_excluding_biofuel_portion) |> 
+  pivot_longer(col = aviation_gasoline:other_kerosene , names_to = 'fuel', values_to = 'values') |>
+  mutate(pj_idees = values/ 10^6 , .keep = 'unused',
+       year = 2018,
+       fuel = 'light_liquid_fuel') |> 
+  group_by(country_code, fuel, year) |> 
+  reframe(pj_ref = sum(pj_idees)) |> 
+  mutate(source = 'idees') |> 
+  left_join(country_codes, by =join_by('country_code' == 'country_iso_code')) |> 
+  select(country_code, country, year, source, everything())
+
+ref_energy_to_idees
+```
+
+# EUROSTAT Refinary product flow
+
+## Downloading Eurostat energy balance
+
+EUROSTAT API is used to dynamically fetch EUROSTAT data using `eurostat` package [@RJ-2017-019]. Please refer this [link](https://ropengov.github.io/eurostat/index.html) to more about the usage of the `eurostat` package.
+
+```{r}
+#| warning: false
+#| output: false
+
+dat_aggregated_ref <- get_eurostat('nrg_bal_c', filters = list(time = 2018),
+                                   time_format = "num", type = 'label', 
+                                   stringsAsFactors = TRUE)
+```
+
+## Refinery product flow
+
+We only focus on `Transformation output - refineries and petrochemical industry - refinery output` (`TO_RPI_RO`). Fuel choices (`siec`) are similar to JRC-IDEES.
+
+```{r}
+
+ref_output_eurostat <- dat_aggregated_ref |> 
+  filter(unit == 'Terajoule') |> 
+  filter(siec %in% c('Motor gasoline (excluding biofuel portion)', 'Aviation gasoline', 'Gasoline-type jet fuel', 
+                     'Kerosene-type jet fuel (excluding biofuel portion)', 
+                     'Other kerosene', 'Gas oil and diesel oil (excluding biofuel portion)')) |> 
+  filter(nrg_bal %in% c('Transformation output - refineries and petrochemical industry - refinery output')) |> 
+  pivot_wider(names_from = siec, values_from =  values) |> 
+  clean_names() |> 
+  rename('motor_gasoline' = motor_gasoline_excluding_biofuel_portion,
+         'aviation_gasoline' = aviation_gasoline,
+         'jet_gasoline' = gasoline_type_jet_fuel,
+         'jet_kerosene' = kerosene_type_jet_fuel_excluding_biofuel_portion,
+         'other_kerosene' = other_kerosene,
+         'gas_oil_diesel_oil' = gas_oil_and_diesel_oil_excluding_biofuel_portion) |> 
+  
+  pivot_longer(col = aviation_gasoline:gas_oil_diesel_oil, names_to = 'fuel', values_to = 'values') |>
+  pivot_wider(names_from = nrg_bal, values_from =  values) |> 
+  clean_names() |> 
+  rename("TO_RPI_RO" = transformation_output_refineries_and_petrochemical_industry_refinery_output) |>
+  mutate(net = TO_RPI_RO / 1000, .keep = 'unused') |> 
+  rename('country_code' = geo,
+             'year' = time,
+             'ref_eurostat_pj' =  net) |> 
+  arrange(country_code)|> 
+  group_by(country_code, year) |> 
+  summarise(pj_ref = sum(ref_eurostat_pj), .groups = 'drop') |> 
+  mutate(fuel = 'light_liquid_fuel') |> 
+  left_join(country_codes, by =join_by('country_code' == 'country')) |> 
+  filter(!is.na(country_iso_code)) |> 
+  select(country_code, country_iso_code, fuel, year, pj_ref) |> 
+  rename('country' = country_code,
+          'country_code'  = country_iso_code) |> 
+  mutate(source = 'eurostat') |> 
+  select(country_code, country, fuel, year, source, pj_ref )
+  
+ref_output_eurostat
+```
+
+# AIDRES refinery product flow
+
+### Establishing AIDRES database connection and fetching tables
+
+AIDRES database is open source [@aidres_report]. However the data is available as a raw `.sql` file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. The data is also available as an Excel workbook. However, it is very customized to be used for specific analysis.
+
+### Importing AIDRES data from local `.csv` files
+
+However, for an external user setting up a PostgreSQL server is not straight forward. Therefore, AIDRES tables are provided with this repository in the `input_data\aidres_data` directory.
+
+the AIDRES tables used for this analysis are first exported into `.csv` files and then they are used further in the analysis. Following code chunks create the directory (`input_data\aidres_data`) for storing the AIDRES files, and exports the AIDRES data files into `.csv` format. However, they are currently deactivated as we provide the files already with the repo.
+
+```{r}
+
+aidres_data <- here('input_data', 'aidres_data')
+
+if (!dir.exists(aidres_data)){
+  
+  print("AIDRES input data folder doesn't exist. Request VITO to provide the data")
+  dir.create(aidres_data)
+  
+} else {
+  
+  print("AIDRES input data directory already exists. Not creating a new one!")
+  print("AIDRES data tables also exist!")
+  
+}
+```
+
+The AIDRES data tables  namely `aidres_scenarios.csv`, `aidres_sectors.csv`, `aidres_result.csv`, `aidres_configurations.csv`, `aidres_perton.csv` are made available in the `aidres_data` folder. The code chunk is currently deactivated.
+
+Dumping AIDRES PSQL tables to `.csv` files (currently deactivated)
+
+```{r}
+#| eval: false
+
+aidres_scenarios |> collect() |> write_csv(here(aidres_data, 'aidres_scenarios.csv'))
+
+aidres_sectors |> collect() |>  write_csv(here(aidres_data, 'aidres_sectors.csv'))
+
+aidres_result |> collect() |>  write_csv(here(aidres_data, 'aidres_result.csv'))
+
+aidres_configurations|> collect() |> write_csv(here(aidres_data, 'aidres_configurations.csv')) 
+
+aidres_perton|> collect() |> write_csv(here(aidres_data, 'aidres_perton.csv'))
+```
+
+Reading the AIDRES data `.csv` files. 
+
+```{r}
+
+#| warning: false
+
+aidres_scenarios <- read_csv(here(aidres_data, 'aidres_scenarios.csv'))
+
+aidres_sectors <- read_csv(here(aidres_data, 'aidres_sectors.csv'))
+
+aidres_result <- read_csv(here(aidres_data, 'aidres_result.csv'))
+
+aidres_configurations <- read_csv(here(aidres_data, 'aidres_configurations.csv'))
+
+aidres_perton <- read_csv(here(aidres_data, 'aidres_perton.csv'))
+```
+
+## Production all sectors in 2018
+
+Product flow of different products in various sectors
+
+```{r}
+#| warning: false
+
+aidres_result |> clean_names() |> 
+  pivot_longer('product_flow_kt_y':'total_energy_vectors_pj_y', 
+               names_to = 'indicators', values_to = 'value') |>
+  mutate(value = round(value,3)) |> 
+  filter(indicators == 'product_flow_kt_y') |> 
+  filter(is_ref_scenario == 1,
+         is_ref_route == 1) |> 
+  select(-c(is_pareto_solution, is_direct_emission_solution, is_mix)) |> 
+  left_join(aidres_sectors, by =join_by('aidres_sector_id' == 'id')) |> 
+  select(-description,) |> 
+  left_join(aidres_configurations, by =join_by('aidres_sector_id' == 'aidres_sector_id', 
+                                               'configuration_id' == 'configuration_id')) |> 
+  select( c('nuts3', 'sector_id', 'product_id'), everything(), -'aidres_sector_id', -'name', -starts_with('mix'),
+          -abbreviation, -description, -starts_with("is"), -'value', -'indicators', 'indicators', 'value') |> 
+  select(-c(configuration_id,	solution_id,	scenario_id,	route_id)) |> 
+  rename('production_route_name' = route_name) |> 
+  pivot_wider(names_from = 'indicators', values_from = 'value') |> 
+  arrange(nuts3, sector_id, product_id, production_route_name, .by_group = TRUE) |> 
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2)) |> 
+  group_by(country_code, sector_id, product_id, production_route_name) |> 
+  summarise(production_kt_y = sum(product_flow_kt_y)) |>  ungroup() ->  aidres_production_country_2018
+
+aidres_production_country_2018
+```
+
+## Refinery product flow
+
+AIDRES only considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg. AIDRES product flow is reported in Million tonne. We are using the LHV value to convert the product flow into PJ.
+
+```{r}
+  aidres_production_country_2018 |> 
+        filter(sector_id == 'refineries') |> 
+        select(-sector_id, -production_route_name) |> 
+    mutate(mt = round(production_kt_y/1000, 3), .keep = 'unused') |> 
+    pivot_wider(names_from = product_id, values_from = mt) |>
+    clean_names() |> 
+    pivot_longer(cols = refineries_light_liquid_fuel, names_to = 'product_id', values_to = 'mt') |> 
+    mutate(source = 'aidres') |> 
+    mutate(pj_ref = mt * 1000 * 10^6 * 42.87/ 10^9,
+           fuel = 'light_liquid_fuel',
+           source = 'aidres',
+           year = 2018) |> 
+  left_join(country_codes, by =join_by('country_code' == 'country_iso_code')) |> 
+  select(country_code, country, fuel, year, source, pj_ref) -> aidres_production_country_ref
+
+aidres_production_country_ref
+```
+
+# Joining the data from three sources
+
+Prepare the data from the three sources for comparison.
+
+```{r}
+
+bind_rows(aidres_production_country_ref, ref_energy_to_idees, ref_output_eurostat) |> 
+  arrange(country_code) -> ref_data_sources
+
+ref_data_sources
+```
+
+# Data comparison
+
+## Creating output directory
+
+```{r}
+output_dir <- here('outputs', 'refinery')
+
+if (!dir.exists(output_dir)){
+  print("Output directory doesn't exist. Creating a new one!")
+dir.create(output_dir)
+} else {
+    print("Output directory already exists. Not creating a new one!")
+}
+```
+
+## Plot
+
+```{r}
+
+#| warning: false
+
+  ref_data_sources |>
+    ggplot(aes(pj_ref, fct_reorder(country_code, pj_ref, .fun=sum))) +
+    geom_line()+
+    geom_point(aes(colour = source), size = 1.5) +
+    theme_bw() +
+    labs(title = 'Light liquid fuel production in Refineries in AIDRES, EUROSTAT, and JRC-IDEES',
+         y = 'Country',
+         x = 'PJ') +
+    theme(legend.position = "bottom") -> p1
+    p1
+    
+    ggsave(here(output_dir, 'ref_pf_compare.pdf'), width = 14, height = 8, units = 'in', dpi = 900)
+```
+
+## Table
+
+```{r}
+ref_data_sources |> 
+  select(-fuel, -year) |> 
+  pivot_wider(names_from = source, values_from = pj_ref) |>
+  mutate(across(.cols = -(1:2), .fns = ~replace_na(., replace = 0)),
+         across(.cols = -(1:2), .fns = ~round(., 2))) |> 
+  arrange(country_code) |>
+  gt() |> 
+  cols_label(
+    country_code = 'Code',
+    country = 'Name',
+    aidres = 'AIDRES',
+    idees = 'JRC-IDEES',
+    eurostat = 'EUROSTAT'
+  ) |> 
+  tab_spanner(label = md('**Data Source**'),
+    columns = 3:5) |> 
+    tab_spanner(label = md('**Country**'),
+    columns = 1:2) |> 
+  tab_header(title = 'Light liquid fuel production (PJ) from refineries in 2018',
+    subtitle = 'Comparison between AIDRES, JRC-IDEES, and EUROSTAT') |> 
+  sub_zero(zero_text = '-') |> 
+  opt_stylize(style = 6, color = 'gray')
+```
+
+### Diff file
+
+The data containing product flow values from the three sources are exported into an Excel workbook for further analysis. `NA` values are replaced by `0`.
+
+```{r}
+
+ref_data_sources |> 
+  select(-fuel, -year) |> 
+  mutate(unit = 'pj') |> 
+  select(country_code: source, unit, pj_ref) |> 
+  pivot_wider(names_from = source, values_from = pj_ref) |>
+  mutate(across(.cols = -(1:3), .fns = ~replace_na(., replace = 0)),
+         across(.cols = -(1:3), .fns = ~round(., 1))) |> 
+  arrange(country_code) |> 
+   write_xlsx(here(output_dir,'diff_ref_prod_flow_llf.xlsx'))
+```
+
+# Bibliography

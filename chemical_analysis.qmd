@@ -1,0 +1,1023 @@
+---
+title: "Analyzing Chemical Sector enrgy consumption"
+subtitle: "AIDRES, JRC-IDEES, EUROSTAT"
+date: last-modified
+date-format: long
+author: 
+ - name: Partha Das
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
+ - name: Pieter Valkering
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+    toc: true
+    theme: journal
+bibliography: references.bib
+keywords:
+  - AIDRES
+  - EUROSTAT
+  - JRC-IDEES
+license: "CC BY"
+citation: true
+funding: 
+  statement: "EU Project MOPO"
+---
+
+# Introduction
+
+This is a stand-alone quarto document with code chunks and documentation for comparing Chemical sector energy consumption in AIDRES, EUROSTAT, and JRC-IDEES databases.
+
+AIDRES only covers 'basic chemicals' omitting chlorine. However, in JRC IDEES database there is a breakup of basic chemical, other chemical, and pharma. Though AIDRES has separate fertilizer sector, we add it to chemical for comparison purpose. First, we compare AIDRES chemical data with JRC-IDEES basic chemical. Subsequently, we add chlorine energy consumption from Eurochlor database to the AIDRES and compare AIDRES + Eurochlor (Chlorine) with JRC_IDEES basic chemicals.
+
+As AIDRES does not contain other chemicals we take it directly from JRC IDEES database. Finally we compare AIDRES + Eurochlor (Chlorine) + Chem others IDEES, total IDEES, and EUROSTAT + non-energy
+
+Therefore, three comparison steps:
+
+-   Compare AIDRES vs IDEES basic chemicals (IDEES)
+-   Compare with AIDRES + Eurochlor (Chlorine) vs JRC-IDEES basic chemicals
+-   Compare AIDRES + Eurochlor (Chlorine) + Chem others JRC-IDEES, total JRC-IDEES, and EUROSTAT + non-energy
+
+# Using this file
+
+The files are produced using [R](https://posit.co/download/rstudio-desktop/) and [RStudio](https://posit.co/download/rstudio-desktop/).
+Though this document can be executed using command line, it is recommended to use `RStudio` for rendering.
+
+Clone this repository to your computer. Open the `mopo_repo.Rproj` (`RStudio needs to be installed`) file. Open `refinery_analysis.qmd` and click on `render button` (Crtl + Shift + K).
+
+# Loading libraries
+
+Checking whether the required packages are installed or not. If not, install them and load them. If they are already installed, just load them.
+
+```{r}
+#| warning: false
+
+mypackages <- c('tidyverse', 'readxl', 'knitr', 'janitor', 'archive', 'DBI', 'odbc',
+              'RPostgres', 'eurostat', 'stringr', 'forcats', 'writexl', 'xlsx', 'gt', 'here')
+
+for (p in mypackages){
+  if (!require(p, character.only = TRUE))
+    {
+    install.packages(p)
+    library(p, character.only = TRUE)
+  }
+  }
+```
+
+# Reading country names and codes
+
+This is provided with the repository by default in the `input_data\europe_country_codes` directory by default.
+
+```{r}
+country_codes <- read_xlsx(here('input_data', 'europe_country_codes', 'europe_country_code.xlsx'), sheet = 1)
+
+country_codes
+```
+
+# JRC-IDEES Basic Chemical Energy Consumption
+
+## Download IDEES excel files
+
+`JRC‑IDEES provides a consistent set of disaggregated energy-economy-emissions data for each Member State of the European Union, covering all sectors of the energy system for the 2000-2021 period: industry, buildings, transport, and power generation. This data complies with Eurostat energy balances while providing a plausible decomposition of energy consumption into specific processes and end uses` [@jrc-idees_report]. 
+
+Checking whether there is a directory (`./input_data/jrc_idees_2021/industry`) containing JRC-IDEES excel files for energy balance. If not (only checking with `JRC-IDEES-2021_Industry_AT.xlsx`), creating the directory, downloading the zipped files, and extracting them for each country.
+
+```{r}
+
+idees_data <- here('input_data', 'jrc_idees_2021', 'industry')
+
+if (!dir.exists(idees_data)){
+  
+  print("Directory doesn't exists! Creating one")
+  
+  dir.create(idees_data, recursive = TRUE)
+  
+  print("Downloading files")
+  
+  for(country_code in country_codes$country_iso_code){
+  
+  zip_file <- paste0("https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/JRC-IDEES/JRC-IDEES-2021_v1/JRC-IDEES-2021_", country_code)
+  filename <- paste0("JRC-IDEES-2021_Industry_", country_code, ".xlsx")
+
+  archive_extract(archive = zip_file,
+                  dir = idees_data,
+                  files = filename)
+  }
+  
+  } else {
+    
+    print(paste('Directory', idees_data,  'already exists!'))
+  
+  if(!file.exists(here(idees_data, 'JRC-IDEES-2021_Industry_AT.xlsx'))){
+    
+     print("But files does not exists! downloading them")
+  
+    for(country_code in country_codes$country_iso_code){
+  
+  zip_file <- paste0("https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/JRC-IDEES/JRC-IDEES-2021_v1/JRC-IDEES-2021_", country_code)
+  filename <- paste0("JRC-IDEES-2021_Industry_", country_code, ".xlsx")
+
+  archive_extract(archive = zip_file,
+                  dir = idees_data,
+                  files = filename)
+  }
+  } else {
+    
+    print(paste('Files also already exist inside the directory, not downloading them again!'))
+    
+    }
+}
+```
+
+### Basic chemical energy consumption by fuel
+
+```{r}
+
+read_data_chem_fec_bc <- function(country){
+  
+    file_path <- paste0(idees_data, '/JRC-IDEES-2021_Industry_', country, '.xlsx')
+  
+  read_excel(file_path, sheet = 'CHI_fec', range = 'A2:W100',
+             col_names = c('product', 2000:2021)) |> 
+    select(1,20) |> 
+    mutate(country_code = country) |> 
+    rename(product = 1) |>
+    slice(5:8, 11:14, 16:23, 25:34, 37:42, 44, 46:56, 57) |>
+    mutate(fuel = case_when(product == 'Lighting' ~ 'electricity',
+                            product == 'Air compressors' ~ 'electricity',
+                            product == 'Motor drives' ~ 'electricity',
+                            product == 'Motor drives' ~ 'electricity',
+                            product == 'Fans and pumps' ~ 'electricity',
+                            product == 'Solar and geothermal' ~ 'renew_bio',
+                            product == 'Electricity' ~ 'electricity',
+                            product == 'LPG' ~ 'oil_petro_products',
+                            product == 'Diesel oil and liquid biofuels'  ~ 'oil_petro_products',
+                            product == 'Diesel oil' ~ 'oil_petro_products',
+                            product == 'Naphtha' ~ 'oil_petro_products',
+                            product == 'Natural gas and biogas' ~ 'natural_gas',
+                            product == 'Natural gas'  ~ 'natural_gas',
+                            product == 'Solids' ~ 'solid_fossil_fuels',
+                            product == 'Refinery gas' ~ 'oil_petro_products',
+                            product == 'Fuel oil' ~ 'oil_petro_products',
+                            product == 'Other liquids' ~ 'oil_petro_products',
+                            product == 'Derived gases' ~ 'solid_fossil_fuels',
+                            product == 'Biomass and waste' ~ 'renew_bio',
+                            product == 'Chemicals: Process cooling - Electric' ~ 'electricity',
+                            product == 'Chemicals: Furnaces - Electric' ~ 'electricity',
+                            product == 'Chemicals: Process cooling - Natural gas and biogas' ~'natural_gas',
+                            product == 'Distributed steam' ~ 'steam',
+                            product == 'Chemicals: Generic electric process' ~ 'electricity',
+                            product == 'Ambient heat' ~ 'heat')) |>
+     mutate(product = 'chem_basic') |>
+     pivot_longer(cols ='2018', names_to = 'year', values_to = 'ktoe') |>
+     mutate(gj_idees = ktoe*1000*41.87,
+            ktoe = NULL) |>
+     group_by(country_code, product, fuel) |>
+     summarise(gj_idees=sum(gj_idees), .groups = 'drop')
+}
+
+test_list_chem_fec_bc <- lapply(country_codes$country_iso_code, read_data_chem_fec_bc)
+chem_fec_bc <- bind_rows(test_list_chem_fec_bc, .id = "id") |> select(-id)
+```
+
+### Allocating steam and heat to a fuel category
+
+Lets assume the heat and steam is produced by gas. Assume the heat production from gas is 95% efficient
+
+Deactivated
+
+```{r}
+#| eval: false
+
+gas_heat_eff = .95
+
+chem_fec_bc <- chem_fec_bc |> 
+  pivot_wider(names_from = fuel, values_from = gj_idees) |> 
+  mutate(natural_gas = natural_gas + (heat+steam)/gas_heat_eff, .keep = 'unused') |> 
+  pivot_longer(cols = electricity:solid_fossil_fuels, names_to = 'fuel', values_to = 'gj_idees')
+
+```
+
+# AIDRES Chemical sector energy consumption
+
+## Establishing AIDRES database connection and fetching tables
+
+AIDRES database is open source [@aidres_report]. However the data is available as a raw `.sql` file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. The data is also available as an Excel workbook. However, it is very customized to be used for specific analysis.
+
+## Importing AIDRES data from local `.csv` files
+
+However, for an external user setting up a PostgreSQL server is not straight forward. Therefore, AIDRES tables are provided with this repository in the `input_data\aidres_data` directory.
+
+the AIDRES tables used for this analysis are first exported into `.csv` files and then they are used further in the analysis. Following code chunks create the directory (`input_data\aidres_data`) for storing the AIDRES files, and exports the AIDRES data files into `.csv` format. However, they are currently deactivated as we provide the files already with the repo.
+
+```{r}
+
+aidres_data <- here('input_data', 'aidres_data')
+
+if (!dir.exists(aidres_data)){
+  
+  print("AIDRES input data folder doesn't exist. Request VITO to provide the data")
+  dir.create(aidres_data)
+  
+} else {
+  
+  print("AIDRES input data directory already exists. Not creating a new one!")
+  print("AIDRES data tables also exist!")
+  
+}
+```
+
+The following AIDRES data tables namely `aidres_scenarios.csv`, `aidres_sectors.csv`, `aidres_result.csv`, `aidres_configurations.csv`, `aidres_perton.csv` are made available in the `aidres_data` folder. The code chunk is currently deactivated.
+
+Dumping AIDRES PSQL tables to `.csv` files (currently deactivated)
+
+```{r}
+#| eval: false
+
+aidres_scenarios |> collect() |> write_csv(here(aidres_data, 'aidres_scenarios.csv'))
+
+aidres_sectors |> collect() |>  write_csv(here(aidres_data, 'aidres_sectors.csv'))
+
+aidres_result |> collect() |>  write_csv(here(aidres_data, 'aidres_result.csv'))
+
+aidres_configurations|> collect() |> write_csv(here(aidres_data, 'aidres_configurations.csv')) 
+
+aidres_perton|> collect() |> write_csv(here(aidres_data, 'aidres_perton.csv'))
+```
+
+Reading the AIDRES data from `.csv` files. 
+
+```{r}
+#| warning: false
+
+aidres_scenarios <- read_csv(here(aidres_data, 'aidres_scenarios.csv'))
+
+aidres_sectors <- read_csv(here(aidres_data, 'aidres_sectors.csv'))
+
+aidres_result <- read_csv(here(aidres_data, 'aidres_result.csv'))
+
+aidres_configurations <- read_csv(here(aidres_data, 'aidres_configurations.csv'))
+
+aidres_perton <- read_csv(here(aidres_data, 'aidres_perton.csv'))
+```
+
+## Energy consumption all sectors in 2018
+
+Energy consumption by different production routes in different sectors
+
+```{r}
+#| warning: false
+
+aidres_result |> clean_names() |> 
+  select(nuts3, contains('id'), contains('is_'), contains('_pj_y'))|>
+  pivot_longer('electricity_pj_y':'total_energy_vectors_pj_y', names_to = 'indicators', values_to = 'value') |> 
+  mutate(value = round(value,3)) |>
+  filter(is_ref_scenario == 1,
+         is_ref_route == 1) |> 
+  select(-c(is_pareto_solution, is_direct_emission_solution, is_mix)) |> 
+  left_join(aidres_sectors, by =join_by('aidres_sector_id' == 'id')) |> 
+  select(-description) |> 
+  left_join(aidres_configurations, by =join_by('aidres_sector_id' == 'aidres_sector_id', 
+                                               'configuration_id' == 'configuration_id')) |> 
+  select( c('nuts3', 'sector_id', 'product_id'), everything(), -'aidres_sector_id', -'name', -starts_with('mix'), -abbreviation, -description,
+          -starts_with("is"), -'value', -'indicators', 'indicators', 'value') |> 
+  select(-c(configuration_id,	solution_id,	scenario_id,	route_id, id)) |> 
+  rename('production_route_name' = route_name) |> 
+  select(nuts3, sector_id, product_id, production_route_name, everything()) |> 
+  arrange(nuts3, sector_id, product_id, production_route_name, .by_group = TRUE) |> 
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2))|>
+  group_by(country_code, sector_id, indicators) |> 
+  summarise(country_total = sum(value)) |> 
+  ungroup() |> 
+  left_join(country_codes, by =join_by('country_code' == 'country_iso_code')) |> 
+  select(country_code, country, everything()) |> 
+  pivot_wider(names_from = sector_id, values_from = country_total) -> aidres_energy_all
+
+  aidres_energy_all
+```
+
+## Chemical sector energy consumption
+
+```{r}
+aidres_cleaned_chem <- aidres_energy_all |> 
+  select(country_code:indicators, chemical, fertiliser) |> 
+  mutate(chemical = rowSums(cbind(chemical, fertiliser), na.rm = TRUE), .keep = 'unused') |> 
+  mutate(indicators = str_replace(indicators, "\\_pj_y", "")) |> 
+  rename('chem_aidres' = chemical,
+         'fuel' = indicators) |> 
+  pivot_longer(cols = chem_aidres, names_to = 'metadata', values_to = 'pj') |> 
+  pivot_wider(names_from = fuel, values_from = pj) |> 
+  rename('total' = total_energy_vectors) |> 
+  mutate(solid_fossil_fuels = rowSums(cbind(coal, coke), na.rm = TRUE),
+         renew_bio = rowSums(cbind(biomass, biomass_waste), na.rm = TRUE),
+         non_renew_waste = rowSums(cbind(plastic_mix, alternative_fuel_mixture), na.rm = TRUE),
+         oil_petro_products = rowSums(cbind(crude_oil, naphtha), na.rm = TRUE)) |> 
+  select(-c(alternative_fuel_mixture, coal, coke, biomass, biomass_waste, plastic_mix, crude_oil, naphtha)) |> 
+  pivot_longer(cols = -c(country_code:metadata), names_to = 'fuel', values_to = 'pj') |> 
+  pivot_wider(names_from = metadata, values_from = pj)
+
+aidres_cleaned_chem
+```
+
+# EUROSTAT Chemical Energy Consumption
+
+## Downloading Eurostat energy balance
+
+EUROSTAT API is used to dynamically fetch EUROSTAT data using `eurostat` package [@RJ-2017-019]. Please refer this [link](https://ropengov.github.io/eurostat/index.html) to more about the usage of the `eurostat` package.
+
+For chemical sector aggregated energy balance data of EUROSTAT (nrg_bal_c) is used.
+
+```{r}
+#| warning: false
+
+dat_aggregated_chem <- get_eurostat('nrg_bal_c', filters = list(time = 2018),
+                                   time_format = "num", type = 'label', 
+                                   stringsAsFactors = TRUE)
+```
+
+We include aggregated total non-energy consumption to the Chemical sector. for EUROSTAT includes non-energy; chemical for AIDRES includes Fertilizer also.
+
+```{r}
+chem_energy_eurostat <- dat_aggregated_chem |> 
+  filter(unit == 'Terajoule') |> 
+  filter(siec %in% c('Solid fossil fuels', 'Manufactured gases', 'Oil and petroleum products (excluding biofuel portion)', 'Renewables and biofuels', 'Electricity', 'Natural gas', 'Non-renewable waste', 'Heat', 'Total')) |> 
+  pivot_wider(names_from = siec, values_from =  values) |> 
+  clean_names() |> 
+  rename('oil_petro_products' = oil_and_petroleum_products_excluding_biofuel_portion,
+         'renew_bio' = renewables_and_biofuels,
+         'non_renew_waste' = non_renewable_waste) |> 
+  mutate(natural_gas  = rowSums(cbind(natural_gas, manufactured_gases), na.rm = TRUE)) |> 
+  select(-manufactured_gases) |> 
+  filter(nrg_bal %in% c('Final consumption - industry sector - chemical and petrochemical - energy use',
+                        'Final consumption - industry sector - non-energy use')) |> 
+  pivot_longer(col = total:heat, names_to = 'fuel', values_to =  'values') |> 
+  pivot_wider(names_from = nrg_bal, values_from =  values) |> 
+  clean_names() |> 
+  rename("FC_IND_CPC_E" = final_consumption_industry_sector_chemical_and_petrochemical_energy_use,
+          "FC_IND_NE" = final_consumption_industry_sector_non_energy_use) |> 
+  group_by(fuel, geo, time) |> 
+  mutate(net = rowSums(cbind(FC_IND_CPC_E, FC_IND_NE), na.rm = TRUE)) |> 
+  mutate(net = net/1000) |> 
+  rename('country_code' = geo,
+           'year' = time,
+           'chem_eurostat_pj' =  net) |> 
+  arrange(country_code)|> 
+  select(country_code, year, fuel, chem_eurostat_pj) |> 
+  left_join(country_codes, by = join_by(country_code == country)) |> 
+  filter(!is.na(country_iso_code)) |> 
+  rename('country' = country_code,
+         'country_code' = country_iso_code,
+         'chem_eurostat' = chem_eurostat_pj) |> 
+  select(country_code, country, fuel, everything(), -year) |> 
+  arrange(country_code, fuel) |> ungroup()
+
+chem_energy_eurostat
+```
+
+### Joining AIDRES and EUROSTAT Chemical energy consumption
+
+```{r}
+
+chem_eurostat_aidres <- chem_energy_eurostat |> 
+  full_join(aidres_cleaned_chem, by = join_by(country_code, country, fuel)) |> 
+  select(country_code, country, fuel, everything()) |> 
+  pivot_longer(cols = chem_eurostat:chem_aidres, names_to = 'metadata', values_to = 'pj') |> 
+  mutate(pj = round(pj, 2))|> 
+  separate_wider_delim(metadata, delim = '_', names = c('sector', 'source'))
+
+chem_eurostat_aidres 
+```
+
+### Compare AIDRES Chemical + Fertiliser vs JRC-IDEES basic chemicals
+
+### Creating output directory
+
+```{r}
+output_dir <- here('outputs', 'chemical')
+
+if (!dir.exists(output_dir)){
+  print("Output directory doesn't exist. Creating a new one!")
+dir.create(output_dir)
+} else {
+  print("Output directory already exists. Not creating a new one!")
+}
+```
+
+### Prepare data
+
+```{r}
+#| warning: false
+
+chem_fec_bc1 <- chem_fec_bc |> group_by(country_code, product) |> 
+  summarise(total = sum(gj_idees), groups = 'drop') |> 
+  pivot_longer(cols = total, names_to = 'fuel', values_to = 'gj_idees') |> 
+  rbind(chem_fec_bc) |> 
+  mutate(source = 'idees') |> 
+  mutate(pj = gj_idees/ 10^6, .keep = 'unused') |> 
+  group_by(country_code, fuel, source) |> 
+  summarise(pj = sum(pj), .groups = 'drop') |> 
+  select(country_code, fuel, everything())
+
+chem_eurostat_aidres |> filter(sector == 'chem',
+                   source != 'eurostat') |> 
+  select(-country, -sector) |> 
+  select(-year) |> 
+  rbind(chem_fec_bc1) |> 
+  arrange(country_code, fuel) -> compare_aidres_idess_basic_chem
+
+compare_aidres_idess_basic_chem
+```
+
+### Plots
+
+#### Comparison graph total
+
+```{r, fig.width=10, fig.height= 7}
+#| warning: false
+
+compare_aidres_idess_basic_chem |> 
+  filter(fuel == 'total') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 2) +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the chemical sector in AIDRES and JRC-IDEES',
+       subtitle = 'Only Basic Chemical componenet of JRC IDEES is compared with Aidres. Chlorine is missing in AIDRES',
+       y = 'Country',
+       x = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare
+
+p_chem_compare
+
+ggsave(here(output_dir, 'chem_fec_basic_compare_total_aidres_idees.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+
+```
+
+#### Comparison graph fuels
+
+```{r, fig.width=10, fig.height= 12}
+#| warning: false
+
+compare_aidres_idess_basic_chem |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 2) +
+  facet_wrap(~fuel, ncol = 4, scales = "free") +
+  theme_bw() +
+  labs(title = 'Fuel-wise energy consumption in the chemical sector in AIDRES and JRC-IDEES',
+       subtitle = 'Only Basic Chemical componenet of JRC IDEES is compared with Aidres. Chlorine is missing in AIDRES',
+       y = 'country') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare
+
+p_chem_compare
+
+ggsave(here(output_dir, 'chem_fec_basic_compare_fuel_aidres_idees.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+```
+
+### Diff file
+
+```{r}
+compare_aidres_idess_basic_chem |> 
+  pivot_wider(values_from = pj, names_from = source) |>
+  write_xlsx(here(output_dir, 'diff_chem_basic_aidres_idees.xlsx'))
+```
+
+## Filling the gap for Basic Chemical
+
+AIDRES does not contain the information of Chlorine. Eurochlor database is used to procure country wise Chlorine production. Specific energy consumption values of various process routes for Chlorine production is taken from JRC-EU-TIMES model.
+
+
+### Creating input directory for Chlorine data
+
+```{r}
+
+eurochlor_data <- here('input_data', 'eurochlor_data')
+
+if (!dir.exists(eurochlor_data)){
+  
+  print("Eurochlor input data folder doesn't exist. Request VITO to provide the data")
+  dir.create(eurochlor_data)
+  
+} else {
+  
+  print("Eurochlor input data directory already exists. Not creating a new one!")
+  print("Eurochlor data tables also exist!")
+  
+}
+```
+
+### Getting Chlorine data
+
+```{r}
+
+chlorine_data_2018 <- read_xlsx(here(eurochlor_data, 'chlorine_data_2018.xlsx'), sheet = 'Sheet2', range = 'A1:H67') |> 
+  clean_names() |> 
+  left_join(country_codes, by = join_by('country' == 'country')) |> 
+  select(country_iso_code, country, company, site, everything()) |> 
+  filter(!is.na(country_iso_code)) |> 
+  select(-thousand_tonnes) |> 
+  pivot_longer(cols = murcury:other, names_to = 'production_routes', values_to = 'kt') |> 
+  mutate(kt = replace_na(kt, 0)) |> 
+  group_by(country_iso_code , country, production_routes) |> 
+  reframe(kt = sum(cbind(kt)))
+
+chlorine_data_2018
+
+chlorine_sec <- read_xlsx(here(eurochlor_data, 'chlorine_data_2018.xlsx'), sheet = 'Sheet2', range = 'L1:M5') 
+
+chlorine_production_energy <- left_join(chlorine_data_2018, chlorine_sec, 
+                                        by = join_by(production_routes == process_routes)) |> 
+  mutate(pj = kt*pj_mt/1000) |> 
+  select(-pj_mt, -country,-pj_mt, -kt) |> 
+  group_by(country_iso_code ) |> 
+  reframe(electricity = sum(pj)) |> 
+  mutate(total = electricity) |> 
+  pivot_longer(cols = electricity:total, names_to = 'fuel', values_to = 'pj_cl') |> 
+  rename('country_code' = country_iso_code )
+
+chlorine_production_energy
+```
+
+#### Prepare AIDRES, and JRC-IDEES data
+
+```{r}
+
+chem_fec_bc_ <- chem_fec_bc |> group_by(country_code, product) |> 
+  summarise(total = sum(gj_idees), .groups = 'drop') |> 
+  pivot_longer(cols = total, names_to = 'fuel', values_to = 'gj_idees') |> 
+  rbind(chem_fec_bc) |> 
+  mutate(source = 'idees') |> 
+  mutate(pj = gj_idees/ 10^6, .keep = 'unused') |> 
+  group_by(country_code, fuel, source) |> 
+  summarise(pj = sum(pj), .groups = 'drop') |> 
+  select(country_code, fuel, everything())
+
+chem_eurostat_aidres |> filter(sector == 'chem') |> 
+  select(-country, -sector, -year) |> 
+  rbind(chem_fec_bc_) |> 
+  arrange(country_code, fuel) -> chem_basic_energy
+
+chem_basic_energy
+```
+
+#### Joining Chlorine data with AIDRES
+
+```{r}
+
+chem_basic_energy2 <- chem_basic_energy |> 
+  pivot_wider(values_from = pj, names_from = source) |> 
+  left_join(chlorine_production_energy, by = join_by('country_code', 'fuel')) |> 
+  mutate(aidres = rowSums(cbind(aidres, pj_cl), na.rm = TRUE), .keep = 'unused') |> 
+  pivot_longer(cols = eurostat:idees, names_to = 'source', values_to = 'pj') |> 
+  mutate(pj = replace_na(pj, 0))
+
+chem_basic_energy2
+```
+
+### Compare AIDRES Chemical + Fertilizer + Eurochlor (Chlorine) with IDEES Basic Chemicals
+
+#### Comparison graph total
+
+```{r, fig.width=10, fig.height= 7}
+#| warning: false
+
+chem_basic_energy2 |> 
+  filter(fuel == 'total') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_point(aes(colour = source), size = 2) +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the Basic Chemical Sector in AIDRES, and JRC-IDEES',
+       subtitle = 'Chlorine added to AIDRES from Eurochlor 2018 database',
+       y = 'country',
+       y = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare
+
+p_chem_compare
+ggsave(here(output_dir,'chem_fec_basic_compare_total_with_cl.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+```
+
+#### Comparison graph fuels
+
+```{r, fig.width=10, fig.height= 12}
+#| warning: false
+
+chem_basic_energy2 |> 
+  filter(source!= 'eurostat') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 2) +
+  facet_wrap(~fuel, ncol = 4, scales = "free") +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the Basic Chemical Sector in AIDRES, and JRC-IDEES',
+       subtitle = 'Chlorine added to AIDRES from Eurochlor 2018 database',
+       y = 'Country',
+       y = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare_fuel
+
+p_chem_compare_fuel
+ggsave(here(output_dir, 'chem_fec_basic_compare_fuel_with_cl.pdf'), width = 10, height = 12, units = 'in', dpi = 900)
+```
+
+#### Diff file
+
+```{r}
+chem_basic_energy |> 
+  pivot_wider(values_from = pj, names_from = source) |>
+  write_xlsx(here(output_dir, 'diff_chem_basic_with_cl.xlsx'))
+```
+
+# Other Chemicals and Pharmaceuticals
+
+AIDRES database does not have information of Other Chemicals and Pharmaceuticals. Together we call them 'Other Chemicals'. JRC-IDEES reports both production volume (in ethylene equivalent) and the energy consumption for Other Chemicals. For simplicity we only track energy demand for Other Chemicals.
+
+## JRC-IDEES Other Chemicals
+
+### Generic electricity process
+
+```{r}
+
+read_data_chem_fec_oc_gep <- function(country){
+  
+file_path <- paste0(idees_data, '/JRC-IDEES-2021_Industry_', country, '.xlsx')
+  
+read_excel(file_path, sheet = 'CHI_fec', range = 'A2:W160',
+           col_names = c('product', 2000:2021)) |> 
+    select(1,20) |> 
+    mutate(country_code = country) |> 
+    rename(product = 1) |>
+    slice(61:64, 106, 110:113, 155) |> 
+    mutate(fuel = case_when(product == 'Lighting' ~ 'electricity',
+                            product == 'Air compressors' ~ 'electricity',
+                            product == 'Motor drives' ~ 'electricity',
+                            product == 'Motor drives' ~ 'electricity',
+                            product == 'Fans and pumps' ~ 'electricity',
+                            product == 'Chemicals: Generic electric process' ~ 'electricity')) |>
+    mutate(process = 'chem_other_gen_elec') |>
+    pivot_longer(cols ='2018', names_to = 'year', values_to = 'ktoe') |>
+    mutate(gj_idees = ktoe*1000*41.87,
+           ktoe = NULL) |>
+    group_by(country_code, process, fuel) |>
+    summarise(gj_idees=sum(gj_idees), .groups = 'drop')
+}
+test_list_chem_fec_oc_gep <- lapply(country_codes$country_iso_code, read_data_chem_fec_oc_gep)
+chem_fec_oc_gep <- bind_rows(test_list_chem_fec_oc_gep, .id = "id") |> select(-id)
+
+chem_fec_oc_gep
+```
+
+### Low enthalpy heat
+
+```{r}
+
+read_data_chem_fec_oc_lt <- function(country){
+  
+      file_path <- paste0(idees_data, '/JRC-IDEES-2021_Industry_', country, '.xlsx')
+  
+  read_excel(file_path, sheet = 'CHI_fec', range = 'A2:W100',
+             col_names = c('product', 2000:2021)) |> 
+    select(1,20) |> 
+    mutate(country_code = country) |> 
+    rename(product = 1) |>
+    slice(66:70, 115:119) |> 
+    mutate(fuel = case_when(product == 'Diesel oil and liquid biofuels'  ~ 'oil_petro_products',
+                            product == 'Natural gas and biogas' ~ 'natural_gas',
+                            product == 'Solar and geothermal' ~ 'renew_bio',
+                            product == 'Electricity' ~ 'electricity',
+                            product == 'Ambient heat' ~ 'heat')) |>
+    mutate(process = 'chem_other_heat_lt') |>
+    pivot_longer(cols ='2018', names_to = 'year', values_to = 'ktoe') |>
+    mutate(gj_idees = ktoe*1000*41.87,
+           ktoe = NULL) |>
+    group_by(country_code, process, fuel) |>
+    summarise(gj_idees=sum(gj_idees), .groups = 'drop')
+}
+test_list_chem_fec_oc_lt <- lapply(country_codes$country_iso_code, read_data_chem_fec_oc_lt)
+chem_fec_oc_lt <- bind_rows(test_list_chem_fec_oc_lt, .id = "id") |> select(-id)
+
+chem_fec_oc_lt
+```
+
+### High enthalpy heat
+
+```{r}
+
+read_data_chem_fec_oc_ht <- function(country){
+  
+file_path <- paste0(idees_data, '/JRC-IDEES-2021_Industry_', country, '.xlsx')
+  
+  read_excel(file_path, sheet = 'CHI_fec', 'A2:W100',
+             col_names = c('product', 2000:2021)) |> 
+    select(1,20) |> 
+    mutate(country_code = country) |> 
+    rename(product = 1) |>
+    slice(73:83, 122:132) |> 
+    mutate(fuel = case_when(product == 'LPG' ~ 'oil_petro_products',
+                            product == 'Diesel oil and liquid biofuels'  ~ 'oil_petro_products',
+                            product == 'Naphtha' ~ 'oil_petro_products',
+                            product == 'Natural gas and biogas' ~ 'natural_gas',
+                            product == 'Natural gas'  ~ 'natural_gas',
+                            product == 'Solids' ~ 'solid_fossil_fuels',
+                            product == 'Refinery gas' ~ 'oil_petro_products',
+                            product == 'Fuel oil' ~ 'oil_petro_products',
+                            product == 'Other liquids' ~ 'oil_petro_products',
+                            product == 'Derived gases' ~ 'solid_fossil_fuels',
+                            product == 'Biomass and waste' ~ 'renew_bio',
+                            product == 'Distributed steam' ~ 'steam',
+                            product == 'High-enthalpy heat processing - Electric (microwave)' ~ 'electricity')) |>
+    mutate(process = 'chem_other_heat_ht') |> 
+    pivot_longer(cols ='2018', names_to = 'year', values_to = 'ktoe') |>
+    mutate(gj_idees = ktoe*1000*41.87,
+           ktoe = NULL) |>
+    group_by(country_code, process, fuel) |>
+    summarise(gj_idees=sum(gj_idees), .groups = 'drop')
+}
+test_list_chem_fec_oc_ht <- lapply(country_codes$country_iso_code, read_data_chem_fec_oc_ht)
+chem_fec_oc_ht <- bind_rows(test_list_chem_fec_oc_ht, .id = "id") |> select(-id)
+
+chem_fec_oc_ht
+```
+
+### Furnace
+
+```{r}
+
+read_data_chem_fec_oc_fur <- function(country){
+  
+file_path <- paste0(idees_data, '/JRC-IDEES-2021_Industry_', country, '.xlsx')
+  
+  
+  read_excel(file_path, sheet = 'CHI_fec', range = 'A2:W100',
+             col_names = c('product', 2000:2021)) |> 
+    select(1,20) |> 
+    mutate(country_code = country) |> 
+    rename(product = 1) |>
+    slice(86:91, 135:140) |> 
+    mutate(fuel = case_when(product == 'LPG' ~ 'oil_petro_products',
+                            product == 'Diesel oil and liquid biofuels'  ~ 'oil_petro_products',
+                            product == 'Natural gas and biogas' ~ 'natural_gas',
+                            product == 'Natural gas'  ~ 'natural_gas',
+                            product == 'Solids' ~ 'solid_fossil_fuels',
+                            product == 'Fuel oil' ~ 'oil_petro_products',
+                            product == 'Chemicals: Furnaces - Electric' ~ 'electricity')) |> 
+   mutate(process = 'chem_other_heat_fur') |> 
+    pivot_longer(cols ='2018', names_to = 'year', values_to = 'ktoe') |>
+    mutate(gj_idees = ktoe*1000*41.87,
+           ktoe = NULL) |>
+    group_by(country_code, process, fuel) |>
+    summarise(gj_idees=sum(gj_idees), .groups = 'drop')
+}
+
+test_list_chem_fec_oc_fur <- lapply(country_codes$country_iso_code, read_data_chem_fec_oc_fur)
+chem_fec_oc_fur <- bind_rows(test_list_chem_fec_oc_fur, .id = "id") |> select(-id)
+
+chem_fec_oc_fur
+```
+
+### Process cooling
+
+```{r}
+
+read_data_chem_fec_oc_cool <- function(country){
+  
+file_path <- paste0(idees_data, '/JRC-IDEES-2021_Industry_', country, '.xlsx')
+
+read_excel(file_path, sheet = 'CHI_fec', 'A2:W100',
+             col_names = c('product', 2000:2021)) |> 
+    select(1,20) |> 
+    mutate(country_code = country) |> 
+    rename(product = 1) |>
+    slice(93, 95:105, 142, 144:154) |> 
+    mutate(fuel = case_when(product == 'LPG' ~ 'oil_petro_products',
+                            product == 'Diesel oil and liquid biofuels'  ~ 'oil_petro_products',
+                            product == 'Naphtha' ~ 'oil_petro_products',
+                            product == 'Natural gas and biogas' ~ 'natural_gas',
+                            product == 'Natural gas'  ~ 'natural_gas',
+                            product == 'Solids' ~ 'solid_fossil_fuels',
+                            product == 'Refinery gas' ~ 'oil_petro_products',
+                            product == 'Fuel oil' ~ 'oil_petro_products',
+                            product == 'Other liquids' ~ 'oil_petro_products',
+                            product == 'Derived gases' ~ 'solid_fossil_fuels',
+                            product == 'Biomass and waste' ~ 'renew_bio',
+                            product == 'Distributed steam' ~ 'steam',
+                            product == 'Chemicals: Process cooling - Electric' ~ 'electricity',
+                            product == 'Chemicals: Process cooling - Natural gas and biogas' ~'natural_gas')) |> 
+    mutate(process = 'chem_other_process_cool') |>
+    pivot_longer(cols ='2018', names_to = 'year', values_to = 'ktoe') |>
+    mutate(gj_idees = ktoe*1000*41.87,
+           ktoe = NULL) |>
+    group_by(country_code, process, fuel) |>
+    summarise(gj_idees=sum(gj_idees), .groups = 'drop')
+}
+test_list_chem_fec_oc_cool <- lapply(country_codes$country_iso_code, read_data_chem_fec_oc_cool)
+chem_fec_oc_cool <- bind_rows(test_list_chem_fec_oc_cool, .id = "id") |> select(-id)
+
+chem_fec_oc_cool
+```
+
+### Total other chemicals
+
+For final energy consumption calculation we assume certain efficiency of the following process.
+
+-   Furnace efficiency from [source](https://thermalprocessing.com/efficient-gas-heating-of-industrial-furnaces/) ---90%
+-   Cooling efficiency is assumed to be 80% -------- own assumption
+-   High enthalpy heat efficiency is from TIMES-BE------95% efficiency
+-   Low enthalpy heat efficiency is from TIMES_BE ------- 95% efficiency
+
+```{r}
+
+chem_fec_oc <- rbind(chem_fec_oc_gep, chem_fec_oc_lt, chem_fec_oc_ht, chem_fec_oc_fur, chem_fec_oc_cool)
+
+chem_fec_oc3 <- chem_fec_oc |> group_by(country_code, process) |> 
+  summarise(total = sum(gj_idees), .groups = 'drop') |> 
+  pivot_longer(cols = total, names_to = 'fuel', values_to = 'gj_idees') |> 
+  rbind(chem_fec_oc)
+  
+# add efficiency and multiply by process type
+
+process <- c('chem_other_gen_elec', 'chem_other_heat_lt', 'chem_other_heat_ht', 'chem_other_heat_fur', 'chem_other_process_cool')
+efficiency <- c(1, .95, .95, .90, .80)
+
+chem_oth_process_eff <- tibble(process, efficiency)
+
+left_join(chem_fec_oc3, chem_oth_process_eff, by = join_by('process')) |> 
+  mutate(pj_idees = gj_idees*efficiency/10^6) |> 
+  select(-efficiency) -> chem_fec_oc_
+
+chem_fec_oc_ |> group_by(country_code , fuel) |> 
+  reframe(pj_idees = sum(pj_idees)) |> 
+  mutate(source = 'idees_oth') |> 
+  rename('pj' = 'pj_idees') -> chem_others_idees
+
+chem_others_idees
+```
+
+## Allocating steam and heat to a fuel category
+
+Lets assume the heat and steam is produced by gas. Assume the heat production from gas is 95% efficient.
+
+Deactivated
+
+```{r}
+#| eval: false
+
+gas_heat_eff = .95
+
+chem_others_idees <- chem_others_idees |> 
+  pivot_wider(names_from = fuel, values_from = pj) |> 
+  mutate(natural_gas = natural_gas + (heat+steam)/gas_heat_eff, .keep = 'unused') |> 
+  pivot_longer(cols = electricity:total, names_to = 'fuel', values_to = 'pj')
+
+```
+
+### All chemical data
+
+Final data frame containing Chemical sector energy consumption in AIDRES, EUROSTAT, and JRC-IDEES
+```{r}
+
+chem_basic_energy2 |> 
+  rbind(chem_others_idees) |> 
+  group_by(country_code, fuel, source) |> 
+  reframe(pj = sum(pj)) -> chem_fec_source
+
+chem_fec_source
+```
+
+## Compare AIDRES + Eurochlor (Chlorine) + Chem Others JRC-IDEES, total IDEES, EUROSTAT Chemical + non energy
+
+Prepare data
+
+```{r}
+
+chem_basic_energy2 |> pivot_wider(names_from = source, values_from = pj) |> 
+  rename('idees_basic' = idees,
+         'aidres_cl' = aidres) |> 
+  pivot_longer(cols = eurostat:idees_basic, names_to = 'source', values_to = 'pj') |> 
+  rbind(chem_others_idees) |> 
+  arrange(country_code, fuel, source) |> 
+  pivot_wider(names_from = source, values_from = pj) |> 
+  mutate(aidres = rowSums(cbind(aidres_cl,idees_oth), na.rm=TRUE),
+         idees = rowSums(cbind(idees_oth,idees_basic), na.rm = TRUE),
+         .keep = 'unused') |> 
+  pivot_longer(eurostat:idees, names_to = 'source', values_to = 'pj') -> chem_fec_source2
+
+chem_fec_source2
+```
+
+
+### Comparison graph total
+
+```{r, fig.width=10, fig.height= 7}
+#| warning: false
+
+chem_fec_source2 |> 
+  filter(fuel == 'total') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_point(aes(colour = source), size = 2) +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the chemical sector in AIDRES and JRC-IDEES and Eurostat',
+       subtitle = 'Total JRC-IDEES vs AIDRES Chemical + Fertiliser vs Eurostat Chemical + Non energy',
+       y = 'Country',
+       x = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare
+
+p_chem_compare
+
+ggsave(here(output_dir, 'chem_fec_total_compare_total_aidres_idees_eurostat.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+```
+
+### Comparison graph fuels
+
+```{r, fig.width=10, fig.height= 12}
+#| warning: false
+
+chem_fec_source2 |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_point(aes(colour = source), size = 2) +
+  facet_wrap(~fuel, ncol = 4, scales = "free") +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the chemical sector in AidRes and JRC-IDEES and Eurostat',
+       subtitle = 'Total JRC IDEES vs Aidres Chemical + Fertiliser vs Eurostat Chemical + Non energy',
+       y = 'Country',
+       x = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare
+
+p_chem_compare
+
+ggsave(here(output_dir, 'chem_fec_total_compare_fuel_aidres_idees_eurostat.pdf'), width = 10, height = 12, units = 'in', dpi = 900)
+```
+
+### Diff file
+
+```{r}
+chem_fec_source |> 
+  pivot_wider(values_from = pj, names_from = source) |>
+  write_xlsx(here(output_dir, 'diff_chem_total_aidres_idees_eurostat.xlsx'))
+```
+
+## AIDRES+ data for EU case study
+
+### AIDRES+ data for Chlorine, and Other Chemicals
+
+Specific energy consumption for Chlorine is taken from JRC-EU-TIMES model.
+For other chemicals specific energy consumption values is calculated using JRC-IDEES data aggregating over the individual processes.
+Final energy demand for Other Chemicals, specific energy consumption of Other Chemicals, Chlorine production volume, and specific energy consumption for Chlorine is written to `outputs/chemicals/chem_aidres_extra.xlsx' file.` 
+
+```{r}
+
+left_join(chem_fec_oc3, chem_oth_process_eff, by = join_by('process')) |> 
+  mutate(pj_idees = gj_idees*efficiency/10^6) |> 
+  select(-efficiency) -> chem_fec_oc_
+
+chem_fec_oc_ |> group_by(country_code , fuel) |> 
+  reframe(pj_idees = sum(pj_idees)) |> 
+  mutate(source = 'idees') |> 
+  rename('pj' = 'pj_idees') -> chem_others_idees
+
+chem_others_idees |> 
+  pivot_wider(names_from = fuel, values_from = pj) |> 
+  mutate(electricity = electricity/ total,
+         oil_petro_product = oil_petro_products / total,
+         renew_bio = renew_bio / total,
+         solid_fossil_fuels = solid_fossil_fuels / total,
+         total = total / total,
+         .keep = 'unused'
+         ) |> 
+  mutate(unit = 'pj_pj') |> 
+  select(country_code, source, unit, everything()) -> other_chem_sec
+
+other_chem_sec
+
+
+chem_others_idees <- chem_others_idees |> 
+  select(country_code, fuel, source, pj) |> 
+  mutate(pj = round(pj , 3))
+
+chem_others_idees
+
+chlorine_sec |> 
+  mutate(unit = 'pj_mt') |> 
+  rename('electricity' = pj_mt) |>
+  select(process_routes, unit, everything()) -> chlorine_sec_
+
+chlorine_sec_
+
+chlorine_data_2018
+  
+
+   write_xlsx(list('other_chem_fec' = chem_others_idees,
+                    'other_chem_sec' = other_chem_sec, 
+                   'chlorine_dem' = chlorine_data_2018,
+                   'chlorine_sec' = chlorine_sec_),
+              here(output_dir,'chem_aidres_extra.xlsx'))
+```

@@ -1,0 +1,797 @@
+---
+title: "Preparation of Technology Catalogue for MOPO EU/ Industrial Cluster Case Study"
+subtitle: "AIDRES, JRC-IDEES, EUROSTAT"
+date: last-modified
+date-format: long
+author: 
+ - name: Partha Das
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
+ - name: Pieter Valkering
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+    toc: true
+    theme: journal
+bibliography: references.bib
+keywords:
+  - AIDRES
+  - EUROSTAT
+  - JRC-IDEES
+license: "CC BY"
+citation: true
+funding: 
+  statement: "EU Project MOPO"
+---
+
+# Introduction
+
+This is a stand-alone quarto document with code chunks and documentation for an application preparing raw input data for MOPO EU/ Industrial cluster case study directly from AIDRES database.
+
+# Using the application
+
+The files are produced using [R](https://cran.r-project.org/) and [RStudio](https://posit.co/download/rstudio-desktop/).
+Though the scripts can be executed using command line, it is recommended to use `RStudio` for rendering.
+
+Clone this [repository](https://git.vito.be/scm/sesam/mopo_repo.git) in your computer. Open the `mopo_repo.Rproj` (`RStudio needs to be installed`) file. Open `refinery_analysis.qmd` and click on `render button` (Crtl + Shift + K).
+
+
+# Loading libraries
+
+The application checks whether the required packages for running the scripts are installed or not. If not, it automatically installs them and loads them. If they are already installed, it just loads them.
+
+```{r}
+#| warning: false
+
+mypackages <- c('tidyverse', 'readxl', 'janitor', 'archive', 'DBI', 'odbc',
+              'RPostgres', 'eurostat', 'stringr', 'forcats', 'writexl', 'xlsx', 'gt', 'here')
+
+for (p in mypackages){
+  if (!require(p, character.only = TRUE))
+    {
+    install.packages(p)
+    library(p, character.only = TRUE)
+  }
+  }
+```
+
+# Reading country names and codes
+
+This is provided with the repository by default in the `input_data\europe_country_codes` directory by default.
+
+```{r}
+
+country_codes <- read_xlsx(here('input_data', 'europe_country_codes', 'europe_country_code.xlsx'), sheet = 1)
+
+country_codes
+```
+
+# Reading AIDRES data
+
+# Establishing AIDRES database connection and fetching tables
+
+AIDRES database is open source [@aidres_report]. However the data is [available](https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/EIGL-Data/AIDRES/) as a raw `.sql` file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. The data is also available as an Excel workbook. However, it is very customized to be used for specific analysis.
+
+In VITO we have set up a AIDRES postgreSQL database server. The following codes chunks are used to fetch the tables dynamically for the analysis.Username and password is not explicitly mentioned due to security reasons; they are read from a local R env profile file. For a different computer a separate profile files needs to be used.
+
+These code chunks are currently deactivated.
+
+```{r}
+#| eval: false
+
+con <- dbConnect(RPostgres::Postgres(),
+                 host = "kaartenbak.marvin.vito.local",
+                 dbname = "zandbakken",
+                 user = Sys.getenv("user"),
+                 password = Sys.getenv("password"),
+                 port = 5432
+)
+```
+
+Fetching tables from AIDRES database (currently deactivated)
+
+```{r}
+#| eval: false
+
+aidres_scenarios <- tbl(con, dbplyr::in_schema('aidres','model_scenario'))
+aidres_sectors <- tbl(con, dbplyr::in_schema('aidres','aidres_sectors'))  
+aidres_result <- tbl(con, dbplyr::in_schema('aidres','model_results')) 
+aidres_configurations <- tbl(con, dbplyr::in_schema('aidres','model_configurations')) 
+aidres_perton <- tbl(con, dbplyr::in_schema('aidres','model_perton')) 
+```
+
+### Importing AIDRES data from local `.csv` files
+
+It is also possible to work directly with the AIDRES tables provided with this repository in the `input_data\aidres_data` directory.
+
+the AIDRES tables used for this analysis are first exported into `.csv` files and then they are used further in the analysis. Following code chunks create the directory (`input_data\aidres_data`) for storing the AIDRES files, and exports the AIDRES data files into `.csv` format. 
+
+However, the code chunk is currently deactivated as we provide the files already with the repo.
+
+```{r}
+
+aidres_data <- here('input_data', 'aidres_data')
+
+if (!dir.exists(aidres_data)){
+  
+  print("AIDRES input data folder doesn't exist. Request VITO to provide the data")
+  dir.create(aidres_data)
+  
+} else {
+  
+  print("AIDRES input data directory already exists. Not creating a new one!")
+  print("AIDRES data tables also exist!")
+  
+}
+```
+
+The AIDRES data tables  namely `aidres_scenarios.csv`, `aidres_sectors.csv`, `aidres_result.csv`, `aidres_configurations.csv`, `aidres_perton.csv` are made available in the `aidres_data` folder. The code chunk is currently deactivated.
+
+Dumping AIDRES PSQL tables to `.csv` files (currently deactivated)
+
+```{r}
+#| eval: false
+
+aidres_scenarios |> collect() |> write_csv(here(aidres_data, 'aidres_scenarios.csv'))
+
+aidres_sectors |> collect() |>  write_csv(here(aidres_data, 'aidres_sectors.csv'))
+
+aidres_result |> collect() |>  write_csv(here(aidres_data, 'aidres_result.csv'))
+
+aidres_configurations|> collect() |> write_csv(here(aidres_data, 'aidres_configurations.csv')) 
+
+aidres_perton|> collect() |> write_csv(here(aidres_data, 'aidres_perton.csv'))
+```
+
+Reading the AIDRES data `.csv` files. 
+
+```{r}
+#| warning: false
+
+aidres_scenarios <- read_csv(here(aidres_data, 'aidres_scenarios.csv'))
+
+aidres_sectors <- read_csv(here(aidres_data, 'aidres_sectors.csv'))
+
+aidres_result <- read_csv(here(aidres_data, 'aidres_result.csv'))
+
+aidres_configurations <- read_csv(here(aidres_data, 'aidres_configurations.csv'))
+
+aidres_perton <- read_csv(here(aidres_data, 'aidres_perton.csv'))
+```
+
+### Get extra data
+
+Get data on the processes to convert hydrogen to Fischer-Tropsch liquid and hydrogen to methanol based on the processes ‘Hydrogen to Jet’ and ‘Methanol from hydrogen and carbon dioxide’, respectively, of the Danish technology catalogue.
+```{r}
+file_extra_data <- here('input_data', 'extra_data')
+extra_data_processes <- read_xlsx(here(file_extra_data, 'extra_data_processes.xlsx'), sheet = 'extra_data', range = 'A1:I20')
+```
+
+Get production data for Switzerland, Norway and the UK retrieved from reports, websites or literature
+```{r}
+extra_data_production <- read_xlsx(here(file_extra_data, 'Mopo_Data_Collection_CH_NO_UK.xlsx'), sheet = 'extra_data', range = 'A1:K83')
+```
+
+# AIDRES data for MOPO EU/ Industrial cluster case study
+
+To limit the number of production routes for the analysis we apply applying filters mix_2040 != 0 in the configuration routes.
+
+## Specific energy consumption factors
+
+```{r}
+      extra_data_processes |> 
+        filter(parameter == 'sec') |>
+        select('sector_id', 'Industry', 'from_node', 'to_node', 'unit', '2030', '2040', '2050') -> extra_data_filtered
+      
+      aidres_configurations$route_name <- gsub(" ", "_", aidres_configurations$route_name)
+    
+      aidres_perton |> clean_names() |>
+        select(configuration_id:horizon, contains('_gj_t')) |>
+        pivot_longer(electricity_gj_t:plastic_mix_gj_t, names_to = 'indicators', values_to = 'gj_t') |>
+        filter((horizon == 2030 & scenario_id == 1) | horizon == 2018) |>
+        distinct(configuration_id, indicators, .keep_all = TRUE) |> 
+        left_join(aidres_sectors, by =join_by('aidres_sector_id' == 'id')) |>
+        select(-description) |>
+        left_join(aidres_configurations, by =join_by('aidres_sector_id' == 'aidres_sector_id',
+                                                     'configuration_id' == 'configuration_id')) |>
+        left_join(aidres_result %>%
+                  filter(is_ref_scenario == 1) %>%
+                  select(configuration_id, is_ref_route, is_ref_scenario) %>%
+                  distinct(), by = 'configuration_id') |>
+        filter(
+          (is_ref_route == 1 & is_ref_scenario == 1) | 
+          (mix_2040 != 0 & 
+          !grepl('mix', route_name) & 
+          product_id != 'fertiliser-nitric-acid' & 
+          product_id != 'fertiliser-urea'))|>
+        select(-starts_with('mix'), -abbreviation, -description, -is_ref_route, -is_ref_scenario) |>
+        select(-c(scenario_id, aidres_sector_id, route_id, name, horizon)) |>
+        select(sector_id, product_id, route_name, configuration_id, indicators, gj_t) |>
+        pivot_wider(names_from = indicators, values_from = gj_t) |> 
+        mutate(solid_fossil_fuels_gj_t = rowSums(cbind(coal_gj_t, coke_gj_t), na.rm = TRUE),
+               renew_bio_gj_t = rowSums(cbind(biomass_gj_t, biomass_waste_gj_t), na.rm = TRUE),
+               non_renew_waste_gj_t = rowSums(cbind(plastic_mix_gj_t, alternative_fuel_mixture_gj_t), na.rm = TRUE),
+               oil_petro_products_gj_t = rowSums(cbind(crude_oil_gj_t, naphtha_gj_t), na.rm = TRUE), .keep = 'unused') |> 
+      rename('NH3' = ammonia_gj_t,
+             'elec' = electricity_gj_t,
+             'H2' = hydrogen_gj_t,
+             'MeOH' = methanol_gj_t,
+             'CH4' = natural_gas_gj_t,
+             'coal' = solid_fossil_fuels_gj_t,
+             'bio' = renew_bio_gj_t,
+             'waste' = non_renew_waste_gj_t,
+             'HC' = oil_petro_products_gj_t) |> 
+  select(-configuration_id) |> 
+  pivot_longer(elec:HC, names_to = 'commodity', values_to = 'gj_t') |>
+  rename('to_node' = product_id,
+         'from_node' = commodity,
+         'Industry' = route_name) |>
+  select(sector_id, Industry, from_node, to_node, everything()) |>
+  mutate(mwh_t = round((gj_t * 0.277),5), .keep = 'unused') -> sec_perton_all
+
+sec_perton_all[sapply(sec_perton_all, is.infinite)] <- 0
+
+sec_perton_all_2030 <- sec_perton_all |> mutate(year = 2030)
+sec_perton_all_2040 <- sec_perton_all |> mutate(year = 2040)
+sec_perton_all_2050 <- sec_perton_all |> mutate(year = 2050)
+
+rbind(sec_perton_all_2030, sec_perton_all_2040, sec_perton_all_2050) |> 
+  pivot_wider(values_from = mwh_t, names_from = year) |> 
+  mutate(unit = 'mwh_t') |> 
+  select(sector_id:to_node, unit, everything()) -> sec_perton_all
+
+# for refinery treatment is different
+
+# AIDRES considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg
+# It then converts to 1 ton HC = 11.92 MWh
+# glass production routes names has been changed
+
+sec_perton_all |> 
+  mutate(to_node = case_when(sector_id == 'refineries'~ 'HC',
+                             .default = to_node)) |>
+  mutate(from_node = case_when((sector_id == 'refineries' & from_node == 'HC')~ 'crude',
+                             .default = from_node)) |> 
+  pivot_longer(cols = `2030`:`2050`, names_to = 'year', values_to = 'value') |> 
+  mutate(value = case_when(sector_id == 'refineries' ~ round(value / 11.92,5),
+                           .default = value)) |> 
+    mutate(unit = case_when(sector_id == 'refineries' ~ 'mwh_mwh',
+                           .default = 'mwh_t')) |> 
+    mutate(Industry = case_when(to_node == 'glass-container'~ paste0(Industry, '_gco'),
+                              to_node == 'glass-fibre'~ paste0(Industry, '_gfi'),
+                              to_node == 'glass-float'~ paste0(Industry, '_gfl'),
+                              .default = Industry)) |>
+  pivot_wider(names_from = year, values_from = value) |>
+  bind_rows(extra_data_filtered) |>
+  mutate(to_node = if_else(Industry %in% c("(H2)MeOH-DC", "(BM)MeOH", "(COEL)MeOH-MEA"), "HC-MeOH", to_node)) |>
+  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) |>
+  filter(!(`2030` < 0.0000001 | `2040` < 0.0000001 | `2050` < 0.0000001))-> sec_perton_all
+
+sec_perton_all
+```
+
+## Costs
+
+```{r}
+extra_data_processes |> 
+  filter(parameter == 'fom') |>
+  select('sector_id', 'Industry', 'to_node', 'parameter', 'unit', '2030', '2040', '2050') |>
+  rename('costs' = 'parameter') -> extra_data_fom_filtered
+
+extra_data_processes |> 
+  filter(parameter == 'capex') |>
+  select('sector_id', 'Industry', 'to_node', 'parameter', 'unit', '2030', '2040', '2050') |>
+  rename('costs' = 'parameter')  -> extra_data_capex_filtered
+
+int_rate <- .06
+life <- 40
+crf <- (int_rate*(1+int_rate)^life)/((1+int_rate)^life - 1)
+print(crf)
+
+aidres_perton |> clean_names() |>
+        select(configuration_id:horizon, contains('eur_t')) |>
+        select(configuration_id: horizon, opex_var_eur_t, opex_cst_eur_t, opex_cst_eur_t, capex_eur_t) |> 
+        pivot_longer(opex_var_eur_t:capex_eur_t, names_to = 'indicators', values_to = 'eur_t') |>
+        filter((horizon == 2030 & scenario_id == 1) | horizon == 2018) |>
+        distinct(configuration_id, indicators, .keep_all = TRUE) |> 
+        left_join(aidres_sectors, by =join_by('aidres_sector_id' == 'id')) |>
+        select(-description) |> 
+        left_join(aidres_configurations, by =join_by('aidres_sector_id' == 'aidres_sector_id',
+                                                     'configuration_id' == 'configuration_id')) |>
+        left_join(aidres_result %>%
+                  filter(is_ref_scenario == 1) %>%
+                  select(configuration_id, is_ref_route, is_ref_scenario) %>%
+                  distinct(), by = 'configuration_id') |>
+        filter(
+          (is_ref_route == 1 & is_ref_scenario == 1) | 
+          (mix_2040 != 0 & 
+          !grepl('mix', route_name) & 
+          product_id != 'fertiliser-nitric-acid' & 
+          product_id != 'fertiliser-urea'))|>
+  select(-starts_with('mix'), -abbreviation, -description, -is_ref_route, -is_ref_scenario) |>
+        select(-c(scenario_id, aidres_sector_id, route_id, name, horizon)) |>
+        select(sector_id, product_id, route_name, configuration_id, indicators, eur_t) |>
+        pivot_wider(names_from = indicators, values_from = eur_t) |>
+  rename('capex' = capex_eur_t,
+         'fom' =  opex_cst_eur_t,
+         'vom' = opex_var_eur_t) |> 
+select(-configuration_id) |> 
+  pivot_longer(capex:vom, names_to = 'costs', values_to = 'eur_t') |> 
+  mutate(eur_t = round(eur_t,3)) |> 
+  rename('to_node' = product_id,
+         'Industry' = route_name) |> 
+select(sector_id, Industry, to_node, everything()) -> costs_perton_all
+
+costs_perton_all |> filter(costs == 'capex') |> 
+  mutate(eur_t = round((eur_t/crf),3)) -> capex_perton_all
+
+costs_perton_all |> filter(costs == 'fom') -> fom_perton_all
+
+rbind(capex_perton_all, fom_perton_all) -> costs_perton_all
+
+costs_perton_all_2030 <- costs_perton_all |> mutate(year = 2030)
+costs_perton_all_2040 <- costs_perton_all |> mutate(year = 2040)
+costs_perton_all_2050 <- costs_perton_all |> mutate(year = 2050)
+
+rbind(costs_perton_all_2030, costs_perton_all_2040, costs_perton_all_2050) |> 
+  pivot_wider(values_from = eur_t, names_from = year) |> 
+  mutate(unit = case_when(costs == 'capex'~ 'eur-yr_t',
+                          costs == 'fom' ~ 'eur_t',
+                          costs =='vom' ~ 'eur_t')) |> 
+  select(sector_id:costs, unit, everything()) -> costs_perton_all
+
+
+# for refinery treatment is different
+
+# AIDRES considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg
+# It then converts to 1 ton HC = 11.92 MWh
+# glass production routes names has been changed
+
+costs_perton_all |>
+  mutate(to_node = case_when(sector_id == 'refineries'~ 'HC',
+                             .default = to_node)) |>
+  pivot_longer(cols = `2030`:`2050`, names_to = 'year', values_to = 'value') |>
+  mutate(value = case_when(sector_id == 'refineries' ~ value/11.92,
+                           .default = value)) |>
+  mutate(Industry = case_when(to_node == 'glass-container'~ paste0(Industry, '_gco'),
+                              to_node == 'glass-fibre'~ paste0(Industry, '_gfi'),
+                              to_node == 'glass-float'~ paste0(Industry, '_gfl'),
+                              .default = Industry)) |>
+pivot_wider(names_from = year, values_from = value) -> costs_perton_all
+
+costs_capex_perton_all <- costs_perton_all |> 
+                          filter(costs == 'capex') |>
+                          bind_rows(extra_data_capex_filtered) |>
+                          mutate(unit = case_when(sector_id == 'refineries' ~ 'eur-yr_mwh',
+                            .default = 'eur-yr_t')) |>
+                          mutate(to_node = if_else(Industry %in% c("(H2)MeOH-DC", "(BM)MeOH", "(COEL)MeOH-MEA"), "HC-MeOH", to_node)) |>
+                          mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node))
+costs_capex_perton_all
+
+costs_fom_perton_all <- costs_perton_all |> 
+                        filter(costs == 'fom') |>
+                        bind_rows(extra_data_fom_filtered) |>
+                        mutate(unit = case_when(sector_id == 'refineries' ~ 'eur_mwh',
+                          .default = 'eur_t')) |>
+                        mutate(to_node = if_else(Industry %in% c("(H2)MeOH-DC", "(BM)MeOH", "(COEL)MeOH-MEA"), "HC-MeOH", to_node)) |>
+                        mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node))
+
+costs_fom_perton_all
+```
+
+## Emission factors
+
+```{r}
+extra_data_processes |> 
+  filter(parameter == 'co2_capture') |>
+  select('sector_id', 'Industry', 'to_node', 'parameter', 'unit', '2030', '2040', '2050') |>
+  rename('emission' = 'parameter') -> extra_data_co2_capture_filtered
+
+extra_data_processes |> 
+  filter(parameter == 'co2_emission') |>
+  select('sector_id', 'Industry', 'to_node', 'parameter', 'unit', '2030', '2040', '2050') |>
+  rename('emission' = 'parameter') -> extra_data_co2_emission_filtered
+
+aidres_perton |> clean_names() |>
+        select(configuration_id:horizon, contains('tco2_t')) |>
+        select(configuration_id: horizon, direct_emission_tco2_t, captured_co2_tco2_t) |> 
+        pivot_longer(direct_emission_tco2_t: captured_co2_tco2_t, names_to = 'indicators', values_to = 'tco2_t') |>
+        filter((horizon == 2030 & scenario_id == 1) | horizon == 2018) |>
+        distinct(configuration_id, indicators, .keep_all = TRUE) |> 
+        left_join(aidres_sectors, by =join_by('aidres_sector_id' == 'id')) |>
+        select(-description) |> 
+        left_join(aidres_configurations, by =join_by('aidres_sector_id' == 'aidres_sector_id',
+                                                     'configuration_id' == 'configuration_id')) |>
+        left_join(aidres_result %>%
+                  filter(is_ref_scenario == 1) %>%
+                  select(configuration_id, is_ref_route, is_ref_scenario) %>%
+                  distinct(), by = 'configuration_id') |>
+        filter(
+          (is_ref_route == 1 & is_ref_scenario == 1) | 
+          (mix_2040 != 0 & 
+          !grepl('mix', route_name) & 
+          product_id != 'fertiliser-nitric-acid' & 
+          product_id != 'fertiliser-urea'))|>
+   select(-starts_with('mix'), -abbreviation, -description, -is_ref_route, -is_ref_scenario) |>
+        select(-c(scenario_id, aidres_sector_id, route_id, name, horizon)) |>
+        select(sector_id, product_id, route_name, configuration_id, indicators, tco2_t) |>
+        pivot_wider(names_from = indicators, values_from = tco2_t) |> 
+  rename('co2_capture' = captured_co2_tco2_t,
+         'co2_emission' = direct_emission_tco2_t) |> 
+  select(-configuration_id) |> 
+  pivot_longer(co2_capture:co2_emission, names_to = 'emission', values_to = 'tco2_t') |> 
+  rename('to_node' = product_id,
+         'Industry' = route_name) |> 
+  select(sector_id, Industry, to_node, everything())  -> emission_perton_all
+
+emission_perton_all_2030 <- emission_perton_all |> mutate(year = 2030)
+emission_perton_all_2040 <- emission_perton_all |> mutate(year = 2040)
+emission_perton_all_2050 <- emission_perton_all |> mutate(year = 2050)
+
+rbind(emission_perton_all_2030, emission_perton_all_2040, emission_perton_all_2050) |> 
+  pivot_wider(values_from = tco2_t, names_from = year) |> 
+  mutate(unit = 'tco2_t') |> 
+  select(sector_id:emission, unit, everything()) -> emission_perton_all
+
+emission_perton_all |>
+  mutate(to_node = case_when(sector_id == 'refineries'~ 'HC',
+                             .default = to_node)) |>
+  pivot_longer(cols = `2030`:`2050`, names_to = 'year', values_to = 'value') |>
+  mutate(value = case_when(sector_id == 'refineries' ~ round(value/11.92,3),
+                           .default = value)) |>
+  mutate(unit = case_when(sector_id == 'refineries' ~ 'tco2_mwh',
+                           .default = 'tco2_t')) |>
+  mutate(Industry = case_when(to_node == 'glass-container'~ paste0(Industry, '_gco'),
+                              to_node == 'glass-fibre'~ paste0(Industry, '_gfi'),
+                              to_node == 'glass-float'~ paste0(Industry, '_gfl'),
+                              .default = Industry)) |>
+pivot_wider(names_from = year, values_from = value) -> emission_perton_all
+
+emission_co2_capture_perton_all <- emission_perton_all |> 
+                                    filter(emission == 'co2_capture') |>
+                                    bind_rows(extra_data_co2_capture_filtered) |>
+                                    mutate(to_node = if_else(Industry %in% c("(H2)MeOH-DC", "(BM)MeOH", "(COEL)MeOH-MEA"), "HC-MeOH", to_node)) |>
+                                    mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node))
+emission_co2_capture_perton_all
+
+emission_co2_emission_perton_all <- emission_perton_all |> 
+                                    filter(emission == 'co2_emission') |>
+                                    bind_rows(extra_data_co2_emission_filtered) |>
+                                    mutate(to_node = if_else(Industry %in% c("(H2)MeOH-DC", "(BM)MeOH", "(COEL)MeOH-MEA"), "HC-MeOH", to_node)) |>
+                                    mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) 
+emission_co2_emission_perton_all
+
+```
+
+## Production
+
+### Production volume at nuts1
+
+Aggregating product flow information at national level. For 2018, production routes and product flow are mapped. However, for future years only product flow is mentioned.
+
+```{r}
+
+aidres_result |> 
+  clean_names() |> 
+  pivot_longer('product_flow_kt_y':'total_energy_vectors_pj_y', names_to = 'indicators', values_to = 'value') |> 
+  mutate(value = round(value, 3)) |> 
+  filter(indicators %in% c('product_flow_kt_y', 'production_factor')) |> 
+  select(-c(is_pareto_solution, is_direct_emission_solution, is_mix)) |> 
+  filter(scenario_id %in% c(0, 1, 5)) |> 
+  mutate(year = case_when(
+    scenario_id == 0 ~ '2018',
+    scenario_id == 1 ~ '2030',
+    scenario_id == 5 ~ '2050')) |> 
+  left_join(aidres_sectors, by = join_by('aidres_sector_id' == 'id')) |> 
+  select(-description) |> 
+  left_join(aidres_configurations, by = join_by('aidres_sector_id' == 'aidres_sector_id', 
+                                                'configuration_id' == 'configuration_id')) |> 
+  filter((is_ref_route == 1 | 
+          (mix_2040 != 0 & 
+          !grepl('mix', route_name))) & 
+         product_id != 'fertiliser-nitric-acid' & 
+         product_id != 'fertiliser-urea') |> 
+  select(c('nuts3', 'sector_id', 'product_id', 'is_ref_route'), everything(), 
+         -'aidres_sector_id', -'name', -starts_with('mix'), -abbreviation, -description, 
+         -is_ref_scenario, -is_ref_solution, -'value', -'indicators', 'indicators', 'value') |> 
+  select(-c(configuration_id, solution_id, scenario_id, route_id)) |> 
+  pivot_wider(names_from = indicators, values_from = value) |> 
+  group_by(nuts3) |> 
+  distinct(product_id, year, .keep_all = TRUE) |> 
+  mutate(prod_cap_kt_y = product_flow_kt_y / production_factor) |> 
+  rename('production_route_name' = route_name) |> 
+  arrange(nuts3, sector_id, product_id, production_route_name, .by_group = TRUE) |> 
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id = 2)) |>
+  rename('Industry' = production_route_name,
+         'to_node' = product_id)  -> aidres_production_country_temp
+
+aidres_production_country_temp |> 
+  filter(year == 2018) |> 
+  group_by(country_code, sector_id, to_node, Industry, year) |> 
+  summarise(production = sum(product_flow_kt_y),
+            production_cap = sum(prod_cap_kt_y), .groups = 'drop') |> 
+  mutate(unit = 'kt_y') |> 
+  select(country_code:year, unit, everything()) -> aidres_production_country_2018year
+
+aidres_production_country_temp |> 
+  filter(year != 2018) |> 
+  group_by(country_code, sector_id, to_node, year) |> 
+  summarise(production = sum(product_flow_kt_y),
+            production_cap = sum(prod_cap_kt_y), .groups = 'drop') |>  
+  mutate(unit = 'kt_y') |> 
+  select(country_code:year, unit, everything()) ->  aidres_production_country_allyear
+
+# Add extra countries
+# Conversion from kt LLF to MWh LLF (approximately 42.87 MJ/kg = 11.92 MWh/ton)
+# Source: https://www.engineeringtoolbox.com/fossil-fuels-energy-content-d_1298.html
+extra_data_production_processed <- extra_data_production |>
+                            filter(year == 2018 & to_node != "") |>
+                            mutate(unit = 'kt_yr')
+extra_data_production_CH_glass_processed <- extra_data_production |>
+                            mutate(unit = 'kt_yr') |>
+                            filter(year == 2023 & to_node != "" & sector_id == 'glass')
+extra_data_production_processed <- bind_rows(extra_data_production_processed, extra_data_production_CH_glass_processed)
+
+to_node_industry_relation <- aidres_production_country_temp |>
+                              select(to_node, Industry, year) |>
+                              distinct() |>
+                              filter(year == 2018) |>
+                              select(-year)
+to_node_year_production_factor_relation_2018 <- aidres_production_country_temp |> 
+                                                filter(year == 2018) |> 
+                                                mutate(year = as.double(year)) |>
+                                                select(to_node, year, production_factor) |>
+                                                distinct()
+to_node_year_production_factor_relation_2030_2050 <- aidres_production_country_temp |> 
+                                                      filter(year != 2018) |> 
+                                                      mutate(year = as.double(year)) |>
+                                                      select(to_node, year, production_factor) |>
+                                                      distinct()
+to_node_year_production_factor_relation_2018
+to_node_year_production_factor_relation_2030_2050
+
+extra_data_production_processed_2018 <- extra_data_production_processed |>
+  mutate(year = 2018) |>
+  left_join(to_node_industry_relation, by = "to_node") |>
+  left_join(to_node_year_production_factor_relation_2018, by = c("to_node", "year")) |>
+  mutate(production = round(value*production_factor)) |>
+  mutate(production_cap = value) |>
+  select(country_code, sector_id, to_node, Industry, year, unit, production, production_cap)
+
+extra_data_production_processed_2030 <- extra_data_production_processed |>
+  mutate(year = 2030) 
+extra_data_production_processed_2050 <- extra_data_production_processed |>
+  mutate(year = 2050) 
+extra_data_production_processed_2030_2050 <- extra_data_production_processed_2030 |>
+  bind_rows(extra_data_production_processed_2050) |>
+  left_join(to_node_industry_relation, by = "to_node") |>
+  left_join(to_node_year_production_factor_relation_2030_2050, by = c("to_node", "year")) |>
+  mutate(production = round(value*production_factor)) |>
+  mutate(production_cap = round(value)) |>
+  select(country_code, sector_id, to_node, year, unit, production, production_cap)
+
+aidres_production_country_2018year <- aidres_production_country_2018year |> 
+  mutate(year = as.double(year)) |>
+  bind_rows(extra_data_production_processed_2018) |>
+  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) 
+
+aidres_production_country_allyear <- aidres_production_country_allyear |>
+  mutate(year = as.double(year)) |>
+  bind_rows(extra_data_production_processed_2030_2050) |>
+  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node))
+
+```
+
+```{r}
+aidres_production_country_2018year |> 
+  select(-production_cap) |> 
+  pivot_wider(names_from = year, values_from = production)-> prod_vol_cap_2018year
+
+
+ prod_vol_cap_2018year |>
+  mutate(to_node = case_when(sector_id == 'refineries'~ 'HC',
+                             .default = to_node)) |>
+   pivot_longer(cols = `2018`, names_to = 'year', values_to = 'value') |>
+   mutate(value = case_when(sector_id == 'refineries' ~ round(value*11.92*1000,3),
+                            .default = value)) |>
+   mutate(unit = case_when(sector_id == 'refineries' ~ 'mwh_yr',
+                            .default = 'kt_yr')) |>
+  mutate(Industry = case_when(to_node == 'glass-container'~ paste0(Industry, '_gco'),
+                              to_node == 'glass-fibre'~ paste0(Industry, '_gfi'),
+                              to_node == 'glass-float'~ paste0(Industry, '_gfl'),
+                              .default = Industry)) |>
+ pivot_wider(names_from = year, values_from = value) -> prod_vol_cap_2018year
+ 
+ prod_vol_cap_2018year
+
+
+aidres_production_country_allyear |> 
+  select(-production_cap) |> 
+  pivot_wider(names_from = year, values_from = production) -> prod_vol_cap_allyear
+ 
+  prod_vol_cap_allyear |>
+  mutate(to_node = case_when(sector_id == 'refineries'~ 'HC',
+                             .default = to_node)) |>
+   pivot_longer(cols = `2030`:`2050`, names_to = 'year', values_to = 'value') |>
+   mutate(value = case_when(sector_id == 'refineries' ~ round(value*11.92*1000,3),
+                            .default = value)) |>
+   mutate(unit = case_when(sector_id == 'refineries' ~ 'mwh_yr',
+                            .default = 'kt_yr')) |>
+ pivot_wider(names_from = year, values_from = value)->prod_vol_cap_allyear
+  
+  prod_vol_cap_allyear
+```
+
+### Production volumes at nuts3
+
+Reporting product flow information at nuts3 level. For 2018, production routes and product flow are mapped. However, for future years only product flow is mentioned.
+
+```{r}
+# Convert kt LLF to MWh (approximately 46.5 MJ/kg = 12.9 MWh/ton)
+# Source: https://www.engineeringtoolbox.com/fossil-fuels-energy-content-d_1298.html
+extra_data_production <- extra_data_production %>%
+                            mutate(unit = 'kt_yr') %>%
+                            filter(year == 2018 & to_node != "") %>%
+                            mutate(value = ifelse(sector_id == "refineries", value * 12.9, value)) %>%
+                            mutate(unit = ifelse(sector_id == "refineries", 'MWh_yr', unit))
+
+aidres_result |> clean_names() |> 
+  pivot_longer('product_flow_kt_y':'total_energy_vectors_pj_y', names_to = 'indicators', values_to = 'value') |>
+  #  select(-starts_with("is")) |> 
+  mutate(value = round(value,3)) |> 
+  filter(indicators %in% c('product_flow_kt_y', 'production_factor')) |> 
+  select(-c(is_pareto_solution, is_direct_emission_solution, is_mix)) |> 
+  filter(scenario_id %in% c(0, 1, 5)) |> 
+  mutate(year = case_when(
+    scenario_id ==0 ~ '2018',
+    scenario_id ==1 ~ '2030',
+    scenario_id ==5 ~ '2050')) |> 
+  
+  # filter(is_ref_scenario == 1,
+  #        is_ref_route == 1) |> 
+  left_join(aidres_sectors, by =join_by('aidres_sector_id' == 'id')) |> 
+  select(-description) |> 
+  left_join(aidres_configurations, by =join_by('aidres_sector_id' == 'aidres_sector_id', 
+                                               'configuration_id' == 'configuration_id')) |> 
+  filter((is_ref_route == 1 | 
+          (mix_2040 != 0 & 
+          !grepl('mix', route_name))) & 
+         product_id != 'fertiliser-nitric-acid' & 
+         product_id != 'fertiliser-urea') |> 
+  select(c('nuts3', 'sector_id', 'product_id', 'is_ref_route'), everything(), 
+         -'aidres_sector_id', -'name', -starts_with('mix'), -abbreviation, -description, 
+         -is_ref_scenario, -is_ref_solution, -'value', -'indicators', 'indicators', 'value') |> 
+  select(-c(configuration_id,	solution_id,	scenario_id,	route_id)) |> 
+#  filter(sector_id == 'refineries') |> 
+  
+  pivot_wider(names_from = indicators, values_from = value) |> 
+  group_by(nuts3) |> 
+  distinct(product_id, year, .keep_all = TRUE) |> 
+  mutate(prod_cap_kt_y = product_flow_kt_y/production_factor) |> 
+  rename('production_route_name' = route_name) |> 
+  arrange(nuts3, sector_id, product_id, production_route_name, .by_group = TRUE) |> 
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2), cols_remove = FALSE) |> 
+  select(-nuts_id ) ->
+  aidres_production_country_temp_nuts3
+  
+aidres_production_country_temp_nuts3 |> 
+  filter(year == 2018) |> 
+  group_by(country_code, nuts3, sector_id, product_id, production_route_name, year) |> 
+  summarise(production = sum(product_flow_kt_y),
+            production_cap = sum(prod_cap_kt_y), .groups = 'drop') |> 
+  mutate(unit = 'kt_y') |> 
+  rename('Industry' = production_route_name,
+         'to_node' = product_id) |> 
+  select(country_code:year, unit, everything()) |>
+  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) -> aidres_production_country_2018year_nuts3
+
+aidres_production_country_temp_nuts3 |> 
+  filter(year != 2018) |> 
+  group_by(country_code, nuts3, sector_id, product_id, year) |> 
+  summarise(production = sum(product_flow_kt_y),
+            production_cap = sum(prod_cap_kt_y), .groups = 'drop') |>  
+  mutate(unit = 'kt_y') |> 
+  rename('to_node' = product_id) |> 
+  select(country_code:year, unit, everything()) |>
+  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) ->  aidres_production_country_allyear_nuts3
+```
+
+
+```{r}
+aidres_production_country_2018year_nuts3 |> 
+  select(-production_cap) |> 
+  pivot_wider(names_from = year, values_from = production)-> prod_vol_cap_2018year_nuts3
+
+
+ prod_vol_cap_2018year_nuts3 |>
+  mutate(to_node = case_when(sector_id == 'refineries'~ 'HC',
+                             .default = to_node)) |>
+   pivot_longer(cols = `2018`, names_to = 'year', values_to = 'value') |>
+   mutate(value = case_when(sector_id == 'refineries' ~ round(value*11.92*1000,3),
+                            .default = value)) |>
+   mutate(unit = case_when(sector_id == 'refineries' ~ 'mwh_yr',
+                            .default = 'kt_yr')) |>
+  mutate(Industry = case_when(to_node == 'glass-container'~ paste0(Industry, '_gco'),
+                              to_node == 'glass-fibre'~ paste0(Industry, '_gfi'),
+                              to_node == 'glass-float'~ paste0(Industry, '_gfl'),
+                              .default = Industry)) |>
+ pivot_wider(names_from = year, values_from = value) -> prod_vol_cap_2018year_nuts3
+ 
+ prod_vol_cap_2018year_nuts3
+
+
+aidres_production_country_allyear_nuts3 |> 
+  select(-production_cap) |> 
+  pivot_wider(names_from = year, values_from = production) -> prod_vol_cap_allyear_nuts3
+ 
+  prod_vol_cap_allyear_nuts3 |>
+  mutate(to_node = case_when(sector_id == 'refineries'~ 'HC',
+                             .default = to_node)) |>
+   pivot_longer(cols = `2030`:`2050`, names_to = 'year', values_to = 'value') |>
+   mutate(value = case_when(sector_id == 'refineries' ~ round(value*11.92*1000,3),
+                            .default = value)) |>
+   mutate(unit = case_when(sector_id == 'refineries' ~ 'mwh_yr',
+                            .default = 'kt_yr')) |>
+ pivot_wider(names_from = year, values_from = value)->prod_vol_cap_allyear_nuts3
+  
+  prod_vol_cap_allyear_nuts3
+```
+
+## Life
+
+AIDRES assumes a generic 40 years' of lifetime of the technologies.
+
+```{r}
+extra_data_processes |> 
+  filter(parameter == 'life') |>
+  select('sector_id', 'Industry', 'to_node', 'unit', '2030') |>
+  rename('life' = '2030') -> extra_data_life_filtered
+
+costs_capex_perton_all |> 
+  select(-c(`2030`: `2050`, costs)) |> 
+  mutate(unit = 'yr',
+         life = 40) |>
+  filter(!Industry %in% extra_data_life_filtered$Industry)|>
+  bind_rows(extra_data_life_filtered) |>
+  mutate(to_node = if_else(Industry %in% c("(H2)MeOH-DC", "(BM)MeOH", "(COEL)MeOH-MEA"), "HC-MeOH", to_node)) |>
+  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) -> life_prodroute_all
+
+life_prodroute_all
+  
+```
+
+## writing all production route data in an excel workbook
+
+### Creating output directory
+
+```{r}
+output_dir <- here('outputs', 'technology_catalogue')
+
+if (!dir.exists(output_dir)){
+  print("Output directory doesn't exist. Creating a new one!")
+dir.create(output_dir)
+} else {
+    print("Output directory already exists. Not creating a new one!")
+}
+```
+
+### Writing final Excel workbook
+
+```{r}
+
+write_xlsx(list('ind_production_2018_nuts3' = prod_vol_cap_2018year_nuts3,
+                'ind_production_30_50_nuts3' = prod_vol_cap_allyear_nuts3,
+                'ind_production_2018_nuts1' = prod_vol_cap_2018year,
+                'ind_production_30_50_nuts1' = prod_vol_cap_allyear,
+                'ind_process_routes_sec' = sec_perton_all,
+                'ind_process_route_life' = life_prodroute_all, 
+                'ind_process_routes_co2_capture' = emission_co2_capture_perton_all,
+                'ind_process_routes_co2_emission' = emission_co2_emission_perton_all,
+                'ind_process_routes_capex' = costs_capex_perton_all,
+                'ind_process_routes_fom' = costs_fom_perton_all),
+           here(output_dir, 'technology_catalogue_ind_nuts1_nuts3.xlsx'))
+```

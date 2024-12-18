@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Partha Das">
+<meta name="author" content="Pieter Valkering">
+<meta name="dcterms.date" content="2024-12-18">
+<meta name="keywords" content="AIDRES, EUROSTAT, JRC-IDEES">
+
+<title>Preparation of Technology Catalogue for MOPO EU/ Industrial Cluster Case Study</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="technology_catalogue_aidres_files/libs/clipboard/clipboard.min.js"></script>
+<script src="technology_catalogue_aidres_files/libs/quarto-html/quarto.js"></script>
+<script src="technology_catalogue_aidres_files/libs/quarto-html/popper.min.js"></script>
+<script src="technology_catalogue_aidres_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="technology_catalogue_aidres_files/libs/quarto-html/anchor.min.js"></script>
+<link href="technology_catalogue_aidres_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="technology_catalogue_aidres_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="technology_catalogue_aidres_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="technology_catalogue_aidres_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="technology_catalogue_aidres_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#using-the-application" id="toc-using-the-application" class="nav-link" data-scroll-target="#using-the-application">Using the application</a></li>
+  <li><a href="#loading-libraries" id="toc-loading-libraries" class="nav-link" data-scroll-target="#loading-libraries">Loading libraries</a></li>
+  <li><a href="#reading-country-names-and-codes" id="toc-reading-country-names-and-codes" class="nav-link" data-scroll-target="#reading-country-names-and-codes">Reading country names and codes</a></li>
+  <li><a href="#reading-aidres-data" id="toc-reading-aidres-data" class="nav-link" data-scroll-target="#reading-aidres-data">Reading AIDRES data</a></li>
+  <li><a href="#establishing-aidres-database-connection-and-fetching-tables" id="toc-establishing-aidres-database-connection-and-fetching-tables" class="nav-link" data-scroll-target="#establishing-aidres-database-connection-and-fetching-tables">Establishing AIDRES database connection and fetching tables</a>
+  <ul class="collapse">
+  <li><a href="#importing-aidres-data-from-local-.csv-files" id="toc-importing-aidres-data-from-local-.csv-files" class="nav-link" data-scroll-target="#importing-aidres-data-from-local-.csv-files">Importing AIDRES data from local <code>.csv</code> files</a></li>
+  <li><a href="#get-extra-data" id="toc-get-extra-data" class="nav-link" data-scroll-target="#get-extra-data">Get extra data</a></li>
+  </ul></li>
+  <li><a href="#aidres-data-for-mopo-eu-industrial-cluster-case-study" id="toc-aidres-data-for-mopo-eu-industrial-cluster-case-study" class="nav-link" data-scroll-target="#aidres-data-for-mopo-eu-industrial-cluster-case-study">AIDRES data for MOPO EU/ Industrial cluster case study</a>
+  <ul class="collapse">
+  <li><a href="#specific-energy-consumption-factors" id="toc-specific-energy-consumption-factors" class="nav-link" data-scroll-target="#specific-energy-consumption-factors">Specific energy consumption factors</a></li>
+  <li><a href="#costs" id="toc-costs" class="nav-link" data-scroll-target="#costs">Costs</a></li>
+  <li><a href="#emission-factors" id="toc-emission-factors" class="nav-link" data-scroll-target="#emission-factors">Emission factors</a></li>
+  <li><a href="#production" id="toc-production" class="nav-link" data-scroll-target="#production">Production</a>
+  <ul class="collapse">
+  <li><a href="#production-volume-at-nuts1" id="toc-production-volume-at-nuts1" class="nav-link" data-scroll-target="#production-volume-at-nuts1">Production volume at nuts1</a></li>
+  <li><a href="#production-volumes-at-nuts3" id="toc-production-volumes-at-nuts3" class="nav-link" data-scroll-target="#production-volumes-at-nuts3">Production volumes at nuts3</a></li>
+  </ul></li>
+  <li><a href="#life" id="toc-life" class="nav-link" data-scroll-target="#life">Life</a></li>
+  <li><a href="#writing-all-production-route-data-in-an-excel-workbook" id="toc-writing-all-production-route-data-in-an-excel-workbook" class="nav-link" data-scroll-target="#writing-all-production-route-data-in-an-excel-workbook">writing all production route data in an excel workbook</a>
+  <ul class="collapse">
+  <li><a href="#creating-output-directory" id="toc-creating-output-directory" class="nav-link" data-scroll-target="#creating-output-directory">Creating output directory</a></li>
+  <li><a href="#writing-final-excel-workbook" id="toc-writing-final-excel-workbook" class="nav-link" data-scroll-target="#writing-final-excel-workbook">Writing final Excel workbook</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Preparation of Technology Catalogue for MOPO EU/ Industrial Cluster Case Study</h1>
+<p class="subtitle lead">AIDRES, JRC-IDEES, EUROSTAT</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Partha Das </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="https://vito.be/nl">
+            VITO
+            </a>
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Pieter Valkering </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="https://vito.be/nl">
+            VITO
+            </a>
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 18, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+<div>
+  <div class="keywords">
+    <div class="block-title">Keywords</div>
+    <p>AIDRES, EUROSTAT, JRC-IDEES</p>
+  </div>
+</div>
+
+</header>
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This is a stand-alone quarto document with code chunks and documentation for an application preparing raw input data for MOPO EU/ Industrial cluster case study directly from AIDRES database.</p>
+</section>
+<section id="using-the-application" class="level1">
+<h1>Using the application</h1>
+<p>The files are produced using <a href="https://cran.r-project.org/">R</a> and <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>. Though the scripts can be executed using command line, it is recommended to use <code>RStudio</code> for rendering.</p>
+<p>Clone this <a href="https://git.vito.be/scm/sesam/mopo_repo.git">repository</a> in your computer. Open the <code>mopo_repo.Rproj</code> (<code>RStudio needs to be installed</code>) file. Open <code>refinery_analysis.qmd</code> and click on <code>render button</code> (Crtl + Shift + K).</p>
+</section>
+<section id="loading-libraries" class="level1">
+<h1>Loading libraries</h1>
+<p>The application checks whether the required packages for running the scripts are installed or not. If not, it automatically installs them and loads them. If they are already installed, it just loads them.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mypackages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'tidyverse'</span>, <span class="st">'readxl'</span>, <span class="st">'janitor'</span>, <span class="st">'archive'</span>, <span class="st">'DBI'</span>, <span class="st">'odbc'</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'RPostgres'</span>, <span class="st">'eurostat'</span>, <span class="st">'stringr'</span>, <span class="st">'forcats'</span>, <span class="st">'writexl'</span>, <span class="st">'xlsx'</span>, <span class="st">'gt'</span>, <span class="st">'here'</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> mypackages){</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(p, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(p)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(p, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="reading-country-names-and-codes" class="level1">
+<h1>Reading country names and codes</h1>
+<p>This is provided with the repository by default in the <code>input_data\europe_country_codes</code> directory by default.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>country_codes <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'europe_country_codes'</span>, <span class="st">'europe_country_code.xlsx'</span>), <span class="at">sheet =</span> <span class="dv">1</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>country_codes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 27 × 2
+   country  country_iso_code
+   &lt;chr&gt;    &lt;chr&gt;           
+ 1 Austria  AT              
+ 2 Belgium  BE              
+ 3 Bulgaria BG              
+ 4 Croatia  HR              
+ 5 Cyprus   CY              
+ 6 Czechia  CZ              
+ 7 Denmark  DK              
+ 8 Estonia  EE              
+ 9 Finland  FI              
+10 France   FR              
+# ℹ 17 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="reading-aidres-data" class="level1">
+<h1>Reading AIDRES data</h1>
+</section>
+<section id="establishing-aidres-database-connection-and-fetching-tables" class="level1">
+<h1>Establishing AIDRES database connection and fetching tables</h1>
+<p>AIDRES database is open source <span class="citation" data-cites="aidres_report">(<a href="#ref-aidres_report" role="doc-biblioref">Vermeiren et al. 2023</a>)</span>. However the data is <a href="https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/EIGL-Data/AIDRES/">available</a> as a raw <code>.sql</code> file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. The data is also available as an Excel workbook. However, it is very customized to be used for specific analysis.</p>
+<p>In VITO we have set up a AIDRES postgreSQL database server. The following codes chunks are used to fetch the tables dynamically for the analysis.Username and password is not explicitly mentioned due to security reasons; they are read from a local R env profile file. For a different computer a separate profile files needs to be used.</p>
+<p>These code chunks are currently deactivated.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(RPostgres<span class="sc">::</span><span class="fu">Postgres</span>(),</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">host =</span> <span class="st">"kaartenbak.marvin.vito.local"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">dbname =</span> <span class="st">"zandbakken"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">user =</span> <span class="fu">Sys.getenv</span>(<span class="st">"user"</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">password =</span> <span class="fu">Sys.getenv</span>(<span class="st">"password"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">port =</span> <span class="dv">5432</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Fetching tables from AIDRES database (currently deactivated)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>aidres_scenarios <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con, dbplyr<span class="sc">::</span><span class="fu">in_schema</span>(<span class="st">'aidres'</span>,<span class="st">'model_scenario'</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>aidres_sectors <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con, dbplyr<span class="sc">::</span><span class="fu">in_schema</span>(<span class="st">'aidres'</span>,<span class="st">'aidres_sectors'</span>))  </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con, dbplyr<span class="sc">::</span><span class="fu">in_schema</span>(<span class="st">'aidres'</span>,<span class="st">'model_results'</span>)) </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>aidres_configurations <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con, dbplyr<span class="sc">::</span><span class="fu">in_schema</span>(<span class="st">'aidres'</span>,<span class="st">'model_configurations'</span>)) </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>aidres_perton <span class="ot">&lt;-</span> <span class="fu">tbl</span>(con, dbplyr<span class="sc">::</span><span class="fu">in_schema</span>(<span class="st">'aidres'</span>,<span class="st">'model_perton'</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="importing-aidres-data-from-local-.csv-files" class="level3">
+<h3 class="anchored" data-anchor-id="importing-aidres-data-from-local-.csv-files">Importing AIDRES data from local <code>.csv</code> files</h3>
+<p>It is also possible to work directly with the AIDRES tables provided with this repository in the <code>input_data\aidres_data</code> directory.</p>
+<p>the AIDRES tables used for this analysis are first exported into <code>.csv</code> files and then they are used further in the analysis. Following code chunks create the directory (<code>input_data\aidres_data</code>) for storing the AIDRES files, and exports the AIDRES data files into <code>.csv</code> format.</p>
+<p>However, the code chunk is currently deactivated as we provide the files already with the repo.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>aidres_data <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'aidres_data'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(aidres_data)){</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"AIDRES input data folder doesn't exist. Request VITO to provide the data"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(aidres_data)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"AIDRES input data directory already exists. Not creating a new one!"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"AIDRES data tables also exist!"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "AIDRES input data directory already exists. Not creating a new one!"
+[1] "AIDRES data tables also exist!"</code></pre>
+</div>
+</div>
+<p>The AIDRES data tables namely <code>aidres_scenarios.csv</code>, <code>aidres_sectors.csv</code>, <code>aidres_result.csv</code>, <code>aidres_configurations.csv</code>, <code>aidres_perton.csv</code> are made available in the <code>aidres_data</code> folder. The code chunk is currently deactivated.</p>
+<p>Dumping AIDRES PSQL tables to <code>.csv</code> files (currently deactivated)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>aidres_scenarios <span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_scenarios.csv'</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>aidres_sectors <span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span>  <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_sectors.csv'</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span>  <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_result.csv'</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>aidres_configurations<span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_configurations.csv'</span>)) </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>aidres_perton<span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_perton.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Reading the AIDRES data <code>.csv</code> files.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>aidres_scenarios <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_scenarios.csv'</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>aidres_sectors <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_sectors.csv'</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_result.csv'</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>aidres_configurations <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_configurations.csv'</span>))</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>aidres_perton <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_perton.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="get-extra-data" class="level3">
+<h3 class="anchored" data-anchor-id="get-extra-data">Get extra data</h3>
+<p>Get data on the processes to convert hydrogen to Fischer-Tropsch liquid and hydrogen to methanol based on the processes ‘Hydrogen to Jet’ and ‘Methanol from hydrogen and carbon dioxide’, respectively, of the Danish technology catalogue.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>file_extra_data <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'extra_data'</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>extra_data_processes <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(file_extra_data, <span class="st">'extra_data_processes.xlsx'</span>), <span class="at">sheet =</span> <span class="st">'extra_data'</span>, <span class="at">range =</span> <span class="st">'A1:I20'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Get production data for Switzerland, Norway and the UK retrieved from reports, websites or literature</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>extra_data_production <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(file_extra_data, <span class="st">'Mopo_Data_Collection_CH_NO_UK.xlsx'</span>), <span class="at">sheet =</span> <span class="st">'extra_data'</span>, <span class="at">range =</span> <span class="st">'A1:K83'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="aidres-data-for-mopo-eu-industrial-cluster-case-study" class="level1">
+<h1>AIDRES data for MOPO EU/ Industrial cluster case study</h1>
+<p>To limit the number of production routes for the analysis we apply applying filters mix_2040 != 0 in the configuration routes.</p>
+<section id="specific-energy-consumption-factors" class="level2">
+<h2 class="anchored" data-anchor-id="specific-energy-consumption-factors">Specific energy consumption factors</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>      extra_data_processes <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(parameter <span class="sc">==</span> <span class="st">'sec'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="st">'sector_id'</span>, <span class="st">'Industry'</span>, <span class="st">'from_node'</span>, <span class="st">'to_node'</span>, <span class="st">'unit'</span>, <span class="st">'2030'</span>, <span class="st">'2040'</span>, <span class="st">'2050'</span>) <span class="ot">-&gt;</span> extra_data_filtered</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      aidres_configurations<span class="sc">$</span>route_name <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, aidres_configurations<span class="sc">$</span>route_name)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      aidres_perton <span class="sc">|&gt;</span> <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(configuration_id<span class="sc">:</span>horizon, <span class="fu">contains</span>(<span class="st">'_gj_t'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_longer</span>(electricity_gj_t<span class="sc">:</span>plastic_mix_gj_t, <span class="at">names_to =</span> <span class="st">'indicators'</span>, <span class="at">values_to =</span> <span class="st">'gj_t'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>((horizon <span class="sc">==</span> <span class="dv">2030</span> <span class="sc">&amp;</span> scenario_id <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|</span> horizon <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">distinct</span>(configuration_id, indicators, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_sectors, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span>description) <span class="sc">|&gt;</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_configurations, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'aidres_sector_id'</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">'configuration_id'</span> <span class="sc">==</span> <span class="st">'configuration_id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_result <span class="sc">%&gt;%</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">filter</span>(is_ref_scenario <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">select</span>(configuration_id, is_ref_route, is_ref_scenario) <span class="sc">%&gt;%</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">distinct</span>(), <span class="at">by =</span> <span class="st">'configuration_id'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>          (is_ref_route <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> is_ref_scenario <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|</span> </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>          (mix_2040 <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> </span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>          <span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'mix'</span>, route_name) <span class="sc">&amp;</span> </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>          product_id <span class="sc">!=</span> <span class="st">'fertiliser-nitric-acid'</span> <span class="sc">&amp;</span> </span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>          product_id <span class="sc">!=</span> <span class="st">'fertiliser-urea'</span>))<span class="sc">|&gt;</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">'mix'</span>), <span class="sc">-</span>abbreviation, <span class="sc">-</span>description, <span class="sc">-</span>is_ref_route, <span class="sc">-</span>is_ref_scenario) <span class="sc">|&gt;</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(scenario_id, aidres_sector_id, route_id, name, horizon)) <span class="sc">|&gt;</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(sector_id, product_id, route_name, configuration_id, indicators, gj_t) <span class="sc">|&gt;</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> indicators, <span class="at">values_from =</span> gj_t) <span class="sc">|&gt;</span> </span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">solid_fossil_fuels_gj_t =</span> <span class="fu">rowSums</span>(<span class="fu">cbind</span>(coal_gj_t, coke_gj_t), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>               <span class="at">renew_bio_gj_t =</span> <span class="fu">rowSums</span>(<span class="fu">cbind</span>(biomass_gj_t, biomass_waste_gj_t), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>               <span class="at">non_renew_waste_gj_t =</span> <span class="fu">rowSums</span>(<span class="fu">cbind</span>(plastic_mix_gj_t, alternative_fuel_mixture_gj_t), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>               <span class="at">oil_petro_products_gj_t =</span> <span class="fu">rowSums</span>(<span class="fu">cbind</span>(crude_oil_gj_t, naphtha_gj_t), <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.keep =</span> <span class="st">'unused'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rename</span>(<span class="st">'NH3'</span> <span class="ot">=</span> ammonia_gj_t,</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>             <span class="st">'elec'</span> <span class="ot">=</span> electricity_gj_t,</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>             <span class="st">'H2'</span> <span class="ot">=</span> hydrogen_gj_t,</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>             <span class="st">'MeOH'</span> <span class="ot">=</span> methanol_gj_t,</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>             <span class="st">'CH4'</span> <span class="ot">=</span> natural_gas_gj_t,</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>             <span class="st">'coal'</span> <span class="ot">=</span> solid_fossil_fuels_gj_t,</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>             <span class="st">'bio'</span> <span class="ot">=</span> renew_bio_gj_t,</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>             <span class="st">'waste'</span> <span class="ot">=</span> non_renew_waste_gj_t,</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>             <span class="st">'HC'</span> <span class="ot">=</span> oil_petro_products_gj_t) <span class="sc">|&gt;</span> </span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>configuration_id) <span class="sc">|&gt;</span> </span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(elec<span class="sc">:</span>HC, <span class="at">names_to =</span> <span class="st">'commodity'</span>, <span class="at">values_to =</span> <span class="st">'gj_t'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'to_node'</span> <span class="ot">=</span> product_id,</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>         <span class="st">'from_node'</span> <span class="ot">=</span> commodity,</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>         <span class="st">'Industry'</span> <span class="ot">=</span> route_name) <span class="sc">|&gt;</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sector_id, Industry, from_node, to_node, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mwh_t =</span> <span class="fu">round</span>((gj_t <span class="sc">*</span> <span class="fl">0.277</span>),<span class="dv">5</span>), <span class="at">.keep =</span> <span class="st">'unused'</span>) <span class="ot">-&gt;</span> sec_perton_all</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>sec_perton_all[<span class="fu">sapply</span>(sec_perton_all, is.infinite)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>sec_perton_all_2030 <span class="ot">&lt;-</span> sec_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2030</span>)</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>sec_perton_all_2040 <span class="ot">&lt;-</span> sec_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2040</span>)</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>sec_perton_all_2050 <span class="ot">&lt;-</span> sec_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2050</span>)</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(sec_perton_all_2030, sec_perton_all_2040, sec_perton_all_2050) <span class="sc">|&gt;</span> </span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">values_from =</span> mwh_t, <span class="at">names_from =</span> year) <span class="sc">|&gt;</span> </span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'mwh_t'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sector_id<span class="sc">:</span>to_node, unit, <span class="fu">everything</span>()) <span class="ot">-&gt;</span> sec_perton_all</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a><span class="co"># for refinery treatment is different</span></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a><span class="co"># AIDRES considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg</span></span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a><span class="co"># It then converts to 1 ton HC = 11.92 MWh</span></span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a><span class="co"># glass production routes names has been changed</span></span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>sec_perton_all <span class="sc">|&gt;</span> </span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span><span class="sc">~</span> <span class="st">'HC'</span>,</span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.default =</span> to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">from_node =</span> <span class="fu">case_when</span>((sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">&amp;</span> from_node <span class="sc">==</span> <span class="st">'HC'</span>)<span class="sc">~</span> <span class="st">'crude'</span>,</span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.default =</span> from_node)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">`</span><span class="at">2030</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2050</span><span class="st">`</span>, <span class="at">names_to =</span> <span class="st">'year'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="fu">round</span>(value <span class="sc">/</span> <span class="fl">11.92</span>,<span class="dv">5</span>),</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.default =</span> value)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="st">'mwh_mwh'</span>,</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.default =</span> <span class="st">'mwh_t'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Industry =</span> <span class="fu">case_when</span>(to_node <span class="sc">==</span> <span class="st">'glass-container'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gco'</span>),</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-fibre'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfi'</span>),</span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-float'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfl'</span>),</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>                              <span class="at">.default =</span> Industry)) <span class="sc">|&gt;</span></span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> value) <span class="sc">|&gt;</span></span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(extra_data_filtered) <span class="sc">|&gt;</span></span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(Industry <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"(H2)MeOH-DC"</span>, <span class="st">"(BM)MeOH"</span>, <span class="st">"(COEL)MeOH-MEA"</span>), <span class="st">"HC-MeOH"</span>, to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(<span class="st">`</span><span class="at">2030</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.0000001</span> <span class="sc">|</span> <span class="st">`</span><span class="at">2040</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.0000001</span> <span class="sc">|</span> <span class="st">`</span><span class="at">2050</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.0000001</span>))<span class="ot">-&gt;</span> sec_perton_all</span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>sec_perton_all</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 181 × 8
+   sector_id Industry           from_node to_node unit  `2030` `2040` `2050`
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 cement    EU-mix-2018        elec      cement  mwh_t 0.0801 0.0801 0.0801
+ 2 cement    EU-mix-2018        coal      cement  mwh_t 0.319  0.319  0.319 
+ 3 cement    EU-mix-2018        bio       cement  mwh_t 0.123  0.123  0.123 
+ 4 cement    EU-mix-2018        waste     cement  mwh_t 0.205  0.205  0.205 
+ 5 cement    CEM2-(Coal)        elec      cement  mwh_t 0.0801 0.0801 0.0801
+ 6 cement    CEM2-(Coal)        coal      cement  mwh_t 0.591  0.591  0.591 
+ 7 cement    CEM2-(Coal)CaL     elec      cement  mwh_t 0.130  0.130  0.130 
+ 8 cement    CEM2-(Coal)CaL     coal      cement  mwh_t 0.591  0.591  0.591 
+ 9 cement    CEM2-(Coal)Oxy-CaL elec      cement  mwh_t 0.158  0.158  0.158 
+10 cement    CEM2-(Coal)Oxy-CaL coal      cement  mwh_t 0.594  0.594  0.594 
+# ℹ 171 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="costs" class="level2">
+<h2 class="anchored" data-anchor-id="costs">Costs</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>extra_data_processes <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(parameter <span class="sc">==</span> <span class="st">'fom'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">'sector_id'</span>, <span class="st">'Industry'</span>, <span class="st">'to_node'</span>, <span class="st">'parameter'</span>, <span class="st">'unit'</span>, <span class="st">'2030'</span>, <span class="st">'2040'</span>, <span class="st">'2050'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'costs'</span> <span class="ot">=</span> <span class="st">'parameter'</span>) <span class="ot">-&gt;</span> extra_data_fom_filtered</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>extra_data_processes <span class="sc">|&gt;</span> </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(parameter <span class="sc">==</span> <span class="st">'capex'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">'sector_id'</span>, <span class="st">'Industry'</span>, <span class="st">'to_node'</span>, <span class="st">'parameter'</span>, <span class="st">'unit'</span>, <span class="st">'2030'</span>, <span class="st">'2040'</span>, <span class="st">'2050'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'costs'</span> <span class="ot">=</span> <span class="st">'parameter'</span>)  <span class="ot">-&gt;</span> extra_data_capex_filtered</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>int_rate <span class="ot">&lt;-</span> .<span class="dv">06</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>life <span class="ot">&lt;-</span> <span class="dv">40</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>crf <span class="ot">&lt;-</span> (int_rate<span class="sc">*</span>(<span class="dv">1</span><span class="sc">+</span>int_rate)<span class="sc">^</span>life)<span class="sc">/</span>((<span class="dv">1</span><span class="sc">+</span>int_rate)<span class="sc">^</span>life <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(crf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.06646154</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>aidres_perton <span class="sc">|&gt;</span> <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(configuration_id<span class="sc">:</span>horizon, <span class="fu">contains</span>(<span class="st">'eur_t'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(configuration_id<span class="sc">:</span> horizon, opex_var_eur_t, opex_cst_eur_t, opex_cst_eur_t, capex_eur_t) <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_longer</span>(opex_var_eur_t<span class="sc">:</span>capex_eur_t, <span class="at">names_to =</span> <span class="st">'indicators'</span>, <span class="at">values_to =</span> <span class="st">'eur_t'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>((horizon <span class="sc">==</span> <span class="dv">2030</span> <span class="sc">&amp;</span> scenario_id <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|</span> horizon <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">distinct</span>(configuration_id, indicators, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_sectors, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span>description) <span class="sc">|&gt;</span> </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_configurations, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'aidres_sector_id'</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">'configuration_id'</span> <span class="sc">==</span> <span class="st">'configuration_id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_result <span class="sc">%&gt;%</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">filter</span>(is_ref_scenario <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">select</span>(configuration_id, is_ref_route, is_ref_scenario) <span class="sc">%&gt;%</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">distinct</span>(), <span class="at">by =</span> <span class="st">'configuration_id'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>          (is_ref_route <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> is_ref_scenario <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|</span> </span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>          (mix_2040 <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> </span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>          <span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'mix'</span>, route_name) <span class="sc">&amp;</span> </span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>          product_id <span class="sc">!=</span> <span class="st">'fertiliser-nitric-acid'</span> <span class="sc">&amp;</span> </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>          product_id <span class="sc">!=</span> <span class="st">'fertiliser-urea'</span>))<span class="sc">|&gt;</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">'mix'</span>), <span class="sc">-</span>abbreviation, <span class="sc">-</span>description, <span class="sc">-</span>is_ref_route, <span class="sc">-</span>is_ref_scenario) <span class="sc">|&gt;</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(scenario_id, aidres_sector_id, route_id, name, horizon)) <span class="sc">|&gt;</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(sector_id, product_id, route_name, configuration_id, indicators, eur_t) <span class="sc">|&gt;</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> indicators, <span class="at">values_from =</span> eur_t) <span class="sc">|&gt;</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'capex'</span> <span class="ot">=</span> capex_eur_t,</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>         <span class="st">'fom'</span> <span class="ot">=</span>  opex_cst_eur_t,</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>         <span class="st">'vom'</span> <span class="ot">=</span> opex_var_eur_t) <span class="sc">|&gt;</span> </span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(<span class="sc">-</span>configuration_id) <span class="sc">|&gt;</span> </span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(capex<span class="sc">:</span>vom, <span class="at">names_to =</span> <span class="st">'costs'</span>, <span class="at">values_to =</span> <span class="st">'eur_t'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">eur_t =</span> <span class="fu">round</span>(eur_t,<span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'to_node'</span> <span class="ot">=</span> product_id,</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>         <span class="st">'Industry'</span> <span class="ot">=</span> route_name) <span class="sc">|&gt;</span> </span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(sector_id, Industry, to_node, <span class="fu">everything</span>()) <span class="ot">-&gt;</span> costs_perton_all</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>costs_perton_all <span class="sc">|&gt;</span> <span class="fu">filter</span>(costs <span class="sc">==</span> <span class="st">'capex'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">eur_t =</span> <span class="fu">round</span>((eur_t<span class="sc">/</span>crf),<span class="dv">3</span>)) <span class="ot">-&gt;</span> capex_perton_all</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>costs_perton_all <span class="sc">|&gt;</span> <span class="fu">filter</span>(costs <span class="sc">==</span> <span class="st">'fom'</span>) <span class="ot">-&gt;</span> fom_perton_all</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(capex_perton_all, fom_perton_all) <span class="ot">-&gt;</span> costs_perton_all</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>costs_perton_all_2030 <span class="ot">&lt;-</span> costs_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2030</span>)</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>costs_perton_all_2040 <span class="ot">&lt;-</span> costs_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2040</span>)</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>costs_perton_all_2050 <span class="ot">&lt;-</span> costs_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2050</span>)</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(costs_perton_all_2030, costs_perton_all_2040, costs_perton_all_2050) <span class="sc">|&gt;</span> </span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">values_from =</span> eur_t, <span class="at">names_from =</span> year) <span class="sc">|&gt;</span> </span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(costs <span class="sc">==</span> <span class="st">'capex'</span><span class="sc">~</span> <span class="st">'eur-yr_t'</span>,</span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>                          costs <span class="sc">==</span> <span class="st">'fom'</span> <span class="sc">~</span> <span class="st">'eur_t'</span>,</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>                          costs <span class="sc">==</span><span class="st">'vom'</span> <span class="sc">~</span> <span class="st">'eur_t'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sector_id<span class="sc">:</span>costs, unit, <span class="fu">everything</span>()) <span class="ot">-&gt;</span> costs_perton_all</span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a><span class="co"># for refinery treatment is different</span></span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a><span class="co"># AIDRES considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg</span></span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a><span class="co"># It then converts to 1 ton HC = 11.92 MWh</span></span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a><span class="co"># glass production routes names has been changed</span></span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>costs_perton_all <span class="sc">|&gt;</span></span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span><span class="sc">~</span> <span class="st">'HC'</span>,</span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.default =</span> to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">`</span><span class="at">2030</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2050</span><span class="st">`</span>, <span class="at">names_to =</span> <span class="st">'year'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> value<span class="sc">/</span><span class="fl">11.92</span>,</span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.default =</span> value)) <span class="sc">|&gt;</span></span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Industry =</span> <span class="fu">case_when</span>(to_node <span class="sc">==</span> <span class="st">'glass-container'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gco'</span>),</span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-fibre'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfi'</span>),</span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-float'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfl'</span>),</span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a>                              <span class="at">.default =</span> Industry)) <span class="sc">|&gt;</span></span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> value) <span class="ot">-&gt;</span> costs_perton_all</span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a>costs_capex_perton_all <span class="ot">&lt;-</span> costs_perton_all <span class="sc">|&gt;</span> </span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">filter</span>(costs <span class="sc">==</span> <span class="st">'capex'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">bind_rows</span>(extra_data_capex_filtered) <span class="sc">|&gt;</span></span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="st">'eur-yr_mwh'</span>,</span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> <span class="st">'eur-yr_t'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(Industry <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"(H2)MeOH-DC"</span>, <span class="st">"(BM)MeOH"</span>, <span class="st">"(COEL)MeOH-MEA"</span>), <span class="st">"HC-MeOH"</span>, to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node))</span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a>costs_capex_perton_all</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 79 × 8
+   sector_id Industry           to_node costs unit     `2030` `2040` `2050`
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 cement    EU-mix-2018        cement  capex eur-yr_t   45.1   45.1   45.1
+ 2 cement    CEM2-(Coal)        cement  capex eur-yr_t   45.1   45.1   45.1
+ 3 cement    CEM2-(Coal)CaL     cement  capex eur-yr_t  316.   316.   316. 
+ 4 cement    CEM2-(Coal)Oxy-CaL cement  capex eur-yr_t  226.   226.   226. 
+ 5 cement    CEM2-(Afm)         cement  capex eur-yr_t   45.1   45.1   45.1
+ 6 cement    CEM2-(Afm)MEA      cement  capex eur-yr_t   75.2   75.2   75.2
+ 7 cement    CEM2-(Afm)CaL      cement  capex eur-yr_t  331.   331.   331. 
+ 8 cement    CEM2-(Afm)Oxy-CaL  cement  capex eur-yr_t  226.   226.   226. 
+ 9 cement    CEM2-(BMW)         cement  capex eur-yr_t   45.1   45.1   45.1
+10 cement    CEM2-(BMW)MEA      cement  capex eur-yr_t   75.2   75.2   75.2
+# ℹ 69 more rows</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>costs_fom_perton_all <span class="ot">&lt;-</span> costs_perton_all <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">filter</span>(costs <span class="sc">==</span> <span class="st">'fom'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">bind_rows</span>(extra_data_fom_filtered) <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="st">'eur_mwh'</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">.default =</span> <span class="st">'eur_t'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(Industry <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"(H2)MeOH-DC"</span>, <span class="st">"(BM)MeOH"</span>, <span class="st">"(COEL)MeOH-MEA"</span>), <span class="st">"HC-MeOH"</span>, to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>costs_fom_perton_all</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 79 × 8
+   sector_id Industry           to_node costs unit  `2030` `2040` `2050`
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 cement    EU-mix-2018        cement  fom   eur_t   23.3   23.3   23.3
+ 2 cement    CEM2-(Coal)        cement  fom   eur_t   23.3   23.3   23.3
+ 3 cement    CEM2-(Coal)CaL     cement  fom   eur_t   30.3   30.3   30.3
+ 4 cement    CEM2-(Coal)Oxy-CaL cement  fom   eur_t   28.7   28.7   28.7
+ 5 cement    CEM2-(Afm)         cement  fom   eur_t   23.3   23.3   23.3
+ 6 cement    CEM2-(Afm)MEA      cement  fom   eur_t   23.3   23.3   23.3
+ 7 cement    CEM2-(Afm)CaL      cement  fom   eur_t   30.4   30.4   30.4
+ 8 cement    CEM2-(Afm)Oxy-CaL  cement  fom   eur_t   27.7   27.7   27.7
+ 9 cement    CEM2-(BMW)         cement  fom   eur_t   23.3   23.3   23.3
+10 cement    CEM2-(BMW)MEA      cement  fom   eur_t   23.3   23.3   23.3
+# ℹ 69 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="emission-factors" class="level2">
+<h2 class="anchored" data-anchor-id="emission-factors">Emission factors</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>extra_data_processes <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(parameter <span class="sc">==</span> <span class="st">'co2_capture'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">'sector_id'</span>, <span class="st">'Industry'</span>, <span class="st">'to_node'</span>, <span class="st">'parameter'</span>, <span class="st">'unit'</span>, <span class="st">'2030'</span>, <span class="st">'2040'</span>, <span class="st">'2050'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'emission'</span> <span class="ot">=</span> <span class="st">'parameter'</span>) <span class="ot">-&gt;</span> extra_data_co2_capture_filtered</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>extra_data_processes <span class="sc">|&gt;</span> </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(parameter <span class="sc">==</span> <span class="st">'co2_emission'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">'sector_id'</span>, <span class="st">'Industry'</span>, <span class="st">'to_node'</span>, <span class="st">'parameter'</span>, <span class="st">'unit'</span>, <span class="st">'2030'</span>, <span class="st">'2040'</span>, <span class="st">'2050'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'emission'</span> <span class="ot">=</span> <span class="st">'parameter'</span>) <span class="ot">-&gt;</span> extra_data_co2_emission_filtered</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>aidres_perton <span class="sc">|&gt;</span> <span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(configuration_id<span class="sc">:</span>horizon, <span class="fu">contains</span>(<span class="st">'tco2_t'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(configuration_id<span class="sc">:</span> horizon, direct_emission_tco2_t, captured_co2_tco2_t) <span class="sc">|&gt;</span> </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_longer</span>(direct_emission_tco2_t<span class="sc">:</span> captured_co2_tco2_t, <span class="at">names_to =</span> <span class="st">'indicators'</span>, <span class="at">values_to =</span> <span class="st">'tco2_t'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>((horizon <span class="sc">==</span> <span class="dv">2030</span> <span class="sc">&amp;</span> scenario_id <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|</span> horizon <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">distinct</span>(configuration_id, indicators, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_sectors, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span>description) <span class="sc">|&gt;</span> </span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_configurations, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'aidres_sector_id'</span>,</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">'configuration_id'</span> <span class="sc">==</span> <span class="st">'configuration_id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(aidres_result <span class="sc">%&gt;%</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">filter</span>(is_ref_scenario <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">select</span>(configuration_id, is_ref_route, is_ref_scenario) <span class="sc">%&gt;%</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">distinct</span>(), <span class="at">by =</span> <span class="st">'configuration_id'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>          (is_ref_route <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> is_ref_scenario <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|</span> </span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>          (mix_2040 <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> </span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>          <span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'mix'</span>, route_name) <span class="sc">&amp;</span> </span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>          product_id <span class="sc">!=</span> <span class="st">'fertiliser-nitric-acid'</span> <span class="sc">&amp;</span> </span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>          product_id <span class="sc">!=</span> <span class="st">'fertiliser-urea'</span>))<span class="sc">|&gt;</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>   <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">'mix'</span>), <span class="sc">-</span>abbreviation, <span class="sc">-</span>description, <span class="sc">-</span>is_ref_route, <span class="sc">-</span>is_ref_scenario) <span class="sc">|&gt;</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(scenario_id, aidres_sector_id, route_id, name, horizon)) <span class="sc">|&gt;</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(sector_id, product_id, route_name, configuration_id, indicators, tco2_t) <span class="sc">|&gt;</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> indicators, <span class="at">values_from =</span> tco2_t) <span class="sc">|&gt;</span> </span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'co2_capture'</span> <span class="ot">=</span> captured_co2_tco2_t,</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>         <span class="st">'co2_emission'</span> <span class="ot">=</span> direct_emission_tco2_t) <span class="sc">|&gt;</span> </span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>configuration_id) <span class="sc">|&gt;</span> </span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(co2_capture<span class="sc">:</span>co2_emission, <span class="at">names_to =</span> <span class="st">'emission'</span>, <span class="at">values_to =</span> <span class="st">'tco2_t'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'to_node'</span> <span class="ot">=</span> product_id,</span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>         <span class="st">'Industry'</span> <span class="ot">=</span> route_name) <span class="sc">|&gt;</span> </span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sector_id, Industry, to_node, <span class="fu">everything</span>())  <span class="ot">-&gt;</span> emission_perton_all</span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>emission_perton_all_2030 <span class="ot">&lt;-</span> emission_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2030</span>)</span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>emission_perton_all_2040 <span class="ot">&lt;-</span> emission_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2040</span>)</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>emission_perton_all_2050 <span class="ot">&lt;-</span> emission_perton_all <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2050</span>)</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(emission_perton_all_2030, emission_perton_all_2040, emission_perton_all_2050) <span class="sc">|&gt;</span> </span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">values_from =</span> tco2_t, <span class="at">names_from =</span> year) <span class="sc">|&gt;</span> </span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'tco2_t'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sector_id<span class="sc">:</span>emission, unit, <span class="fu">everything</span>()) <span class="ot">-&gt;</span> emission_perton_all</span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>emission_perton_all <span class="sc">|&gt;</span></span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span><span class="sc">~</span> <span class="st">'HC'</span>,</span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.default =</span> to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">`</span><span class="at">2030</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2050</span><span class="st">`</span>, <span class="at">names_to =</span> <span class="st">'year'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="fu">round</span>(value<span class="sc">/</span><span class="fl">11.92</span>,<span class="dv">3</span>),</span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.default =</span> value)) <span class="sc">|&gt;</span></span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="st">'tco2_mwh'</span>,</span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.default =</span> <span class="st">'tco2_t'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Industry =</span> <span class="fu">case_when</span>(to_node <span class="sc">==</span> <span class="st">'glass-container'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gco'</span>),</span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-fibre'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfi'</span>),</span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-float'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfl'</span>),</span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>                              <span class="at">.default =</span> Industry)) <span class="sc">|&gt;</span></span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> value) <span class="ot">-&gt;</span> emission_perton_all</span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>emission_co2_capture_perton_all <span class="ot">&lt;-</span> emission_perton_all <span class="sc">|&gt;</span> </span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">filter</span>(emission <span class="sc">==</span> <span class="st">'co2_capture'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">bind_rows</span>(extra_data_co2_capture_filtered) <span class="sc">|&gt;</span></span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(Industry <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"(H2)MeOH-DC"</span>, <span class="st">"(BM)MeOH"</span>, <span class="st">"(COEL)MeOH-MEA"</span>), <span class="st">"HC-MeOH"</span>, to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node))</span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>emission_co2_capture_perton_all</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 79 × 8
+   sector_id Industry           to_node emission    unit   `2030` `2040` `2050`
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 cement    EU-mix-2018        cement  co2_capture tco2_t  0      0      0    
+ 2 cement    CEM2-(Coal)        cement  co2_capture tco2_t  0      0      0    
+ 3 cement    CEM2-(Coal)CaL     cement  co2_capture tco2_t  0.438  0.438  0.438
+ 4 cement    CEM2-(Coal)Oxy-CaL cement  co2_capture tco2_t  0.533  0.533  0.533
+ 5 cement    CEM2-(Afm)         cement  co2_capture tco2_t  0      0      0    
+ 6 cement    CEM2-(Afm)MEA      cement  co2_capture tco2_t  0.516  0.516  0.516
+ 7 cement    CEM2-(Afm)CaL      cement  co2_capture tco2_t  0.448  0.448  0.448
+ 8 cement    CEM2-(Afm)Oxy-CaL  cement  co2_capture tco2_t  0.457  0.457  0.457
+ 9 cement    CEM2-(BMW)         cement  co2_capture tco2_t  0      0      0    
+10 cement    CEM2-(BMW)MEA      cement  co2_capture tco2_t  0.65   0.65   0.65 
+# ℹ 69 more rows</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>emission_co2_emission_perton_all <span class="ot">&lt;-</span> emission_perton_all <span class="sc">|&gt;</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">filter</span>(emission <span class="sc">==</span> <span class="st">'co2_emission'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">bind_rows</span>(extra_data_co2_emission_filtered) <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(Industry <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"(H2)MeOH-DC"</span>, <span class="st">"(BM)MeOH"</span>, <span class="st">"(COEL)MeOH-MEA"</span>), <span class="st">"HC-MeOH"</span>, to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node)) </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>emission_co2_emission_perton_all</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 79 × 8
+   sector_id Industry           to_node emission     unit   `2030` `2040` `2050`
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 cement    EU-mix-2018        cement  co2_emission tco2_t  0.498  0.498  0.498
+ 2 cement    CEM2-(Coal)        cement  co2_emission tco2_t  0.524  0.524  0.524
+ 3 cement    CEM2-(Coal)CaL     cement  co2_emission tco2_t  0.086  0.086  0.086
+ 4 cement    CEM2-(Coal)Oxy-CaL cement  co2_emission tco2_t  0.083  0.083  0.083
+ 5 cement    CEM2-(Afm)         cement  co2_emission tco2_t  0.535  0.535  0.535
+ 6 cement    CEM2-(Afm)MEA      cement  co2_emission tco2_t  0.129  0.129  0.129
+ 7 cement    CEM2-(Afm)CaL      cement  co2_emission tco2_t  0.088  0.088  0.088
+ 8 cement    CEM2-(Afm)Oxy-CaL  cement  co2_emission tco2_t  0.075  0.075  0.075
+ 9 cement    CEM2-(BMW)         cement  co2_emission tco2_t  0.342  0.342  0.342
+10 cement    CEM2-(BMW)MEA      cement  co2_emission tco2_t -0.308 -0.308 -0.308
+# ℹ 69 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="production" class="level2">
+<h2 class="anchored" data-anchor-id="production">Production</h2>
+<section id="production-volume-at-nuts1" class="level3">
+<h3 class="anchored" data-anchor-id="production-volume-at-nuts1">Production volume at nuts1</h3>
+<p>Aggregating product flow information at national level. For 2018, production routes and product flow are mapped. However, for future years only product flow is mentioned.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="sc">|&gt;</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="st">'product_flow_kt_y'</span><span class="sc">:</span><span class="st">'total_energy_vectors_pj_y'</span>, <span class="at">names_to =</span> <span class="st">'indicators'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">round</span>(value, <span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(indicators <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'product_flow_kt_y'</span>, <span class="st">'production_factor'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(is_pareto_solution, is_direct_emission_solution, is_mix)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(scenario_id <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">case_when</span>(</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    scenario_id <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">'2018'</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    scenario_id <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">'2030'</span>,</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    scenario_id <span class="sc">==</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">'2050'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_sectors, <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'id'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>description) <span class="sc">|&gt;</span> </span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_configurations, <span class="at">by =</span> <span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'aidres_sector_id'</span>, </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">'configuration_id'</span> <span class="sc">==</span> <span class="st">'configuration_id'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>((is_ref_route <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> </span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>          (mix_2040 <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> </span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>          <span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'mix'</span>, route_name))) <span class="sc">&amp;</span> </span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>         product_id <span class="sc">!=</span> <span class="st">'fertiliser-nitric-acid'</span> <span class="sc">&amp;</span> </span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>         product_id <span class="sc">!=</span> <span class="st">'fertiliser-urea'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">'nuts3'</span>, <span class="st">'sector_id'</span>, <span class="st">'product_id'</span>, <span class="st">'is_ref_route'</span>), <span class="fu">everything</span>(), </span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="st">'aidres_sector_id'</span>, <span class="sc">-</span><span class="st">'name'</span>, <span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">'mix'</span>), <span class="sc">-</span>abbreviation, <span class="sc">-</span>description, </span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>is_ref_scenario, <span class="sc">-</span>is_ref_solution, <span class="sc">-</span><span class="st">'value'</span>, <span class="sc">-</span><span class="st">'indicators'</span>, <span class="st">'indicators'</span>, <span class="st">'value'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(configuration_id, solution_id, scenario_id, route_id)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> indicators, <span class="at">values_from =</span> value) <span class="sc">|&gt;</span> </span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nuts3) <span class="sc">|&gt;</span> </span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(product_id, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prod_cap_kt_y =</span> product_flow_kt_y <span class="sc">/</span> production_factor) <span class="sc">|&gt;</span> </span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'production_route_name'</span> <span class="ot">=</span> route_name) <span class="sc">|&gt;</span> </span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(nuts3, sector_id, product_id, production_route_name, <span class="at">.by_group =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_position</span>(nuts3, <span class="fu">c</span>(<span class="at">country_code =</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="at">nuts_id =</span> <span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'Industry'</span> <span class="ot">=</span> production_route_name,</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>         <span class="st">'to_node'</span> <span class="ot">=</span> product_id)  <span class="ot">-&gt;</span> aidres_production_country_temp</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>aidres_production_country_temp <span class="sc">|&gt;</span> </span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_code, sector_id, to_node, Industry, year) <span class="sc">|&gt;</span> </span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">production =</span> <span class="fu">sum</span>(product_flow_kt_y),</span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>            <span class="at">production_cap =</span> <span class="fu">sum</span>(prod_cap_kt_y), <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'kt_y'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code<span class="sc">:</span>year, unit, <span class="fu">everything</span>()) <span class="ot">-&gt;</span> aidres_production_country_2018year</span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>aidres_production_country_temp <span class="sc">|&gt;</span> </span>
+<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">!=</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_code, sector_id, to_node, year) <span class="sc">|&gt;</span> </span>
+<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">production =</span> <span class="fu">sum</span>(product_flow_kt_y),</span>
+<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>            <span class="at">production_cap =</span> <span class="fu">sum</span>(prod_cap_kt_y), <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'kt_y'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code<span class="sc">:</span>year, unit, <span class="fu">everything</span>()) <span class="ot">-&gt;</span>  aidres_production_country_allyear</span>
+<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Add extra countries</span></span>
+<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversion from kt LLF to MWh LLF (approximately 42.87 MJ/kg = 11.92 MWh/ton)</span></span>
+<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Source: https://www.engineeringtoolbox.com/fossil-fuels-energy-content-d_1298.html</span></span>
+<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>extra_data_production_processed <span class="ot">&lt;-</span> extra_data_production <span class="sc">|&gt;</span></span>
+<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2018</span> <span class="sc">&amp;</span> to_node <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'kt_yr'</span>)</span>
+<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>extra_data_production_CH_glass_processed <span class="ot">&lt;-</span> extra_data_production <span class="sc">|&gt;</span></span>
+<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'kt_yr'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span> <span class="sc">&amp;</span> to_node <span class="sc">!=</span> <span class="st">""</span> <span class="sc">&amp;</span> sector_id <span class="sc">==</span> <span class="st">'glass'</span>)</span>
+<span id="cb24-60"><a href="#cb24-60" aria-hidden="true" tabindex="-1"></a>extra_data_production_processed <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(extra_data_production_processed, extra_data_production_CH_glass_processed)</span>
+<span id="cb24-61"><a href="#cb24-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-62"><a href="#cb24-62" aria-hidden="true" tabindex="-1"></a>to_node_industry_relation <span class="ot">&lt;-</span> aidres_production_country_temp <span class="sc">|&gt;</span></span>
+<span id="cb24-63"><a href="#cb24-63" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">select</span>(to_node, Industry, year) <span class="sc">|&gt;</span></span>
+<span id="cb24-64"><a href="#cb24-64" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-65"><a href="#cb24-65" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-66"><a href="#cb24-66" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">select</span>(<span class="sc">-</span>year)</span>
+<span id="cb24-67"><a href="#cb24-67" aria-hidden="true" tabindex="-1"></a>to_node_year_production_factor_relation_2018 <span class="ot">&lt;-</span> aidres_production_country_temp <span class="sc">|&gt;</span> </span>
+<span id="cb24-68"><a href="#cb24-68" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-69"><a href="#cb24-69" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.double</span>(year)) <span class="sc">|&gt;</span></span>
+<span id="cb24-70"><a href="#cb24-70" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">select</span>(to_node, year, production_factor) <span class="sc">|&gt;</span></span>
+<span id="cb24-71"><a href="#cb24-71" aria-hidden="true" tabindex="-1"></a>                                                <span class="fu">distinct</span>()</span>
+<span id="cb24-72"><a href="#cb24-72" aria-hidden="true" tabindex="-1"></a>to_node_year_production_factor_relation_2030_2050 <span class="ot">&lt;-</span> aidres_production_country_temp <span class="sc">|&gt;</span> </span>
+<span id="cb24-73"><a href="#cb24-73" aria-hidden="true" tabindex="-1"></a>                                                      <span class="fu">filter</span>(year <span class="sc">!=</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-74"><a href="#cb24-74" aria-hidden="true" tabindex="-1"></a>                                                      <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.double</span>(year)) <span class="sc">|&gt;</span></span>
+<span id="cb24-75"><a href="#cb24-75" aria-hidden="true" tabindex="-1"></a>                                                      <span class="fu">select</span>(to_node, year, production_factor) <span class="sc">|&gt;</span></span>
+<span id="cb24-76"><a href="#cb24-76" aria-hidden="true" tabindex="-1"></a>                                                      <span class="fu">distinct</span>()</span>
+<span id="cb24-77"><a href="#cb24-77" aria-hidden="true" tabindex="-1"></a>to_node_year_production_factor_relation_2018</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 11 × 3
+   to_node                       year production_factor
+   &lt;chr&gt;                        &lt;dbl&gt;             &lt;dbl&gt;
+ 1 glass-container               2018              1   
+ 2 cement                        2018              1   
+ 3 chemical-PE                   2018              1   
+ 4 chemical-PEA                  2018              1   
+ 5 chemical-olefins              2018              0.84
+ 6 refineries-light-liquid-fuel  2018              1   
+ 7 steel-secondary               2018              1   
+ 8 steel-primary                 2018              1   
+ 9 fertiliser-ammonia            2018              0.69
+10 glass-float                   2018              1   
+11 glass-fibre                   2018              1   </code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>to_node_year_production_factor_relation_2030_2050</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 22 × 3
+   to_node           year production_factor
+   &lt;chr&gt;            &lt;dbl&gt;             &lt;dbl&gt;
+ 1 glass-container   2030              1   
+ 2 glass-container   2050              1   
+ 3 cement            2030              1   
+ 4 cement            2050              1   
+ 5 chemical-PE       2030              1   
+ 6 chemical-PE       2050              1   
+ 7 chemical-PEA      2030              1   
+ 8 chemical-PEA      2050              1   
+ 9 chemical-olefins  2030              0.84
+10 chemical-olefins  2050              0.84
+# ℹ 12 more rows</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>extra_data_production_processed_2018 <span class="ot">&lt;-</span> extra_data_production_processed <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(to_node_industry_relation, <span class="at">by =</span> <span class="st">"to_node"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(to_node_year_production_factor_relation_2018, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"to_node"</span>, <span class="st">"year"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">production =</span> <span class="fu">round</span>(value<span class="sc">*</span>production_factor)) <span class="sc">|&gt;</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">production_cap =</span> value) <span class="sc">|&gt;</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code, sector_id, to_node, Industry, year, unit, production, production_cap)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>extra_data_production_processed_2030 <span class="ot">&lt;-</span> extra_data_production_processed <span class="sc">|&gt;</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2030</span>) </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>extra_data_production_processed_2050 <span class="ot">&lt;-</span> extra_data_production_processed <span class="sc">|&gt;</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="dv">2050</span>) </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>extra_data_production_processed_2030_2050 <span class="ot">&lt;-</span> extra_data_production_processed_2030 <span class="sc">|&gt;</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(extra_data_production_processed_2050) <span class="sc">|&gt;</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(to_node_industry_relation, <span class="at">by =</span> <span class="st">"to_node"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(to_node_year_production_factor_relation_2030_2050, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"to_node"</span>, <span class="st">"year"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">production =</span> <span class="fu">round</span>(value<span class="sc">*</span>production_factor)) <span class="sc">|&gt;</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">production_cap =</span> <span class="fu">round</span>(value)) <span class="sc">|&gt;</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code, sector_id, to_node, year, unit, production, production_cap)</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>aidres_production_country_2018year <span class="ot">&lt;-</span> aidres_production_country_2018year <span class="sc">|&gt;</span> </span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.double</span>(year)) <span class="sc">|&gt;</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(extra_data_production_processed_2018) <span class="sc">|&gt;</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node)) </span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>aidres_production_country_allyear <span class="ot">&lt;-</span> aidres_production_country_allyear <span class="sc">|&gt;</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.double</span>(year)) <span class="sc">|&gt;</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(extra_data_production_processed_2030_2050) <span class="sc">|&gt;</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>aidres_production_country_2018year <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>production_cap) <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> production)<span class="ot">-&gt;</span> prod_vol_cap_2018year</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a> prod_vol_cap_2018year <span class="sc">|&gt;</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span><span class="sc">~</span> <span class="st">'HC'</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.default =</span> to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">`</span><span class="at">2018</span><span class="st">`</span>, <span class="at">names_to =</span> <span class="st">'year'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="fu">round</span>(value<span class="sc">*</span><span class="fl">11.92</span><span class="sc">*</span><span class="dv">1000</span>,<span class="dv">3</span>),</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> value)) <span class="sc">|&gt;</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="st">'mwh_yr'</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> <span class="st">'kt_yr'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Industry =</span> <span class="fu">case_when</span>(to_node <span class="sc">==</span> <span class="st">'glass-container'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gco'</span>),</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-fibre'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfi'</span>),</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-float'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfl'</span>),</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>                              <span class="at">.default =</span> Industry)) <span class="sc">|&gt;</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> value) <span class="ot">-&gt;</span> prod_vol_cap_2018year</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a> prod_vol_cap_2018year</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 218 × 6
+   country_code sector_id  to_node                Industry    unit       `2018`
+   &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;                  &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;
+ 1 AT           cement     cement                 EU-mix-2018 kt_yr      4214. 
+ 2 AT           chemical   chemical-PE            (NG)PE      kt_yr        94.3
+ 3 AT           chemical   chemical-PEA           (NG)PEA     kt_yr       130. 
+ 4 AT           chemical   chemical-olefins       (LN)O       kt_yr      1273. 
+ 5 AT           fertiliser fertiliser-ammonia-NH3 (NG)NH3     kt_yr       383. 
+ 6 AT           glass      glass-container        (NG)_gco    kt_yr       577. 
+ 7 AT           refineries HC                     REF-SMR     mwh_yr 73768112  
+ 8 AT           steel      steel-primary          BF-BOF      kt_yr      6177  
+ 9 AT           steel      steel-secondary        Scraps_EAF  kt_yr       708  
+10 BE           cement     cement                 EU-mix-2018 kt_yr      5538. 
+# ℹ 208 more rows</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>aidres_production_country_allyear <span class="sc">|&gt;</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>production_cap) <span class="sc">|&gt;</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> production) <span class="ot">-&gt;</span> prod_vol_cap_allyear</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  prod_vol_cap_allyear <span class="sc">|&gt;</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span><span class="sc">~</span> <span class="st">'HC'</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.default =</span> to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">`</span><span class="at">2030</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2050</span><span class="st">`</span>, <span class="at">names_to =</span> <span class="st">'year'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="fu">round</span>(value<span class="sc">*</span><span class="fl">11.92</span><span class="sc">*</span><span class="dv">1000</span>,<span class="dv">3</span>),</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> value)) <span class="sc">|&gt;</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="st">'mwh_yr'</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> <span class="st">'kt_yr'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> value)<span class="ot">-&gt;</span>prod_vol_cap_allyear</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  prod_vol_cap_allyear</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 218 × 6
+   country_code sector_id  to_node                unit       `2030`     `2050`
+   &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;                  &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+ 1 AT           cement     cement                 kt_yr      4214.      4214. 
+ 2 AT           chemical   chemical-PE            kt_yr        94.3       94.3
+ 3 AT           chemical   chemical-PEA           kt_yr       130.       130. 
+ 4 AT           chemical   chemical-olefins       kt_yr      1273.      1273. 
+ 5 AT           fertiliser fertiliser-ammonia-NH3 kt_yr       383.       383. 
+ 6 AT           glass      glass-container        kt_yr       577.       577. 
+ 7 AT           refineries HC                     mwh_yr 62053732   21569800. 
+ 8 AT           steel      steel-primary          kt_yr      6177       6177  
+ 9 AT           steel      steel-secondary        kt_yr       708        708  
+10 BE           cement     cement                 kt_yr      5538.      5538. 
+# ℹ 208 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="production-volumes-at-nuts3" class="level3">
+<h3 class="anchored" data-anchor-id="production-volumes-at-nuts3">Production volumes at nuts3</h3>
+<p>Reporting product flow information at nuts3 level. For 2018, production routes and product flow are mapped. However, for future years only product flow is mentioned.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert kt LLF to MWh (approximately 46.5 MJ/kg = 12.9 MWh/ton)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Source: https://www.engineeringtoolbox.com/fossil-fuels-energy-content-d_1298.html</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>extra_data_production <span class="ot">&lt;-</span> extra_data_production <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'kt_yr'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2018</span> <span class="sc">&amp;</span> to_node <span class="sc">!=</span> <span class="st">""</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">ifelse</span>(sector_id <span class="sc">==</span> <span class="st">"refineries"</span>, value <span class="sc">*</span> <span class="fl">12.9</span>, value)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">ifelse</span>(sector_id <span class="sc">==</span> <span class="st">"refineries"</span>, <span class="st">'MWh_yr'</span>, unit))</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="sc">|&gt;</span> <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="st">'product_flow_kt_y'</span><span class="sc">:</span><span class="st">'total_energy_vectors_pj_y'</span>, <span class="at">names_to =</span> <span class="st">'indicators'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#  select(-starts_with("is")) |&gt; </span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">round</span>(value,<span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(indicators <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'product_flow_kt_y'</span>, <span class="st">'production_factor'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(is_pareto_solution, is_direct_emission_solution, is_mix)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(scenario_id <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>    scenario_id <span class="sc">==</span><span class="dv">0</span> <span class="sc">~</span> <span class="st">'2018'</span>,</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>    scenario_id <span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="st">'2030'</span>,</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>    scenario_id <span class="sc">==</span><span class="dv">5</span> <span class="sc">~</span> <span class="st">'2050'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter(is_ref_scenario == 1,</span></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">#        is_ref_route == 1) |&gt; </span></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_sectors, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'id'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>description) <span class="sc">|&gt;</span> </span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_configurations, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'aidres_sector_id'</span>, </span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>                                               <span class="st">'configuration_id'</span> <span class="sc">==</span> <span class="st">'configuration_id'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>((is_ref_route <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> </span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>          (mix_2040 <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> </span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>          <span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'mix'</span>, route_name))) <span class="sc">&amp;</span> </span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>         product_id <span class="sc">!=</span> <span class="st">'fertiliser-nitric-acid'</span> <span class="sc">&amp;</span> </span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>         product_id <span class="sc">!=</span> <span class="st">'fertiliser-urea'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">'nuts3'</span>, <span class="st">'sector_id'</span>, <span class="st">'product_id'</span>, <span class="st">'is_ref_route'</span>), <span class="fu">everything</span>(), </span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="st">'aidres_sector_id'</span>, <span class="sc">-</span><span class="st">'name'</span>, <span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">'mix'</span>), <span class="sc">-</span>abbreviation, <span class="sc">-</span>description, </span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>is_ref_scenario, <span class="sc">-</span>is_ref_solution, <span class="sc">-</span><span class="st">'value'</span>, <span class="sc">-</span><span class="st">'indicators'</span>, <span class="st">'indicators'</span>, <span class="st">'value'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(configuration_id,   solution_id,    scenario_id,    route_id)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a><span class="co">#  filter(sector_id == 'refineries') |&gt; </span></span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> indicators, <span class="at">values_from =</span> value) <span class="sc">|&gt;</span> </span>
+<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(nuts3) <span class="sc">|&gt;</span> </span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(product_id, year, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prod_cap_kt_y =</span> product_flow_kt_y<span class="sc">/</span>production_factor) <span class="sc">|&gt;</span> </span>
+<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'production_route_name'</span> <span class="ot">=</span> route_name) <span class="sc">|&gt;</span> </span>
+<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(nuts3, sector_id, product_id, production_route_name, <span class="at">.by_group =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_position</span>(nuts3, <span class="fu">c</span>(<span class="at">country_code =</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="at">nuts_id =</span><span class="dv">2</span>), <span class="at">cols_remove =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>nuts_id ) <span class="ot">-&gt;</span></span>
+<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a>  aidres_production_country_temp_nuts3</span>
+<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a>aidres_production_country_temp_nuts3 <span class="sc">|&gt;</span> </span>
+<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_code, nuts3, sector_id, product_id, production_route_name, year) <span class="sc">|&gt;</span> </span>
+<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">production =</span> <span class="fu">sum</span>(product_flow_kt_y),</span>
+<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a>            <span class="at">production_cap =</span> <span class="fu">sum</span>(prod_cap_kt_y), <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'kt_y'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'Industry'</span> <span class="ot">=</span> production_route_name,</span>
+<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a>         <span class="st">'to_node'</span> <span class="ot">=</span> product_id) <span class="sc">|&gt;</span> </span>
+<span id="cb33-56"><a href="#cb33-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code<span class="sc">:</span>year, unit, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb33-57"><a href="#cb33-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node)) <span class="ot">-&gt;</span> aidres_production_country_2018year_nuts3</span>
+<span id="cb33-58"><a href="#cb33-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-59"><a href="#cb33-59" aria-hidden="true" tabindex="-1"></a>aidres_production_country_temp_nuts3 <span class="sc">|&gt;</span> </span>
+<span id="cb33-60"><a href="#cb33-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">!=</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-61"><a href="#cb33-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_code, nuts3, sector_id, product_id, year) <span class="sc">|&gt;</span> </span>
+<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">production =</span> <span class="fu">sum</span>(product_flow_kt_y),</span>
+<span id="cb33-63"><a href="#cb33-63" aria-hidden="true" tabindex="-1"></a>            <span class="at">production_cap =</span> <span class="fu">sum</span>(prod_cap_kt_y), <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb33-64"><a href="#cb33-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'kt_y'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-65"><a href="#cb33-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'to_node'</span> <span class="ot">=</span> product_id) <span class="sc">|&gt;</span> </span>
+<span id="cb33-66"><a href="#cb33-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code<span class="sc">:</span>year, unit, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb33-67"><a href="#cb33-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node)) <span class="ot">-&gt;</span>  aidres_production_country_allyear_nuts3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>aidres_production_country_2018year_nuts3 <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>production_cap) <span class="sc">|&gt;</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> production)<span class="ot">-&gt;</span> prod_vol_cap_2018year_nuts3</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a> prod_vol_cap_2018year_nuts3 <span class="sc">|&gt;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span><span class="sc">~</span> <span class="st">'HC'</span>,</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.default =</span> to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">`</span><span class="at">2018</span><span class="st">`</span>, <span class="at">names_to =</span> <span class="st">'year'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="fu">round</span>(value<span class="sc">*</span><span class="fl">11.92</span><span class="sc">*</span><span class="dv">1000</span>,<span class="dv">3</span>),</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> value)) <span class="sc">|&gt;</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="st">'mwh_yr'</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> <span class="st">'kt_yr'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Industry =</span> <span class="fu">case_when</span>(to_node <span class="sc">==</span> <span class="st">'glass-container'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gco'</span>),</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-fibre'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfi'</span>),</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>                              to_node <span class="sc">==</span> <span class="st">'glass-float'</span><span class="sc">~</span> <span class="fu">paste0</span>(Industry, <span class="st">'_gfl'</span>),</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>                              <span class="at">.default =</span> Industry)) <span class="sc">|&gt;</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> value) <span class="ot">-&gt;</span> prod_vol_cap_2018year_nuts3</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a> prod_vol_cap_2018year_nuts3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 860 × 7
+   country_code nuts3 sector_id  to_node          Industry    unit       `2018`
+   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;       &lt;dbl&gt;
+ 1 AT           AT121 glass      glass-container  (NG)_gco    kt_yr       192. 
+ 2 AT           AT122 cement     cement           EU-mix-2018 kt_yr       449. 
+ 3 AT           AT124 chemical   chemical-PE      (NG)PE      kt_yr        47.2
+ 4 AT           AT124 chemical   chemical-PEA     (NG)PEA     kt_yr        43.4
+ 5 AT           AT127 cement     cement           EU-mix-2018 kt_yr       932. 
+ 6 AT           AT127 chemical   chemical-PE      (NG)PE      kt_yr        47.2
+ 7 AT           AT127 chemical   chemical-PEA     (NG)PEA     kt_yr        43.4
+ 8 AT           AT127 chemical   chemical-olefins (LN)O       kt_yr      1273. 
+ 9 AT           AT127 refineries HC               REF-SMR     mwh_yr 73768112  
+10 AT           AT213 cement     cement           EU-mix-2018 kt_yr       674. 
+# ℹ 850 more rows</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>aidres_production_country_allyear_nuts3 <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>production_cap) <span class="sc">|&gt;</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> production) <span class="ot">-&gt;</span> prod_vol_cap_allyear_nuts3</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  prod_vol_cap_allyear_nuts3 <span class="sc">|&gt;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span><span class="sc">~</span> <span class="st">'HC'</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.default =</span> to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="st">`</span><span class="at">2030</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2050</span><span class="st">`</span>, <span class="at">names_to =</span> <span class="st">'year'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="fu">round</span>(value<span class="sc">*</span><span class="fl">11.92</span><span class="sc">*</span><span class="dv">1000</span>,<span class="dv">3</span>),</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> value)) <span class="sc">|&gt;</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="fu">case_when</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span> <span class="sc">~</span> <span class="st">'mwh_yr'</span>,</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>                            <span class="at">.default =</span> <span class="st">'kt_yr'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a> <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> year, <span class="at">values_from =</span> value)<span class="ot">-&gt;</span>prod_vol_cap_allyear_nuts3</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  prod_vol_cap_allyear_nuts3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 860 × 7
+   country_code nuts3 sector_id  to_node          unit       `2030`     `2050`
+   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;            &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+ 1 AT           AT121 glass      glass-container  kt_yr       192.       192. 
+ 2 AT           AT122 cement     cement           kt_yr       449.       449. 
+ 3 AT           AT124 chemical   chemical-PE      kt_yr        47.2       47.2
+ 4 AT           AT124 chemical   chemical-PEA     kt_yr        43.4       43.4
+ 5 AT           AT127 cement     cement           kt_yr       932.       932. 
+ 6 AT           AT127 chemical   chemical-PE      kt_yr        47.2       47.2
+ 7 AT           AT127 chemical   chemical-PEA     kt_yr        43.4       43.4
+ 8 AT           AT127 chemical   chemical-olefins kt_yr      1273.      1273. 
+ 9 AT           AT127 refineries HC               mwh_yr 62053732   21569800. 
+10 AT           AT213 cement     cement           kt_yr       674.       674. 
+# ℹ 850 more rows</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="life" class="level2">
+<h2 class="anchored" data-anchor-id="life">Life</h2>
+<p>AIDRES assumes a generic 40 years’ of lifetime of the technologies.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>extra_data_processes <span class="sc">|&gt;</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(parameter <span class="sc">==</span> <span class="st">'life'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">'sector_id'</span>, <span class="st">'Industry'</span>, <span class="st">'to_node'</span>, <span class="st">'unit'</span>, <span class="st">'2030'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'life'</span> <span class="ot">=</span> <span class="st">'2030'</span>) <span class="ot">-&gt;</span> extra_data_life_filtered</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>costs_capex_perton_all <span class="sc">|&gt;</span> </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">`</span><span class="at">2030</span><span class="st">`</span><span class="sc">:</span> <span class="st">`</span><span class="at">2050</span><span class="st">`</span>, costs)) <span class="sc">|&gt;</span> </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'yr'</span>,</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">life =</span> <span class="dv">40</span>) <span class="sc">|&gt;</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>Industry <span class="sc">%in%</span> extra_data_life_filtered<span class="sc">$</span>Industry)<span class="sc">|&gt;</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(extra_data_life_filtered) <span class="sc">|&gt;</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(Industry <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"(H2)MeOH-DC"</span>, <span class="st">"(BM)MeOH"</span>, <span class="st">"(COEL)MeOH-MEA"</span>), <span class="st">"HC-MeOH"</span>, to_node)) <span class="sc">|&gt;</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">to_node =</span> <span class="fu">if_else</span>(to_node <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"fertiliser-ammonia"</span>), <span class="st">"fertiliser-ammonia-NH3"</span>, to_node)) <span class="ot">-&gt;</span> life_prodroute_all</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>life_prodroute_all</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 79 × 5
+   sector_id Industry           to_node unit   life
+   &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;   &lt;chr&gt; &lt;dbl&gt;
+ 1 cement    EU-mix-2018        cement  yr       40
+ 2 cement    CEM2-(Coal)        cement  yr       40
+ 3 cement    CEM2-(Coal)CaL     cement  yr       40
+ 4 cement    CEM2-(Coal)Oxy-CaL cement  yr       40
+ 5 cement    CEM2-(Afm)         cement  yr       40
+ 6 cement    CEM2-(Afm)MEA      cement  yr       40
+ 7 cement    CEM2-(Afm)CaL      cement  yr       40
+ 8 cement    CEM2-(Afm)Oxy-CaL  cement  yr       40
+ 9 cement    CEM2-(BMW)         cement  yr       40
+10 cement    CEM2-(BMW)MEA      cement  yr       40
+# ℹ 69 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="writing-all-production-route-data-in-an-excel-workbook" class="level2">
+<h2 class="anchored" data-anchor-id="writing-all-production-route-data-in-an-excel-workbook">writing all production route data in an excel workbook</h2>
+<section id="creating-output-directory" class="level3">
+<h3 class="anchored" data-anchor-id="creating-output-directory">Creating output directory</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>output_dir <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'outputs'</span>, <span class="st">'technology_catalogue'</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(output_dir)){</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Output directory doesn't exist. Creating a new one!"</span>)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(output_dir)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">"Output directory already exists. Not creating a new one!"</span>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Output directory doesn't exist. Creating a new one!"</code></pre>
+</div>
+</div>
+</section>
+<section id="writing-final-excel-workbook" class="level3">
+<h3 class="anchored" data-anchor-id="writing-final-excel-workbook">Writing final Excel workbook</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(<span class="fu">list</span>(<span class="st">'ind_production_2018_nuts3'</span> <span class="ot">=</span> prod_vol_cap_2018year_nuts3,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_production_30_50_nuts3'</span> <span class="ot">=</span> prod_vol_cap_allyear_nuts3,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_production_2018_nuts1'</span> <span class="ot">=</span> prod_vol_cap_2018year,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_production_30_50_nuts1'</span> <span class="ot">=</span> prod_vol_cap_allyear,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_process_routes_sec'</span> <span class="ot">=</span> sec_perton_all,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_process_route_life'</span> <span class="ot">=</span> life_prodroute_all, </span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_process_routes_co2_capture'</span> <span class="ot">=</span> emission_co2_capture_perton_all,</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_process_routes_co2_emission'</span> <span class="ot">=</span> emission_co2_emission_perton_all,</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_process_routes_capex'</span> <span class="ot">=</span> costs_capex_perton_all,</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ind_process_routes_fom'</span> <span class="ot">=</span> costs_fom_perton_all),</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>           <span class="fu">here</span>(output_dir, <span class="st">'technology_catalogue_ind_nuts1_nuts3.xlsx'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+</section>
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-aidres_report" class="csl-entry" role="listitem">
+Vermeiren, Karolien, Wim Clymans, Lorenz Hambsch, and Leen Van Esch. 2023. <span>“AIDRES - Advancing Industrial Decarbonization by Assessing the Future Use of Renewable Energies in Industrial Processes.”</span> European Commission, Joint Research Centre. <a href="http://data.europa.eu/89h/14914982-70a9-4d1d-a2fc-cdee4a1d833d">http://data.europa.eu/89h/14914982-70a9-4d1d-a2fc-cdee4a1d833d</a>.
+</div>
+</div></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{das2024,
+  author = {Das, Partha and Valkering, Pieter},
+  title = {Preparation of {Technology} {Catalogue} for {MOPO} {EU/}
+    {Industrial} {Cluster} {Case} {Study}},
+  date = {2024-12-18},
+  langid = {en}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-das2024" class="csl-entry quarto-appendix-citeas" role="listitem">
+Das, Partha, and Pieter Valkering. 2024. <span>“Preparation of
+Technology Catalogue for MOPO EU/ Industrial Cluster Case Study.”</span>
+December 18, 2024.
+</div></div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
