@@ -166,13 +166,22 @@ aidres_perton <- read_csv(here(aidres_data, 'aidres_perton.csv'))
 
 ### Get extra data
 
-Get data on the processes to convert hydrogen to Fischer-Tropsch liquid and hydrogen to methanol based on the processes ‘Hydrogen to Jet’ and ‘Methanol from hydrogen and carbon dioxide’, respectively, of the Danish technology catalogue.
+Get data on the CO2 consumption of co electrolysis processes (based on Figure 12 and 13 of the final aidres report) + data on the processes to convert hydrogen to Fischer-Tropsch liquid (FT) and hydrogen to methanol (MeOH) based on the processes ‘Hydrogen to Jet’ and ‘Methanol from hydrogen and carbon dioxide’, respectively, of the Danish technology catalogue.
+
+For the AIDRES processes (COEL)FT-MEA and (COEL)MeOH-MEA, the CO2 consumption from the final aidres report is expressed in ton CO2/MWh LLF, which is converted to ton CO2/MWh LLF based on a lower heating value of 11.91 MWh/t. For ((COEL)MeOH)O-MEA, ton CO2/ton LLF is converted to ton CO2/ton olefins by dividing by 2.1552 ton MeOH/ton LLF and by dividing by 0.4377 ton olefins/ton MeOH. Check the 'extra_data_processed.xlsx' file for more info on the calculation.
+
+For the ‘Hydrogen to Jet’ process in the Danish technology catalogue, the capex is expressed in Meur_(MW_FT)_year. To convert this to (eur-yr)/mwh, we multiply by 1000000 eur/Meur and divide by 8760 h/y. The fom is expressed in 'eur_(MWh_FT)' which is already the correct unit. Check the 'extra_data_processed.xlsx' file for more info on the calculation.
+--> Remark: we are still going to check these values with our TIMES model!
+
+For the ‘Methanol from hydrogen and carbon dioxide’ in the Danish technology catalogue, the capex is expressed in Meur_(MW_methanol). To convert this to (eur-yr)/mwh, we multiply by 1000000 eur/Meur and divide by 8760 h/y. The fom is expressed in 'keur_(MW_methanol_year)', which is multiplied by 1000 eur/keur and divided by 8760 h/year to convert it to eur/mwh. Check the 'extra_data_processed.xlsx' file for more info on the calculation.
+--> Remark: we are still going to check these values with our TIMES model!
+
 ```{r}
 file_extra_data <- here('input_data', 'extra_data')
 extra_data_processes <- read_xlsx(here(file_extra_data, 'extra_data_processes.xlsx'), sheet = 'extra_data', range = 'A1:K20')
 ```
 
-Get production data for Switzerland, Norway and the UK retrieved from reports, websites or literature
+Get production data for Switzerland, Norway and the UK retrieved from reports, websites or literature. More information on the data source can be found in the 'Mopo_Data_Collection_CH_NO_UK.xlsx' file.
 ```{r}
 extra_data_production <- read_xlsx(here(file_extra_data, 'Mopo_Data_Collection_CH_NO_UK.xlsx'), sheet = 'extra_data', range = 'A1:K83')
 ```
@@ -277,16 +286,24 @@ sec_perton_all
 ```
 
 ## Costs
-
+The costs of aidres and the danish technology catalogue are expressed in EUR2018 and EUR2020, respectively. These costs are converted to EUR2025 based on the historical inflation rates.
 ```{r}
 extra_data_processes |> 
   filter(parameter == 'fom') |>
   select('sector_id', 'Industry', 'to_node', 'parameter', 'unit', '2025', '2030', '2040', '2050') |>
+  mutate(`2025` = `2025` * 1.026 * 1.084 * 1.054 * 1.024 * 1.021) |>
+  mutate(`2030` = `2030` * 1.026 * 1.084 * 1.054 * 1.024 * 1.021) |>
+  mutate(`2040` = `2040` * 1.026 * 1.084 * 1.054 * 1.024 * 1.021) |>
+  mutate(`2050` = `2050` * 1.026 * 1.084 * 1.054 * 1.024 * 1.021) |>
   rename('costs' = 'parameter') -> extra_data_fom_filtered
 
 extra_data_processes |> 
   filter(parameter == 'capex') |>
   select('sector_id', 'Industry', 'to_node', 'parameter', 'unit', '2025', '2030', '2040', '2050') |>
+  mutate(`2025` = `2025` * 1.026 * 1.084 * 1.054 * 1.024 * 1.021) |>
+  mutate(`2030` = `2030` * 1.026 * 1.084 * 1.054 * 1.024 * 1.021) |>
+  mutate(`2040` = `2040` * 1.026 * 1.084 * 1.054 * 1.024 * 1.021) |>
+  mutate(`2050` = `2050` * 1.026 * 1.084 * 1.054 * 1.024 * 1.021) |>
   rename('costs' = 'parameter')  -> extra_data_capex_filtered
 
 int_rate <- .06
@@ -337,9 +354,9 @@ rbind(capex_perton_all, fom_perton_all) -> costs_perton_all
 # Capex and cst opex is multiplied with historical and expected (= 2%) inflation rate
 # inflation rates: 2018, 1.8,; 2019, 1.2; 2020,0.3; 2021,2.6; 2022,8.4; 2023,5.4; 2024,2.4; projected 2025,2.1
 costs_perton_all_2025 <- costs_perton_all |> mutate(year = 2025, eur_t = eur_t*1.012*1.003*1.026*1.084*1.054*1.024*1.021)
-costs_perton_all_2030 <- costs_perton_all |> mutate(year = 2030, eur_t = eur_t*1.012*1.003*1.026*1.084*1.054*1.024*1.021*(1.02)^5)
-costs_perton_all_2040 <- costs_perton_all |> mutate(year = 2040, eur_t = eur_t*1.012*1.003*1.026*1.084*1.054*1.024*1.021*(1.02)^15)
-costs_perton_all_2050 <- costs_perton_all |> mutate(year = 2050, eur_t = eur_t*1.012*1.003*1.026*1.084*1.054*1.024*1.021*(1.02)^25)
+costs_perton_all_2030 <- costs_perton_all |> mutate(year = 2030, eur_t = eur_t*1.012*1.003*1.026*1.084*1.054*1.024*1.021)
+costs_perton_all_2040 <- costs_perton_all |> mutate(year = 2040, eur_t = eur_t*1.012*1.003*1.026*1.084*1.054*1.024*1.021)
+costs_perton_all_2050 <- costs_perton_all |> mutate(year = 2050, eur_t = eur_t*1.012*1.003*1.026*1.084*1.054*1.024*1.021)
 
 rbind(costs_perton_all_2025, costs_perton_all_2030, costs_perton_all_2040, costs_perton_all_2050) |> 
   pivot_wider(values_from = eur_t, names_from = year) |> 
@@ -582,13 +599,15 @@ extra_data_production_processed_2030_2050 <- extra_data_production_processed_203
 aidres_production_country_2018year <- aidres_production_country_2018year |> 
   mutate(year = as.double(year)) |>
   bind_rows(extra_data_production_processed_2018) |>
-  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) 
+  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) |>
+  filter(production != 0)
 aidres_production_country_2018year
 
 aidres_production_country_allyear <- aidres_production_country_allyear |>
   mutate(year = as.double(year)) |>
   bind_rows(extra_data_production_processed_2030_2050) |>
-  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node))
+  mutate(to_node = if_else(to_node %in% c("fertiliser-ammonia"), "fertiliser-ammonia-NH3", to_node)) |>
+  filter(production != 0)
 aidres_production_country_allyear
 ```
 
@@ -804,6 +823,8 @@ write_xlsx(list('ind_production_2018_nuts3' = prod_vol_cap_2018year_nuts3,
            here(output_dir, 'technology_catalogue_ind_nuts1_nuts3.xlsx'))
 ```
 
+### Filter out all data except HC, MeOH and NH3 + save excel file
+
 ```{r}
 #filter out all data but HC, MeOH and NH3 from data + save in excel
 prod_vol_cap_2018year_nuts3_no_HC_NH3 <- prod_vol_cap_2018year_nuts3 |> filter(!to_node %in% c("HC", "fertiliser-ammonia-NH3"))
@@ -829,6 +850,8 @@ write_xlsx(list('ind_production_2018_nuts3' = prod_vol_cap_2018year_nuts3_no_HC_
                 'ind_process_routes_fom' = costs_fom_perton_all_no_HC_NH3),
            here(output_dir, 'technology_catalogue_ind_nuts1_nuts3_no_HC_NH3.xlsx'))
 ```
+
+### Filter out HC, MeOH and NH3 (and convert ton NH3 to mwh) + save excel file
 
 ```{r}
 #filter out HC, MeOH and NH3 from data + convert ton NH3 to mwh + save in excel
@@ -865,7 +888,8 @@ sec_perton_all_HC_NH3 <- sec_perton_all |>
          `2025` = ifelse(to_node == "NH3", `2025` / 5.54, `2025`),
          `2030` = ifelse(to_node == "NH3", `2030` / 5.54, `2030`),
          `2040` = ifelse(to_node == "NH3", `2040` / 5.54, `2040`),
-         `2050` = ifelse(to_node == "NH3", `2050` / 5.54, `2050`))
+         `2050` = ifelse(to_node == "NH3", `2050` / 5.54, `2050`),
+         unit = ifelse(to_node == "NH3", "mwh_mwh", unit))
 
 life_prodroute_all_HC_NH3 <- life_prodroute_all |> 
   filter(to_node %in% c("HC", "HC-MeOH", "fertiliser-ammonia-NH3")) |> 
