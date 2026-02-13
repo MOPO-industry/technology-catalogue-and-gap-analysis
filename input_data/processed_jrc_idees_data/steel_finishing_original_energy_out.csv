@@ -1,0 +1,17 @@
+sector_id,to_node,Industry,classification_1,from_node,unit,2025,std,2030,2040,2050
+steel,electric-arc-steel,steel-electric-arc-finishing-reference,Steel: Product finishing,CH4,mwh_t,0.1406661213639901,0.11970327105410794,0.1406661213639901,0.1406661213639901,0.1406661213639901
+steel,electric-arc-steel,steel-electric-arc-finishing-reference,Steel: Product finishing,HC,mwh_t,0.011826194091419048,0.01942818377577519,0.011826194091419048,0.011826194091419048,0.011826194091419048
+steel,electric-arc-steel,steel-electric-arc-finishing-reference,Steel: Product finishing,bio,mwh_t,0.0009666400660079642,0.002229199533918027,0.0009666400660079642,0.0009666400660079642,0.0009666400660079642
+steel,electric-arc-steel,steel-electric-arc-finishing-reference,Steel: Product finishing,coal,mwh_t,0.01613830282699762,0.022672225145130093,0.01613830282699762,0.01613830282699762,0.01613830282699762
+steel,electric-arc-steel,steel-electric-arc-finishing-reference,Steel: Product finishing,elec,mwh_t,0.05016469214131723,0.01850768040545072,0.05016469214131723,0.05016469214131723,0.05016469214131723
+steel,electric-arc-steel,steel-electric-arc-rolling-reference,"Steel: Furnaces, refining and rolling",CH4,mwh_t,0.21177406509169328,0.10175363788205374,0.21177406509169328,0.21177406509169328,0.21177406509169328
+steel,electric-arc-steel,steel-electric-arc-rolling-reference,"Steel: Furnaces, refining and rolling",HC,mwh_t,0.02153400041326941,0.04638471775800937,0.02153400041326941,0.02153400041326941,0.02153400041326941
+steel,electric-arc-steel,steel-electric-arc-rolling-reference,"Steel: Furnaces, refining and rolling",elec,mwh_t,0.18741462695385747,0.0799850917742504,0.18741462695385747,0.18741462695385747,0.18741462695385747
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-reference,Steel: Product finishing,CH4,mwh_t,0.21186589030199235,0.13628377988849297,0.21186589030199235,0.21186589030199235,0.21186589030199235
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-reference,Steel: Product finishing,HC,mwh_t,0.02385754469459788,0.060628806493416385,0.02385754469459788,0.02385754469459788,0.02385754469459788
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-reference,Steel: Product finishing,bio,mwh_t,0.0022925033075590078,0.004964758060011165,0.0022925033075590078,0.0022925033075590078,0.0022925033075590078
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-reference,Steel: Product finishing,coal,mwh_t,0.04178160632165629,0.04367226567322371,0.04178160632165629,0.04178160632165629,0.04178160632165629
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-reference,Steel: Product finishing,elec,mwh_t,0.11004531636121806,0.05746867163402402,0.11004531636121806,0.11004531636121806,0.11004531636121806
+steel,integrated-steelworks-steel,steel-integrated-steelworks-rolling-reference,"Steel: Furnaces, refining and rolling",CH4,mwh_t,0.246024916009232,0.09781107712696162,0.246024916009232,0.246024916009232,0.246024916009232
+steel,integrated-steelworks-steel,steel-integrated-steelworks-rolling-reference,"Steel: Furnaces, refining and rolling",HC,mwh_t,0.02890554902101211,0.06970988826951131,0.02890554902101211,0.02890554902101211,0.02890554902101211
+steel,integrated-steelworks-steel,steel-integrated-steelworks-rolling-reference,"Steel: Furnaces, refining and rolling",elec,mwh_t,0.2720004776092014,0.09411551243233984,0.2720004776092014,0.2720004776092014,0.2720004776092014

@@ -1,0 +1,5 @@
+sector_id,to_node,Industry,classification_1,unit,2025,std,emission,2030,2040,2050
+steel,electric-arc-steel,steel-electric-arc-finishing-reference,Steel: Product finishing,tco2_t,0.03960593973803992,0.024882233465854615,co2_emission,0.03960593973803992,0.03960593973803992,0.03960593973803992
+steel,electric-arc-steel,steel-electric-arc-rolling-reference,"Steel: Furnaces, refining and rolling",tco2_t,0.04793716971817965,0.018767495213309546,co2_emission,0.04793716971817965,0.04793716971817965,0.04793716971817965
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-reference,Steel: Product finishing,tco2_t,0.07052988425514586,0.03258648762921497,co2_emission,0.07052988425514586,0.07052988425514586,0.07052988425514586
+steel,integrated-steelworks-steel,steel-integrated-steelworks-rolling-reference,"Steel: Furnaces, refining and rolling",tco2_t,0.05661758704866775,0.015524745686804885,co2_emission,0.05661758704866775,0.05661758704866775,0.05661758704866775

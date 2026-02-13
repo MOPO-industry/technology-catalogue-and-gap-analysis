@@ -1,0 +1,8 @@
+﻿sector_id;sector;sector_description;sector_remark
+1;Steel;classification for production and processing of pig iron, steel or coke;NULL
+2;Cement;classification for production of cement clinker or lime in rotary kilns or in other furnaces;NULL
+3;Glass;classification for production of glass including glass fibre;NULL
+4;Refineries;classification for oil refineries;NULL
+5;Fertiliser;classification for production N-fertlisers;NULL
+6;Chemical;classification for production of chemical end-products;NULL
+7;Other;Non-AIDRES sector;NULL

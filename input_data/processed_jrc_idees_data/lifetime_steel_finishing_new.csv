@@ -1,0 +1,5 @@
+sector_id,to_node,Industry,unit,life
+steel,electric-arc-steel,steel-electric-arc-finishing-alternative,yr,40
+steel,electric-arc-steel,steel-electric-arc-rolling-alternative,yr,40
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-alternative,yr,40
+steel,integrated-steelworks-steel,steel-integrated-steelworks-rolling-alternative,yr,40

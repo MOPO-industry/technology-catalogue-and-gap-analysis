@@ -12,6 +12,10 @@ author:
    affiliation: 
     - name: 'VITO'
       url: https://vito.be/nl
+ - name: Hans Van de Put
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
 format: 
   html:
     code-fold: true
@@ -31,9 +35,9 @@ funding:
 
 # Introduction
 
-This is a stand-alone quarto document with code chunks and documentation for comparing Refinery sector product flow in AIDRES, EUROSTAT, and JRC-IDEES databases.
+This is a stand-alone quarto document with code chunks and documentation for comparing Refinery sector product flow in AIDRES/AIDRES 2.0, EUROSTAT, and JRC-IDEES databases.
 
-This document extracts refinery product flow for certain fuels (to match with Light Liquid Fuel category of AIDRES) from JRC-IDEES, EUROSTAT, and AIDRES database and generate comparison plots and tables to visualize and compare the product flow across those databases.
+This document extracts refinery product flow for certain fuels (to match with Light Liquid Fuel category of AIDRES) from JRC-IDEES, EUROSTAT, and AIDRES/AIDRES 2.0 database and generate comparison plots and tables to visualize and compare the product flow across those databases.
 
 # Using this file
 
@@ -126,7 +130,7 @@ if (!dir.exists(idees_data)){
 }
 ```
 
-## Refinary product flow
+## Refinery product flow
 
 From the Energy balance excel workbook we focus on the `TO_RPI_RO` sheet.
 
@@ -182,7 +186,7 @@ ref_energy_to_idees <- bind_rows(test_list_ref_to, .id = "id") |> select(-id) |>
 ref_energy_to_idees
 ```
 
-# EUROSTAT Refinary product flow
+# EUROSTAT Refinery product flow
 
 ## Downloading Eurostat energy balance
 
@@ -241,7 +245,7 @@ ref_output_eurostat <- dat_aggregated_ref |>
 ref_output_eurostat
 ```
 
-# AIDRES refinery product flow
+# AIDRES + AIDRES 2.0 refinery product flow
 
 ### Establishing AIDRES database connection and fetching tables
 
@@ -288,21 +292,30 @@ aidres_configurations|> collect() |> write_csv(here(aidres_data, 'aidres_configu
 aidres_perton|> collect() |> write_csv(here(aidres_data, 'aidres_perton.csv'))
 ```
 
-Reading the AIDRES data `.csv` files. 
+### Reading the AIDRES and AIDRES 2.0 data from `.csv` files. 
 
 ```{r}
 
 #| warning: false
 
 aidres_scenarios <- read_csv(here(aidres_data, 'aidres_scenarios.csv'))
-
 aidres_sectors <- read_csv(here(aidres_data, 'aidres_sectors.csv'))
-
 aidres_result <- read_csv(here(aidres_data, 'aidres_result.csv'))
-
 aidres_configurations <- read_csv(here(aidres_data, 'aidres_configurations.csv'))
-
 aidres_perton <- read_csv(here(aidres_data, 'aidres_perton.csv'))
+
+
+aidres_2_0_sectors <- read_csv2(here(aidres_data, 'aidres_2_0_sectors.csv'))
+aidres_2_0_results <- read_delim(here(aidres_data, "aidres_2_0_results.csv"),
+                                 delim = ";",
+                                 locale = locale(decimal_mark = ".", grouping_mark = ","),
+                                 guess_max = 6000)
+aidres_2_0_configurations <- read_csv2(here(aidres_data, 'aidres_2_0_configurations.csv'))
+aidres_2_0_perton <- read_delim(here(aidres_data, "aidres_2_0_perton.csv"),
+                                 delim = ";",
+                                 locale = locale(decimal_mark = ".", grouping_mark = ","),
+                                 guess_max = 6000)
+aidres_2_0_products <- read_csv2(here(aidres_data, 'aidres_2_0_products.csv'))
 ```
 
 ## Production all sectors in 2018
@@ -337,27 +350,73 @@ aidres_result |> clean_names() |>
 aidres_production_country_2018
 ```
 
+```{r}
+#| warning: false
+aidres_2_0_results |> clean_names() |> 
+  pivot_longer('product_flow_kt_y':'total_energy_vectors_pj_y', 
+               names_to = 'indicators', values_to = 'value') |>
+  mutate(value = round(value,3)) |> 
+  filter(indicators == 'product_flow_kt_y') |> 
+  filter(scenario_id == 0,
+         is_reference_route == 1) |> 
+  select(-c(is_mix, is_reference_route)) |> 
+  left_join(aidres_2_0_sectors, by =join_by('sector_id' == 'sector_id')) |>
+  left_join(aidres_2_0_configurations, by =join_by('configuration_id' == 'configuration_id')) |>
+  left_join(aidres_2_0_products, by =join_by('product_id' == 'product_id')) |>
+  select(c('nuts3', 'sector', 'product', 'configuration', 'indicators', 'value')) |>
+  rename('sector_id' = sector) |> 
+  rename('product_id' = product) |> 
+  mutate(sector_id = tolower(sector_id)) |>
+  filter(product_id != 'fertiliser-nitric-acid') |> 
+  filter(product_id != 'fertiliser-urea') |> 
+  rename('production_route_name' = configuration) |>
+  pivot_wider(names_from = 'indicators', values_from = 'value')|>
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2)) |>
+  group_by(country_code, sector_id, product_id, production_route_name) |> 
+  summarise(production_kt_y = sum(product_flow_kt_y)) |>  ungroup() ->  aidres_2_0_production_country_2018
+
+aidres_2_0_production_country_2018
+
+```
+
 ## Refinery product flow
 
-AIDRES only considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg. AIDRES product flow is reported in Million tonne. We are using the LHV value to convert the product flow into PJ.
+AIDRES/AIDRES 2.0 only considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg. AIDRES/AIDRES 2.0 product flow is reported in Million tonne. We are using the LHV value to convert the product flow into PJ.
 
 ```{r}
-  aidres_production_country_2018 |> 
-        filter(sector_id == 'refineries') |> 
-        select(-sector_id, -production_route_name) |> 
-    mutate(mt = round(production_kt_y/1000, 3), .keep = 'unused') |> 
-    pivot_wider(names_from = product_id, values_from = mt) |>
-    clean_names() |> 
-    pivot_longer(cols = refineries_light_liquid_fuel, names_to = 'product_id', values_to = 'mt') |> 
-    mutate(source = 'aidres') |> 
-    mutate(pj_ref = mt * 1000 * 10^6 * 42.87/ 10^9,
-           fuel = 'light_liquid_fuel',
-           source = 'aidres',
-           year = 2018) |> 
+aidres_production_country_2018 |> 
+  filter(sector_id == 'refineries') |> 
+  select(-sector_id, -production_route_name) |> 
+  mutate(mt = round(production_kt_y/1000, 3), .keep = 'unused') |> 
+  pivot_wider(names_from = product_id, values_from = mt) |>
+  clean_names() |> 
+  pivot_longer(cols = refineries_light_liquid_fuel, names_to = 'product_id', values_to = 'mt') |> 
+  mutate(pj_ref = mt * 1000 * 10^6 * 42.87/ 10^9,
+         fuel = 'light_liquid_fuel',
+          source = 'aidres',
+          year = 2018) |> 
   left_join(country_codes, by =join_by('country_code' == 'country_iso_code')) |> 
   select(country_code, country, fuel, year, source, pj_ref) -> aidres_production_country_ref
 
 aidres_production_country_ref
+```
+
+```{r}
+aidres_2_0_production_country_2018 |> 
+  filter(sector_id == 'refineries') |> 
+  select(-sector_id) |>
+  mutate(mt = round(production_kt_y/1000, 3), .keep = 'unused') |> 
+  pivot_wider(names_from = product_id, values_from = mt) |>
+  clean_names() |> 
+  pivot_longer(cols = refineries_light_liquid_fuel, names_to = 'product_id',values_to = 'mt') |> 
+  mutate(pj_ref = mt * 1000 * 10^6 * 42.87/ 10^9,
+         fuel = 'light_liquid_fuel',
+          source = 'aidres',
+          year = 2018) |>
+  left_join(country_codes, by =join_by('country_code' == 'country_iso_code')) |>
+  select(country_code, country, fuel, year, source, pj_ref) -> aidres_2_0_production_country_ref
+
+aidres_2_0_production_country_ref
 ```
 
 # Joining the data from three sources
@@ -370,6 +429,14 @@ bind_rows(aidres_production_country_ref, ref_energy_to_idees, ref_output_eurosta
   arrange(country_code) -> ref_data_sources
 
 ref_data_sources
+```
+
+```{r}
+
+bind_rows(aidres_2_0_production_country_ref, ref_energy_to_idees, ref_output_eurostat) |> 
+  arrange(country_code) -> ref_data_sources_2_0
+
+ref_data_sources_2_0
 ```
 
 # Data comparison
@@ -407,6 +474,24 @@ dir.create(output_dir)
     ggsave(here(output_dir, 'ref_pf_compare.pdf'), width = 14, height = 8, units = 'in', dpi = 900)
 ```
 
+```{r}
+
+#| warning: false
+
+  ref_data_sources_2_0 |>
+    ggplot(aes(pj_ref, fct_reorder(country_code, pj_ref, .fun=sum))) +
+    geom_line()+
+    geom_point(aes(colour = source), size = 1.5) +
+    theme_bw() +
+    labs(title = 'Light liquid fuel production in Refineries in AIDRES 2.0, EUROSTAT, and JRC-IDEES',
+         y = 'Country',
+         x = 'PJ') +
+    theme(legend.position = "bottom") -> p1
+    p1
+    
+    ggsave(here(output_dir, 'ref_pf_compare_2_0.pdf'), width = 14, height = 8, units = 'in', dpi = 900)
+```
+
 ## Table
 
 ```{r}
@@ -434,6 +519,31 @@ ref_data_sources |>
   opt_stylize(style = 6, color = 'gray')
 ```
 
+```{r}
+ref_data_sources_2_0 |> 
+  select(-fuel, -year) |> 
+  pivot_wider(names_from = source, values_from = pj_ref) |>
+  mutate(across(.cols = -(1:2), .fns = ~replace_na(., replace = 0)),
+         across(.cols = -(1:2), .fns = ~round(., 2))) |> 
+  arrange(country_code) |>
+  gt() |> 
+  cols_label(
+    country_code = 'Code',
+    country = 'Name',
+    aidres = 'AIDRES 2.0',
+    idees = 'JRC-IDEES',
+    eurostat = 'EUROSTAT'
+  ) |> 
+  tab_spanner(label = md('**Data Source**'),
+    columns = 3:5) |> 
+    tab_spanner(label = md('**Country**'),
+    columns = 1:2) |> 
+  tab_header(title = 'Light liquid fuel production (PJ) from refineries in 2018',
+    subtitle = 'Comparison between AIDRES 2.0, JRC-IDEES, and EUROSTAT') |> 
+  sub_zero(zero_text = '-') |> 
+  opt_stylize(style = 6, color = 'gray')
+```
+
 ### Diff file
 
 The data containing product flow values from the three sources are exported into an Excel workbook for further analysis. `NA` values are replaced by `0`.
@@ -449,6 +559,19 @@ ref_data_sources |>
          across(.cols = -(1:3), .fns = ~round(., 1))) |> 
   arrange(country_code) |> 
    write_xlsx(here(output_dir,'diff_ref_prod_flow_llf.xlsx'))
+```
+
+```{r}
+
+ref_data_sources_2_0 |> 
+  select(-fuel, -year) |> 
+  mutate(unit = 'pj') |> 
+  select(country_code: source, unit, pj_ref) |> 
+  pivot_wider(names_from = source, values_from = pj_ref) |>
+  mutate(across(.cols = -(1:3), .fns = ~replace_na(., replace = 0)),
+         across(.cols = -(1:3), .fns = ~round(., 1))) |> 
+  arrange(country_code) |> 
+   write_xlsx(here(output_dir,'diff_ref_prod_flow_llf_2_0.xlsx'))
 ```
 
 # Bibliography

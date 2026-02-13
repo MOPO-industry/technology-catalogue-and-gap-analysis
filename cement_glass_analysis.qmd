@@ -12,6 +12,10 @@ author:
    affiliation: 
     - name: 'VITO'
       url: https://vito.be/nl
+ - name: Hans Van de Put
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
 format: 
   html:
     code-fold: true
@@ -28,7 +32,7 @@ citation: true
 funding: 
   statement: "EU Project MOPO"
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Introduction
@@ -204,7 +208,7 @@ p80
 ggsave(here(output_dir, 'glass_production_total_allyears.pdf'), width = 14, height = 13, units = 'in', dpi = 900)
 ```
 
-# AIDRES Glass and Cement production
+# AIDRES and AIDRES 2.0 Glass and Cement production
 
 ## Establishing AIDRES database connection and fetching tables
 
@@ -252,20 +256,25 @@ aidres_configurations|> collect() |> write_csv(here(aidres_data, 'aidres_configu
 aidres_perton|> collect() |> write_csv(here(aidres_data, 'aidres_perton.csv'))
 ```
 
-Reading the AIDRES data `.csv` files. 
+### Reading the AIDRES and AIDRES 2.0 data from `.csv` files. 
 
 ```{r}
 #| warning: false
 
 aidres_scenarios <- read_csv(here(aidres_data, 'aidres_scenarios.csv'))
-
 aidres_sectors <- read_csv(here(aidres_data, 'aidres_sectors.csv'))
-
 aidres_result <- read_csv(here(aidres_data, 'aidres_result.csv'))
-
 aidres_configurations <- read_csv(here(aidres_data, 'aidres_configurations.csv'))
-
 aidres_perton <- read_csv(here(aidres_data, 'aidres_perton.csv'))
+
+aidres_2_0_sectors <- read_csv2(here(aidres_data, 'aidres_2_0_sectors.csv'))
+aidres_2_0_results <- read_delim(here(aidres_data, "aidres_2_0_results.csv"),
+                                 delim = ";",
+                                 locale = locale(decimal_mark = ".", grouping_mark = ","),
+                                 guess_max = 6000)
+
+aidres_2_0_configurations <- read_csv2(here(aidres_data, 'aidres_2_0_configurations.csv'))
+aidres_2_0_products <- read_csv2(here(aidres_data, 'aidres_2_0_products.csv'))
 ```
 
 ## Production all sectors in 2018
@@ -274,7 +283,7 @@ Product flow of different products in various sectors
 
 ```{r}
 #| warning: false
-
+aidres_result
 aidres_result |> clean_names() |> 
   pivot_longer('product_flow_kt_y':'total_energy_vectors_pj_y', 
                names_to = 'indicators', values_to = 'value') |>
@@ -300,6 +309,33 @@ aidres_result |> clean_names() |>
 aidres_production_country_2018
 ```
 
+```{r}
+#| warning: false
+aidres_2_0_results |> clean_names() |> 
+  pivot_longer('product_flow_kt_y':'total_energy_vectors_pj_y', 
+               names_to = 'indicators', values_to = 'value') |>
+  mutate(value = round(value,3)) |> 
+  filter(indicators == 'product_flow_kt_y') |> 
+  filter(scenario_id == 0,
+         is_reference_route == 1) |> 
+  select(-c(is_mix, is_reference_route)) |> 
+  left_join(aidres_2_0_sectors, by =join_by('sector_id' == 'sector_id')) |>
+  left_join(aidres_2_0_configurations, by =join_by('configuration_id' == 'configuration_id')) |>
+  left_join(aidres_2_0_products, by =join_by('product_id' == 'product_id')) |>
+  select(c('nuts3', 'sector', 'product', 'configuration', 'indicators', 'value')) |>
+  rename('sector_id' = sector) |> 
+  rename('product_id' = product) |> 
+  mutate(sector_id = tolower(sector_id)) |>
+  filter(product_id != 'fertiliser-nitric-acid') |> 
+  filter(product_id != 'fertiliser-urea') |> 
+  rename('production_route_name' = configuration) |>
+  pivot_wider(names_from = 'indicators', values_from = 'value')|>
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2)) |>
+  group_by(country_code, sector_id, product_id, production_route_name) |> 
+  summarise(production_kt_y = sum(product_flow_kt_y)) |>  ungroup() ->  aidres_2_0_production_country_2018
+
+aidres_2_0_production_country_2018
+```
 ## Energy consumption all sectors in 2018
 
 Energy consumption by different production routes in different sectors
@@ -335,6 +371,35 @@ aidres_result |> clean_names() |>
   aidres_energy_all
 ```
 
+```{r}
+#| warning: false
+
+aidres_2_0_results |> clean_names() |> 
+  pivot_longer('alternative_fuel_mixture_usage_pj_y':'total_energy_vectors_pj_y', 
+               names_to = 'indicators', values_to = 'value') |>
+  mutate(value = round(value,3)) |> 
+  filter(scenario_id == 0,
+         is_reference_route == 1) |> 
+  select(-c(is_mix, is_reference_route)) |> 
+  left_join(aidres_2_0_sectors, by =join_by('sector_id' == 'sector_id')) |>
+  left_join(aidres_2_0_configurations, by =join_by('configuration_id' == 'configuration_id')) |>
+  left_join(aidres_2_0_products, by =join_by('product_id' == 'product_id')) |>
+  select(c('nuts3', 'sector', 'product', 'configuration', 'indicators', 'value')) |>
+  rename('sector_id' = sector) |> 
+  rename('product_id' = product) |> 
+  mutate(sector_id = tolower(sector_id)) |>
+  filter(product_id != 'fertiliser-nitric-acid') |> 
+  filter(product_id != 'fertiliser-urea') |> 
+  rename('production_route_name' = configuration) |>
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2)) |>
+  group_by(country_code, sector_id, indicators) |> 
+  summarise(country_total = sum(value)) |>
+  left_join(country_codes, by =join_by('country_code' == 'country_iso_code')) |> 
+  pivot_wider(names_from = sector_id, values_from = country_total) -> aidres_2_0_energy_all
+
+  aidres_2_0_energy_all
+```
+
 ## Aggregating AIDRES fuels to EUROSTAT aggregated commodities for Glass and Cement
 
 ```{r}
@@ -356,6 +421,32 @@ aidres_cleaned_cg <- aidres_energy_all |>
   select(-c(alternative_fuel_mixture, coal, coke, biomass, biomass_waste, plastic_mix, crude_oil, naphtha)) |> 
   pivot_longer(cols = -c(country_code:metadata), names_to = 'fuel', values_to = 'pj') |> 
   separate_wider_delim(metadata, delim = '_', names = c('sector', 'source'))
+
+  aidres_cleaned_cg
+```
+
+```{r}
+
+aidres_2_0_cleaned_cg <- aidres_2_0_energy_all |> 
+  select(country_code:country, glass, cement) |> 
+  mutate(indicators = str_replace(indicators, "\\_usage_pj_y", "")) |> 
+  mutate(indicators = str_replace(indicators, "\\_pj_y", "")) |> 
+  rename('cem_aidres' = cement,
+         'glass_aidres' = glass,
+         'fuel' = indicators) |> 
+  pivot_longer(cols = c(cem_aidres, glass_aidres), names_to = 'metadata', values_to = 'pj') |> 
+  pivot_wider(names_from = fuel, values_from = pj) |> 
+  rename('total' = total_energy_vectors) |> 
+
+  mutate(solid_fossil_fuels = rowSums(cbind(coal, coke), na.rm = TRUE),
+         renew_bio = rowSums(cbind(biomass, biomass_waste), na.rm = TRUE),
+         non_renew_waste = rowSums(cbind(plastic_mix, alternative_fuel_mixture), na.rm = TRUE),
+         oil_petro_products = rowSums(cbind(crude_oil, naphtha), na.rm = TRUE)) |> 
+  select(-c(alternative_fuel_mixture, coal, coke, biomass, biomass_waste, plastic_mix, crude_oil, naphtha)) |> 
+  pivot_longer(cols = -c(country_code:metadata), names_to = 'fuel', values_to = 'pj') |> 
+  separate_wider_delim(metadata, delim = '_', names = c('sector', 'source'))
+
+  aidres_2_0_cleaned_cg
 ```
 
 # Comparing production 
@@ -390,6 +481,27 @@ aidres_production_country_2018 |>
 
 ```
 
+```{r}
+aidres_2_0_production_country_2018 |> 
+  filter(sector_id == 'cement') |> 
+  select(-sector_id, -production_route_name) |> 
+  mutate(mt = round(production_kt_y/1000, 3), .keep = 'unused') |> 
+  rename('product' = 'product_id') |> 
+  mutate(source = 'aidres')  -> aidres_2_0_production_country_plot_cement
+```
+
+```{r}
+aidres_2_0_production_country_2018 |> 
+  filter(sector_id == 'glass') |> 
+  select(-sector_id, -production_route_name) |> 
+  group_by(country_code) |> 
+  summarise(production_kt_y = sum(production_kt_y)) |> 
+  mutate(product = 'glass') |>
+  mutate(mt = round(production_kt_y/1000, 3), .keep = 'unused') |> 
+  mutate(source = 'aidres')  -> aidres_2_0_production_country_plot_glass
+
+```
+
 ### Plots
 
 Cement
@@ -410,6 +522,23 @@ p100
 ggsave(here(output_dir, 'cement_production_compare.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
 ```
 
+```{r, fig.width=10,fig.height=7}
+
+bind_rows(cg_production_allyear_plot |> filter(year == 2018, product == 'cement') |> select(-year), 
+          aidres_2_0_production_country_plot_cement) |> 
+  ggplot(aes(mt, fct_reorder(country_code, mt, .fun = sum)))+
+  #        geom_col(width = 0.5) + 
+  geom_line()+
+  geom_point(aes(colour = source), size = 1.5)+
+#  facet_wrap(~product, ncol = 3)+
+  theme_bw()+
+  labs(title = 'Cement sector production volume comparison aidres 2.0',
+       y = 'Country') +
+  theme(legend.position = "bottom")-> p100
+p100
+ggsave(here(output_dir, 'cement_production_compare_2_0.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
+```
+
 Glass
 
 ```{r, fig.width=10,fig.height=7}
@@ -426,6 +555,20 @@ p110
 ggsave(here(output_dir, 'glass_production_compare.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
 ```
 
+```{r, fig.width=10,fig.height=7}
+bind_rows(cg_production_allyear_plot |> filter(year == 2018, product == 'glass') |> select(-year), 
+          aidres_2_0_production_country_plot_glass) |> 
+  ggplot(aes(mt, fct_reorder(country_code, mt, .fun = sum)))+
+  geom_line()+
+  geom_point(aes(colour = source), size = 1.5)+
+  theme_bw()+
+  labs(title = 'Glass sector production volume comparison aidres 2.0',
+       y = 'Country')+
+  theme(legend.position = "bottom") -> p110
+p110
+ggsave(here(output_dir, 'glass_production_compare_2_0.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
+```
+
 ### Diff files
 
 ```{r}
@@ -438,6 +581,18 @@ bind_rows(cg_production_allyear_plot |> filter(year == 2018, product == 'glass')
           aidres_production_country_plot_glass) |> 
 pivot_wider(names_from = source, values_from = mt) |> 
   write_xlsx(here(output_dir, 'diff_production_volume_glass.xlsx'))
+```
+
+```{r}
+bind_rows(cg_production_allyear_plot |> filter(year == 2018, product == 'cement') |> select(-year), 
+          aidres_2_0_production_country_plot_cement) |> 
+  pivot_wider(names_from = source, values_from = mt) |> 
+  write_xlsx(here(output_dir, 'diff_production_volume_cement_2_0.xlsx'))
+
+bind_rows(cg_production_allyear_plot |> filter(year == 2018, product == 'glass') |> select(-year), 
+          aidres_2_0_production_country_plot_glass) |> 
+pivot_wider(names_from = source, values_from = mt) |> 
+  write_xlsx(here(output_dir, 'diff_production_volume_glass_2_0.xlsx'))
 ```
 
 # Comparing Energy consumption
@@ -517,6 +672,12 @@ aidres_cleaned_cg |> filter(sector == 'cem') |>
   rbind(cem_energy_fec_) |> 
   arrange(country_code, fuel) -> cem_fec_compare
 
+
+aidres_2_0_cleaned_cg |> filter(sector == 'cem') |> 
+  select(-country, -sector) |> 
+  rbind(cem_energy_fec_) |> 
+  arrange(country_code, fuel) -> cem_fec_compare_2_0
+
 ```
 
 ### Comparing energy consumption
@@ -540,6 +701,23 @@ cem_fec_compare |>
 ggsave(here(output_dir, 'cem_fec_tot_compare.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
 ```
 
+```{r, fig.width=10,fig.height=7}
+#| warning: false
+
+cem_fec_compare_2_0 |> 
+  filter(fuel == 'total') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 2) +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the cement sector in AidRes 2.0 and JRC-IDEES',
+       subtitle = 'IDEES contains lime also',
+       y = 'country') +
+  theme(legend.position = "bottom") -> p_cem_compare_tot_2_0
+ p_cem_compare_tot_2_0
+ggsave(here(output_dir, 'cem_fec_tot_compare_2_0.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
+```
+
 ```{r, fig.width=12,fig.height=14}
 #| warning: false
 
@@ -561,6 +739,27 @@ ggsave(here(output_dir, 'cem_fec_all_compare.pdf'), width = 18, height = 8, unit
 
 ```
 
+```{r, fig.width=12,fig.height=14}
+#| warning: false
+
+cem_fec_compare_2_0 |> 
+#  filter(fuel != 'total') |> 
+    filter(source!= 'eurostat') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+    geom_line()+
+  geom_point(aes(colour = source), size = 2) +
+  facet_wrap(~fuel, ncol = 4, scales = "free") +
+  theme_bw() +
+  labs(title = 'Fuel wise energy consumption in the cement sector in AidRes 2.0 and JRC-IDEES',
+       subtitle = 'IDEES contains lime also',
+       y = 'country') +
+  theme(legend.position = "bottom") -> p_cem_compare_all_2_0
+
+p_cem_compare_all_2_0
+ggsave(here(output_dir, 'cem_fec_all_compare_2_0.pdf'), width = 18, height = 8, units = 'in', dpi = 900)
+
+```
+
 #### Diff files
 
 ```{r}
@@ -570,6 +769,15 @@ cem_fec_compare |>
   mutate(pj = replace_na(pj, 0)) |> 
   pivot_wider(names_from = source, values_from = pj) |> 
   write_xlsx(here(output_dir, 'diff_fec_cement.xlsx'))
+```
+
+```{r}
+#----diff files
+cem_fec_compare_2_0 |> 
+  filter(source!= 'eurostat') |> 
+  mutate(pj = replace_na(pj, 0)) |> 
+  pivot_wider(names_from = source, values_from = pj) |> 
+  write_xlsx(here(output_dir, 'diff_fec_cement_2_0.xlsx'))
 ```
 
 ## Glass
@@ -644,6 +852,11 @@ aidres_cleaned_cg |> filter(sector == 'glass') |>
   select(-country, -sector) |> 
   rbind(glass_energy_fec_) |> 
   arrange(country_code, fuel) -> glass_fec_compare
+
+aidres_2_0_cleaned_cg |> filter(sector == 'glass') |> 
+  select(-country, -sector) |> 
+  rbind(glass_energy_fec_) |> 
+  arrange(country_code, fuel) -> glass_fec_compare_2_0
 ```
 
 ### Comparison plots
@@ -657,11 +870,27 @@ glass_fec_compare |>
   geom_line()+
   geom_point(aes(colour = source), size = 1.5) +
   theme_bw() +
-  labs(title = 'Total energy consumption in the glass sector in AidRes JRC-IDEES',
+  labs(title = 'Total energy consumption in the glass sector in AidRes and JRC-IDEES',
        y = 'country') +
   theme(legend.position = "bottom") -> p_glass_compare_tot
 p_glass_compare_tot
 ggsave(here(output_dir, 'glass_fec_tot_compare.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
+```
+
+```{r, fig.width=10,fig.height=7}
+#| warning: false
+
+glass_fec_compare_2_0 |> 
+  filter(fuel == 'total') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 1.5) +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the glass sector in AidRes 2.0 and JRC-IDEES',
+       y = 'country') +
+  theme(legend.position = "bottom") -> p_glass_compare_tot_2_0
+p_glass_compare_tot_2_0
+ggsave(here(output_dir, 'glass_fec_tot_compare_2_0.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
 ```
 
 ```{r, fig.width=12,fig.height=14}
@@ -673,11 +902,28 @@ glass_fec_compare |>
   geom_point(aes(colour = source), size = 1.5) +
   facet_wrap(~fuel, ncol = 4, scales = "free") +
   theme_bw() +
-  labs(title = 'Total energy consumption in the glass sector in AidRes JRC-IDEES',
+  labs(title = 'Total energy consumption in the glass sector in AidRes and JRC-IDEES',
        y = 'country') +
   theme(legend.position = "bottom") -> p_glass_compare_all
 p_glass_compare_all
 ggsave(here(output_dir, 'glass_fec_all_compare.pdf'), width = 18, height = 8, units = 'in', dpi = 900)
+
+```
+
+```{r, fig.width=12,fig.height=14}
+#| warning: false
+
+glass_fec_compare_2_0 |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 1.5) +
+  facet_wrap(~fuel, ncol = 4, scales = "free") +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the glass sector in AidRes and 2.0 JRC-IDEES',
+       y = 'country') +
+  theme(legend.position = "bottom") -> p_glass_compare_all_2_0
+p_glass_compare_all_2_0
+ggsave(here(output_dir, 'glass_fec_all_compare_2_0.pdf'), width = 18, height = 8, units = 'in', dpi = 900)
 
 ```
 
@@ -690,6 +936,15 @@ glass_fec_compare |>
   mutate(pj = replace_na(pj, 0)) |> 
   pivot_wider(names_from = source, values_from = pj) |> 
   write_xlsx(here(output_dir, 'diff_fec_glass.xlsx'))
+```
+
+```{r}
+
+glass_fec_compare_2_0 |> 
+  filter(source!= 'eurostat') |> 
+  mutate(pj = replace_na(pj, 0)) |> 
+  pivot_wider(names_from = source, values_from = pj) |> 
+  write_xlsx(here(output_dir, 'diff_fec_glass_2_0.xlsx'))
 ```
 
 # AIDRES+

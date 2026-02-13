@@ -1,0 +1,5 @@
+sector_id,to_node,Industry,classification_1,from_node,unit,2025,std,2030,2040,2050
+steel,electric-arc-steel,steel-electric-arc-finishing-alternative,Steel: Product finishing,elec,mwh_t,0.19346472312267243,0.09910238684962923,0.19346472312267243,0.19346472312267243,0.19346472312267243
+steel,electric-arc-steel,steel-electric-arc-rolling-alternative,"Steel: Furnaces, refining and rolling",elec,mwh_t,0.3744578396710275,0.04182496145084179,0.3744578396710275,0.3744578396710275,0.3744578396710275
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-alternative,Steel: Product finishing,elec,mwh_t,0.344888778881062,0.14027219448369607,0.344888778881062,0.344888778881062,0.344888778881062
+steel,integrated-steelworks-steel,steel-integrated-steelworks-rolling-alternative,"Steel: Furnaces, refining and rolling",elec,mwh_t,0.4922115544883196,0.07313971807306648,0.4922115544883196,0.4922115544883196,0.4922115544883196

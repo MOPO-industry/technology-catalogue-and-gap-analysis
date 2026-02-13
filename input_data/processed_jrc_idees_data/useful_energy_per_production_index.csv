@@ -1,0 +1,7 @@
+sector,product,year,unit,useful_energy_per_capacity
+FBT,Food_beverages_and_tobacco,2021,TJ/production_index,2.585258326750281
+MAE,machinery_equipment,2021,TJ/production_index,0.6934177753871755
+OIS,other_industrial_sectors,2021,TJ/production_index,0.46362741559130705
+TEL,Textile_and_leather,2021,TJ/production_index,1.1446119170464673
+TRE,transport_equipment,2021,TJ/production_index,0.6884033447088735
+WWP,wood_and_wood_products,2021,TJ/production_index,3.8758933833947875

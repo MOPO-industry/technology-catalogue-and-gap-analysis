@@ -1,0 +1,141 @@
+﻿product_id;product;sector_id;product_description;product_remark
+0;cement;2;NULL;NULL
+1;cement-CEM1;2;NULL;NULL
+2;cement-CEM2;2;NULL;NULL
+3;cement-LC3;2;NULL;NULL
+4;chemical-PE;6;NULL;NULL
+5;chemical-PEA;6;NULL;NULL
+6;chemical-other-olefins;6;NULL;NULL
+7;chemical-ethylene;6;NULL;NULL
+8;chemical-propylene;6;NULL;NULL
+9;chemical-cracker-all;6;NULL;NULL
+10;chemical-olefins;6;NULL;NULL
+11;fertiliser-ammonia;5;NULL;NULL
+12;fertiliser-nitric-acid;5;NULL;NULL
+13;fertiliser-urea;5;NULL;NULL
+14;fertiliser-derivates;5;NULL;NULL
+15;glass-container;3;NULL;NULL
+16;glass-fibre;3;NULL;NULL
+17;glass-float;3;NULL;NULL
+18;refineries-light-liquid-fuel;4;NULL;NULL
+19;refineries-all-products;4;NULL;NULL
+20;steel-primary;1;NULL;NULL
+21;steel-secondary;1;NULL;NULL
+22;refineries-LPG;4;NULL;NULL
+23;refineries-chemicals (naphtha and others);4;NULL;NULL
+24;refineries-heavy fuel;4;NULL;NULL
+25;refineries-other products;4;NULL;NULL
+26;methanol (LLF eq.);4;NULL;NULL
+100;heavy glycols;6;NULL;NULL
+101;diisopropylbenzene;6;NULL;NULL
+102;tertbutyl hydroperoxide;6;NULL;NULL
+103;allyl alcohol;6;NULL;NULL
+104;cardura glycidyl ester;6;NULL;NULL
+105;methyl propanediol;6;NULL;NULL
+106;ethylene dichloride impurities;6;NULL;NULL
+107;aromatics;6;NULL;NULL
+108;butane;6;NULL;NULL
+109;styrene acrylonitrile;6;NULL;NULL
+110;hydrogen chloride;6;NULL;NULL
+111;san polyols;6;NULL;NULL
+112;other c4;6;NULL;NULL
+113;benzaldehyde;6;NULL;NULL
+114;butylene;6;NULL;NULL
+115;iso-butylene;6;NULL;NULL
+116;phthalic anhydride;6;NULL;NULL
+117;propylene glycol;6;NULL;NULL
+118;chlorine;6;NULL;NULL
+119;propylene glycol methyl ether;6;NULL;NULL
+120;versatic acid;6;NULL;NULL
+121;isobutylene;6;NULL;NULL
+122;epichlorohydrine;6;NULL;NULL
+123;crude c4;6;NULL;NULL
+124;1,4-butanediol;6;NULL;NULL
+125;butadiene;6;NULL;NULL
+126;bio-methanol;6;NULL;NULL
+127;ortho-xylene;6;NULL;NULL
+128;Isopropyl alcohol;6;NULL;NULL
+129;ethylene glycol;6;NULL;NULL
+130;liquid epoxy resins;6;NULL;NULL
+131;bisphenol a;6;NULL;NULL
+132;benzoate;6;NULL;NULL
+133;ethylene oxide;6;NULL;NULL
+134;polypropylene;6;NULL;NULL
+135;acrylonitrile butadiene styrene;6;NULL;NULL
+136;"ethyl tert butyl ether ";6;NULL;NULL
+137;methyl tert butyl ether;6;NULL;NULL
+138;propylene oxide;6;NULL;NULL
+139;polyvinyl chloride;6;NULL;NULL
+140;pc powder;6;NULL;NULL
+141;propylene oxide glycol ethers;6;NULL;NULL
+142;polyols;6;NULL;NULL
+143;cyclohexane;6;NULL;NULL
+144;alkylate;6;NULL;NULL
+145;latex;6;NULL;NULL
+146;toluene;6;NULL;NULL
+147;benzene;6;NULL;NULL
+148;oxo-alcohols;6;NULL;NULL
+149;purified terephthalic acid;6;NULL;NULL
+150;fiber-grade polyethylene terephthalate;6;NULL;NULL
+151;plasticizer;6;NULL;NULL
+152;styrene monomer;6;NULL;NULL
+153;isobutane;6;NULL;NULL
+154;styrene;6;NULL;NULL
+155;tert butyl alcohol;6;NULL;NULL
+156;ethylbenzene;6;NULL;NULL
+157;vinyl chloride monomer;6;NULL;NULL
+158;cumene;6;NULL;NULL
+159;methanol;6;NULL;NULL
+160;para-xylene;6;NULL;NULL
+161;ethylene dichloride pure;6;NULL;NULL
+162;methylene diphenyl diisocyanate variants;6;NULL;NULL
+163;methylene diphenyl diisocyanate;6;NULL;NULL
+164;formaldehyde;6;NULL;NULL
+165;nitrobenzene;6;NULL;NULL
+166;phenol;6;NULL;NULL
+167;aniline;6;NULL;NULL
+168;polystyrene;6;NULL;NULL
+169;cyclohexanon/cyclohexanol mix;6;NULL;NULL
+170;aceton;6;NULL;NULL
+171;caprolactam;6;NULL;NULL
+172;polyether;6;NULL;NULL
+173;polyolefins;6;NULL;NULL
+174;alkoxylates;6;NULL;NULL
+175;acrylic acid;6;NULL;NULL
+176;di-n-butylene;6;NULL;NULL
+177;cyclohexanon;6;NULL;NULL
+178;ethanolamine;6;NULL;NULL
+179;1-butylene;6;NULL;NULL
+180;butadiene styrene polymer;6;NULL;NULL
+181;ethyleneamine;6;NULL;NULL
+182;glycol ether;6;NULL;NULL
+183;1,3-butadiene;6;NULL;NULL
+184;tributylene/tetrabutylene;6;NULL;NULL
+185;cyclohexanol;6;NULL;NULL
+186;other chemicals;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+187;other hydrocarbons;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+188;other polymers and resins;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+189;other carbohydrates;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+190;other aromatics;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+191;other carboxylic acids;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+192;other aldehydes;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+193;other silanes and siloxanes;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+194;other esters;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+195;other alcohols;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+196;other amines and amides;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+197;other ethers;6;NULL;This is a general category, specific chemical is specified in remark of industrial_parameters
+198;toluene (no cracker product);6;contains all toluene that is not produced by cracker;NULL
+199;benzene (no cracker product);6;contains all benzene that is not produced by cracker;NULL
+200;pyrolysis benzine;6;NULL;this is a cracker product
+201;pyrolysis oil;6;NULL;this is a cracker product
+1001;processed steel;1;NULL;NULL
+1002;Pig-iron/Processing;1;NULL;NULL
+1003;Non-oriented steel;1;NULL;NULL
+1004;Cokes;1;NULL;NULL
+1005;Lime;2;NULL;NULL
+1006;Cement-Other;2;NULL;NULL
+1007;Not active/refinery;1;NULL;NULL
+1008;carbon black;7;NULL;NULL
+1009;soda;7;NULL;NULL
+1010;inorganics;7;NULL;NULL
+1011;industrial gas or hydrogen;7;NULL;NULL

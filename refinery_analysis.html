@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Partha Das">
 <meta name="author" content="Pieter Valkering">
-<meta name="dcterms.date" content="2024-12-18">
+<meta name="author" content="Hans Van de Put">
+<meta name="dcterms.date" content="2026-01-29">
 <meta name="keywords" content="AIDRES, EUROSTAT, JRC-IDEES">
 
 <title>Analyzing Refinery Sector Product Flow of Light Liquid Fuels</title>
@@ -25,8 +26,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -37,7 +39,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -82,20 +84,22 @@ div.csl-indent {
 
 
 <script src="refinery_analysis_files/libs/clipboard/clipboard.min.js"></script>
-<script src="refinery_analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="refinery_analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="refinery_analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="refinery_analysis_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="refinery_analysis_files/libs/quarto-html/popper.min.js"></script>
 <script src="refinery_analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="refinery_analysis_files/libs/quarto-html/anchor.min.js"></script>
 <link href="refinery_analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="refinery_analysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="refinery_analysis_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="refinery_analysis_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="refinery_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="refinery_analysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="refinery_analysis_files/libs/bootstrap/bootstrap-2b16cb1ea19488d2d80dabb165e63084.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
 
-<body>
+<body class="quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -110,19 +114,20 @@ div.csl-indent {
   <li><a href="#jrc-idees-refinary-product-flow" id="toc-jrc-idees-refinary-product-flow" class="nav-link" data-scroll-target="#jrc-idees-refinary-product-flow">JRC-IDEES Refinary product flow</a>
   <ul class="collapse">
   <li><a href="#download-idees-excel-files" id="toc-download-idees-excel-files" class="nav-link" data-scroll-target="#download-idees-excel-files">Download IDEES excel files</a></li>
-  <li><a href="#refinary-product-flow" id="toc-refinary-product-flow" class="nav-link" data-scroll-target="#refinary-product-flow">Refinary product flow</a></li>
-  </ul></li>
-  <li><a href="#eurostat-refinary-product-flow" id="toc-eurostat-refinary-product-flow" class="nav-link" data-scroll-target="#eurostat-refinary-product-flow">EUROSTAT Refinary product flow</a>
-  <ul class="collapse">
-  <li><a href="#downloading-eurostat-energy-balance" id="toc-downloading-eurostat-energy-balance" class="nav-link" data-scroll-target="#downloading-eurostat-energy-balance">Downloading Eurostat energy balance</a></li>
   <li><a href="#refinery-product-flow" id="toc-refinery-product-flow" class="nav-link" data-scroll-target="#refinery-product-flow">Refinery product flow</a></li>
   </ul></li>
-  <li><a href="#aidres-refinery-product-flow" id="toc-aidres-refinery-product-flow" class="nav-link" data-scroll-target="#aidres-refinery-product-flow">AIDRES refinery product flow</a>
+  <li><a href="#eurostat-refinery-product-flow" id="toc-eurostat-refinery-product-flow" class="nav-link" data-scroll-target="#eurostat-refinery-product-flow">EUROSTAT Refinery product flow</a>
+  <ul class="collapse">
+  <li><a href="#downloading-eurostat-energy-balance" id="toc-downloading-eurostat-energy-balance" class="nav-link" data-scroll-target="#downloading-eurostat-energy-balance">Downloading Eurostat energy balance</a></li>
+  <li><a href="#refinery-product-flow-1" id="toc-refinery-product-flow-1" class="nav-link" data-scroll-target="#refinery-product-flow-1">Refinery product flow</a></li>
+  </ul></li>
+  <li><a href="#aidres-aidres-2.0-refinery-product-flow" id="toc-aidres-aidres-2.0-refinery-product-flow" class="nav-link" data-scroll-target="#aidres-aidres-2.0-refinery-product-flow">AIDRES + AIDRES 2.0 refinery product flow</a>
   <ul class="collapse">
   <li><a href="#establishing-aidres-database-connection-and-fetching-tables" id="toc-establishing-aidres-database-connection-and-fetching-tables" class="nav-link" data-scroll-target="#establishing-aidres-database-connection-and-fetching-tables">Establishing AIDRES database connection and fetching tables</a></li>
   <li><a href="#importing-aidres-data-from-local-.csv-files" id="toc-importing-aidres-data-from-local-.csv-files" class="nav-link" data-scroll-target="#importing-aidres-data-from-local-.csv-files">Importing AIDRES data from local <code>.csv</code> files</a></li>
+  <li><a href="#reading-the-aidres-and-aidres-2.0-data-from-.csv-files." id="toc-reading-the-aidres-and-aidres-2.0-data-from-.csv-files." class="nav-link" data-scroll-target="#reading-the-aidres-and-aidres-2.0-data-from-.csv-files.">Reading the AIDRES and AIDRES 2.0 data from <code>.csv</code> files.</a></li>
   <li><a href="#production-all-sectors-in-2018" id="toc-production-all-sectors-in-2018" class="nav-link" data-scroll-target="#production-all-sectors-in-2018">Production all sectors in 2018</a></li>
-  <li><a href="#refinery-product-flow-1" id="toc-refinery-product-flow-1" class="nav-link" data-scroll-target="#refinery-product-flow-1">Refinery product flow</a></li>
+  <li><a href="#refinery-product-flow-2" id="toc-refinery-product-flow-2" class="nav-link" data-scroll-target="#refinery-product-flow-2">Refinery product flow</a></li>
   </ul></li>
   <li><a href="#joining-the-data-from-three-sources" id="toc-joining-the-data-from-three-sources" class="nav-link" data-scroll-target="#joining-the-data-from-three-sources">Joining the data from three sources</a></li>
   <li><a href="#data-comparison" id="toc-data-comparison" class="nav-link" data-scroll-target="#data-comparison">Data comparison</a>
@@ -171,6 +176,16 @@ div.csl-indent {
             </a>
           </p>
       </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Hans Van de Put </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="https://vito.be/nl">
+            VITO
+            </a>
+          </p>
+      </div>
   </div>
 
 <div class="quarto-title-meta">
@@ -179,7 +194,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 18, 2024</p>
+      <p class="date">January 29, 2026</p>
     </div>
   </div>
   
@@ -199,8 +214,8 @@ div.csl-indent {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This is a stand-alone quarto document with code chunks and documentation for comparing Refinery sector product flow in AIDRES, EUROSTAT, and JRC-IDEES databases.</p>
-<p>This document extracts refinery product flow for certain fuels (to match with Light Liquid Fuel category of AIDRES) from JRC-IDEES, EUROSTAT, and AIDRES database and generate comparison plots and tables to visualize and compare the product flow across those databases.</p>
+<p>This is a stand-alone quarto document with code chunks and documentation for comparing Refinery sector product flow in AIDRES/AIDRES 2.0, EUROSTAT, and JRC-IDEES databases.</p>
+<p>This document extracts refinery product flow for certain fuels (to match with Light Liquid Fuel category of AIDRES) from JRC-IDEES, EUROSTAT, and AIDRES/AIDRES 2.0 database and generate comparison plots and tables to visualize and compare the product flow across those databases.</p>
 </section>
 <section id="using-this-file" class="level1">
 <h1>Using this file</h1>
@@ -213,7 +228,7 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mypackages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'tidyverse'</span>, <span class="st">'readxl'</span>, <span class="st">'janitor'</span>, <span class="st">'archive'</span>, <span class="st">'DBI'</span>, <span class="st">'odbc'</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mypackages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'tidyverse'</span>, <span class="st">'readxl'</span>, <span class="st">'janitor'</span>, <span class="st">'archive'</span>, <span class="st">'DBI'</span>, <span class="st">'odbc'</span>,</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'RPostgres'</span>, <span class="st">'eurostat'</span>, <span class="st">'stringr'</span>, <span class="st">'forcats'</span>, <span class="st">'writexl'</span>, <span class="st">'xlsx'</span>, <span class="st">'gt'</span>, <span class="st">'here'</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> mypackages){</span>
@@ -222,7 +237,7 @@ div.csl-indent {
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(p)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(p, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -232,9 +247,9 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>country_codes <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'europe_country_codes'</span>, <span class="st">'europe_country_code.xlsx'</span>), <span class="at">sheet =</span> <span class="dv">1</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>country_codes <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'europe_country_codes'</span>, <span class="st">'europe_country_code.xlsx'</span>), <span class="at">sheet =</span> <span class="dv">1</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>country_codes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>country_codes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 27 × 2
@@ -263,7 +278,7 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>idees_data <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'jrc_idees_2021'</span>, <span class="st">'energy_balance'</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>idees_data <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'jrc_idees_2021'</span>, <span class="st">'energy_balance'</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(idees_data)){</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -305,16 +320,16 @@ div.csl-indent {
 <span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'Files also already exist inside the directory, not downloading them again!'</span>))</span>
 <span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Directory C:/Users/VDPUTH/OneDrive - VITO/Mopo/Mopo_repo_github/input_data/jrc_idees_2021/energy_balance already exists!"
+<pre><code>[1] "Directory C:/Users/VDPUTH/OneDrive - VITO/Mopo/Mopo_repo_github/technology-catalogue-and-gap-analysis/input_data/jrc_idees_2021/energy_balance already exists!"
 [1] "Files also already exist inside the directory, not downloading them again!"</code></pre>
 </div>
 </div>
 </section>
-<section id="refinary-product-flow" class="level2">
-<h2 class="anchored" data-anchor-id="refinary-product-flow">Refinary product flow</h2>
+<section id="refinery-product-flow" class="level2">
+<h2 class="anchored" data-anchor-id="refinery-product-flow">Refinery product flow</h2>
 <p>From the Energy balance excel workbook we focus on the <code>TO_RPI_RO</code> sheet.</p>
 <p>For the light liquid fuel category we only focus on the following fuels:</p>
 <ul>
@@ -328,7 +343,7 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>read_data_ref_to <span class="ot">&lt;-</span> <span class="cf">function</span>(country){</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>read_data_ref_to <span class="ot">&lt;-</span> <span class="cf">function</span>(country){</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  file_path <span class="ot">&lt;-</span> <span class="fu">paste0</span>(idees_data, <span class="st">'/JRC-IDEES-2021_EnergyBalance_'</span>, country, <span class="st">'.xlsx'</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -367,7 +382,7 @@ div.csl-indent {
 <span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_codes, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'country_code'</span> <span class="sc">==</span> <span class="st">'country_iso_code'</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code, country, year, source, <span class="fu">everything</span>())</span>
 <span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>ref_energy_to_idees</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>ref_energy_to_idees</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 27 × 6
@@ -388,27 +403,27 @@ div.csl-indent {
 </div>
 </section>
 </section>
-<section id="eurostat-refinary-product-flow" class="level1">
-<h1>EUROSTAT Refinary product flow</h1>
+<section id="eurostat-refinery-product-flow" class="level1">
+<h1>EUROSTAT Refinery product flow</h1>
 <section id="downloading-eurostat-energy-balance" class="level2">
 <h2 class="anchored" data-anchor-id="downloading-eurostat-energy-balance">Downloading Eurostat energy balance</h2>
 <p>EUROSTAT API is used to dynamically fetch EUROSTAT data using <code>eurostat</code> package <span class="citation" data-cites="RJ-2017-019">(<a href="#ref-RJ-2017-019" role="doc-biblioref">Lahti et al. 2017</a>)</span>. Please refer this <a href="https://ropengov.github.io/eurostat/index.html">link</a> to more about the usage of the <code>eurostat</code> package.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat_aggregated_ref <span class="ot">&lt;-</span> <span class="fu">get_eurostat</span>(<span class="st">'nrg_bal_c'</span>, <span class="at">filters =</span> <span class="fu">list</span>(<span class="at">time =</span> <span class="dv">2018</span>),</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dat_aggregated_ref <span class="ot">&lt;-</span> <span class="fu">get_eurostat</span>(<span class="st">'nrg_bal_c'</span>, <span class="at">filters =</span> <span class="fu">list</span>(<span class="at">time =</span> <span class="dv">2018</span>),</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">time_format =</span> <span class="st">"num"</span>, <span class="at">type =</span> <span class="st">'label'</span>, </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
-<section id="refinery-product-flow" class="level2">
-<h2 class="anchored" data-anchor-id="refinery-product-flow">Refinery product flow</h2>
+<section id="refinery-product-flow-1" class="level2">
+<h2 class="anchored" data-anchor-id="refinery-product-flow-1">Refinery product flow</h2>
 <p>We only focus on <code>Transformation output - refineries and petrochemical industry - refinery output</code> (<code>TO_RPI_RO</code>). Fuel choices (<code>siec</code>) are similar to JRC-IDEES.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ref_output_eurostat <span class="ot">&lt;-</span> dat_aggregated_ref <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ref_output_eurostat <span class="ot">&lt;-</span> dat_aggregated_ref <span class="sc">|&gt;</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(unit <span class="sc">==</span> <span class="st">'Terajoule'</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(siec <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Motor gasoline (excluding biofuel portion)'</span>, <span class="st">'Aviation gasoline'</span>, <span class="st">'Gasoline-type jet fuel'</span>, </span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'Kerosene-type jet fuel (excluding biofuel portion)'</span>, </span>
@@ -443,7 +458,7 @@ div.csl-indent {
 <span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">'eurostat'</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code, country, fuel, year, source, pj_ref )</span>
 <span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>ref_output_eurostat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>ref_output_eurostat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 27 × 6
@@ -464,8 +479,8 @@ div.csl-indent {
 </div>
 </section>
 </section>
-<section id="aidres-refinery-product-flow" class="level1">
-<h1>AIDRES refinery product flow</h1>
+<section id="aidres-aidres-2.0-refinery-product-flow" class="level1">
+<h1>AIDRES + AIDRES 2.0 refinery product flow</h1>
 <section id="establishing-aidres-database-connection-and-fetching-tables" class="level3">
 <h3 class="anchored" data-anchor-id="establishing-aidres-database-connection-and-fetching-tables">Establishing AIDRES database connection and fetching tables</h3>
 <p>AIDRES database is open source <span class="citation" data-cites="aidres_report">(<a href="#ref-aidres_report" role="doc-biblioref">Vermeiren et al. 2023</a>)</span>. However the data is available as a raw <code>.sql</code> file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. The data is also available as an Excel workbook. However, it is very customized to be used for specific analysis.</p>
@@ -477,7 +492,7 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>aidres_data <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'aidres_data'</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>aidres_data <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'input_data'</span>, <span class="st">'aidres_data'</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(aidres_data)){</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -489,7 +504,7 @@ div.csl-indent {
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"AIDRES input data directory already exists. Not creating a new one!"</span>)</span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"AIDRES data tables also exist!"</span>)</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "AIDRES input data directory already exists. Not creating a new one!"
@@ -501,7 +516,7 @@ div.csl-indent {
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>aidres_scenarios <span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_scenarios.csv'</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>aidres_scenarios <span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_scenarios.csv'</span>))</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>aidres_sectors <span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span>  <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_sectors.csv'</span>))</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -509,16 +524,18 @@ div.csl-indent {
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>aidres_configurations<span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_configurations.csv'</span>)) </span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>aidres_perton<span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_perton.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>aidres_perton<span class="sc">|&gt;</span> <span class="fu">collect</span>() <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_perton.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>Reading the AIDRES data <code>.csv</code> files.</p>
+</section>
+<section id="reading-the-aidres-and-aidres-2.0-data-from-.csv-files." class="level3">
+<h3 class="anchored" data-anchor-id="reading-the-aidres-and-aidres-2.0-data-from-.csv-files.">Reading the AIDRES and AIDRES 2.0 data from <code>.csv</code> files.</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>aidres_scenarios <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_scenarios.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>aidres_scenarios <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_scenarios.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 9 Columns: 29
@@ -531,7 +548,7 @@ dbl (29): scenario_id, horizon, electricity_[kgco2/kwh], alternative_fuel_mi...
 </div>
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>aidres_sectors <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_sectors.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>aidres_sectors <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_sectors.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 7 Columns: 3
@@ -545,7 +562,7 @@ dbl (1): id
 </div>
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_result.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_result.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 133148 Columns: 42
@@ -559,7 +576,7 @@ dbl (41): aidres_sector_id, is_mix, is_ref_route, is_ref_scenario, is_ref_so...
 </div>
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>aidres_configurations <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_configurations.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>aidres_configurations <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_configurations.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 219 Columns: 12
@@ -573,7 +590,7 @@ dbl (7): aidres_sector_id, configuration_id, route_id, mix_2018, mix_2030, m...
 </div>
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>aidres_perton <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_perton.csv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>aidres_perton <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_perton.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 1468 Columns: 42
@@ -581,6 +598,78 @@ dbl (7): aidres_sector_id, configuration_id, route_id, mix_2018, mix_2030, m...
 Delimiter: ","
 dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>aidres_2_0_sectors <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_2_0_sectors.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.
+Rows: 7 Columns: 4── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+chr (3): sector, sector_description, sector_remark
+dbl (1): sector_id
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>aidres_2_0_results <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="fu">here</span>(aidres_data, <span class="st">"aidres_2_0_results.csv"</span>),</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">delim =</span> <span class="st">";"</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">decimal_mark =</span> <span class="st">"."</span>, <span class="at">grouping_mark =</span> <span class="st">","</span>),</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">guess_max =</span> <span class="dv">6000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 137316 Columns: 74
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+chr  (1): nuts3
+dbl (73): scenario_id, configuration_id, sector_id, co2_allowance_id, jcs_co...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>aidres_2_0_configurations <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_2_0_configurations.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.
+Rows: 245 Columns: 17── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+chr (11): configuration, horizon, data_source_id, configuration_abbreviation...
+dbl  (6): configuration_id, configuration_product_id, is_mix, is_reference_r...
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>aidres_2_0_perton <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="fu">here</span>(aidres_data, <span class="st">"aidres_2_0_perton.csv"</span>),</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">delim =</span> <span class="st">";"</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">decimal_mark =</span> <span class="st">"."</span>, <span class="at">grouping_mark =</span> <span class="st">","</span>),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">guess_max =</span> <span class="dv">6000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1476 Columns: 66
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+dbl (66): scenario_id, configuration_id, sector_id, co2_allowance_id, jcs_co...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>aidres_2_0_products <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="fu">here</span>(aidres_data, <span class="st">'aidres_2_0_products.csv'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.
+Rows: 140 Columns: 5── Column specification ────────────────────────────────────────────────────────
+Delimiter: ";"
+chr (3): product, product_description, product_remark
+dbl (2): product_id, sector_id
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
@@ -592,29 +681,29 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="sc">|&gt;</span> <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="st">'product_flow_kt_y'</span><span class="sc">:</span><span class="st">'total_energy_vectors_pj_y'</span>, </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">'indicators'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">round</span>(value,<span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(indicators <span class="sc">==</span> <span class="st">'product_flow_kt_y'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(is_ref_scenario <span class="sc">==</span> <span class="dv">1</span>,</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>         is_ref_route <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(is_pareto_solution, is_direct_emission_solution, is_mix)) <span class="sc">|&gt;</span> </span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_sectors, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'id'</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>description,) <span class="sc">|&gt;</span> </span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_configurations, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'aidres_sector_id'</span>, </span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                                               <span class="st">'configuration_id'</span> <span class="sc">==</span> <span class="st">'configuration_id'</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>( <span class="fu">c</span>(<span class="st">'nuts3'</span>, <span class="st">'sector_id'</span>, <span class="st">'product_id'</span>), <span class="fu">everything</span>(), <span class="sc">-</span><span class="st">'aidres_sector_id'</span>, <span class="sc">-</span><span class="st">'name'</span>, <span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">'mix'</span>),</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>          <span class="sc">-</span>abbreviation, <span class="sc">-</span>description, <span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">"is"</span>), <span class="sc">-</span><span class="st">'value'</span>, <span class="sc">-</span><span class="st">'indicators'</span>, <span class="st">'indicators'</span>, <span class="st">'value'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(configuration_id,   solution_id,    scenario_id,    route_id)) <span class="sc">|&gt;</span> </span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'production_route_name'</span> <span class="ot">=</span> route_name) <span class="sc">|&gt;</span> </span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">'indicators'</span>, <span class="at">values_from =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(nuts3, sector_id, product_id, production_route_name, <span class="at">.by_group =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_position</span>(nuts3, <span class="fu">c</span>(<span class="at">country_code =</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="at">nuts_id =</span><span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_code, sector_id, product_id, production_route_name) <span class="sc">|&gt;</span> </span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">production_kt_y =</span> <span class="fu">sum</span>(product_flow_kt_y)) <span class="sc">|&gt;</span>  <span class="fu">ungroup</span>() <span class="ot">-&gt;</span>  aidres_production_country_2018</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>aidres_production_country_2018</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>aidres_result <span class="sc">|&gt;</span> <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="st">'product_flow_kt_y'</span><span class="sc">:</span><span class="st">'total_energy_vectors_pj_y'</span>, </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">'indicators'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">round</span>(value,<span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(indicators <span class="sc">==</span> <span class="st">'product_flow_kt_y'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(is_ref_scenario <span class="sc">==</span> <span class="dv">1</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>         is_ref_route <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(is_pareto_solution, is_direct_emission_solution, is_mix)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_sectors, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'id'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>description,) <span class="sc">|&gt;</span> </span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_configurations, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'aidres_sector_id'</span> <span class="sc">==</span> <span class="st">'aidres_sector_id'</span>, </span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>                                               <span class="st">'configuration_id'</span> <span class="sc">==</span> <span class="st">'configuration_id'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>( <span class="fu">c</span>(<span class="st">'nuts3'</span>, <span class="st">'sector_id'</span>, <span class="st">'product_id'</span>), <span class="fu">everything</span>(), <span class="sc">-</span><span class="st">'aidres_sector_id'</span>, <span class="sc">-</span><span class="st">'name'</span>, <span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">'mix'</span>),</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>          <span class="sc">-</span>abbreviation, <span class="sc">-</span>description, <span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">"is"</span>), <span class="sc">-</span><span class="st">'value'</span>, <span class="sc">-</span><span class="st">'indicators'</span>, <span class="st">'indicators'</span>, <span class="st">'value'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(configuration_id,   solution_id,    scenario_id,    route_id)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'production_route_name'</span> <span class="ot">=</span> route_name) <span class="sc">|&gt;</span> </span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">'indicators'</span>, <span class="at">values_from =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(nuts3, sector_id, product_id, production_route_name, <span class="at">.by_group =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_position</span>(nuts3, <span class="fu">c</span>(<span class="at">country_code =</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="at">nuts_id =</span><span class="dv">2</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_code, sector_id, product_id, production_route_name) <span class="sc">|&gt;</span> </span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">production_kt_y =</span> <span class="fu">sum</span>(product_flow_kt_y)) <span class="sc">|&gt;</span>  <span class="fu">ungroup</span>() <span class="ot">-&gt;</span>  aidres_production_country_2018</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>aidres_production_country_2018</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 185 × 5
@@ -633,29 +722,73 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 # ℹ 175 more rows</code></pre>
 </div>
 </div>
-</section>
-<section id="refinery-product-flow-1" class="level2">
-<h2 class="anchored" data-anchor-id="refinery-product-flow-1">Refinery product flow</h2>
-<p>AIDRES only considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg. AIDRES product flow is reported in Million tonne. We are using the LHV value to convert the product flow into PJ.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>  aidres_production_country_2018 <span class="sc">|&gt;</span> </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="sc">-</span>sector_id, <span class="sc">-</span>production_route_name) <span class="sc">|&gt;</span> </span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">mt =</span> <span class="fu">round</span>(production_kt_y<span class="sc">/</span><span class="dv">1000</span>, <span class="dv">3</span>), <span class="at">.keep =</span> <span class="st">'unused'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> product_id, <span class="at">values_from =</span> mt) <span class="sc">|&gt;</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> refineries_light_liquid_fuel, <span class="at">names_to =</span> <span class="st">'product_id'</span>, <span class="at">values_to =</span> <span class="st">'mt'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">source =</span> <span class="st">'aidres'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">pj_ref =</span> mt <span class="sc">*</span> <span class="dv">1000</span> <span class="sc">*</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">6</span> <span class="sc">*</span> <span class="fl">42.87</span><span class="sc">/</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">9</span>,</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">fuel =</span> <span class="st">'light_liquid_fuel'</span>,</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">source =</span> <span class="st">'aidres'</span>,</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">year =</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_codes, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'country_code'</span> <span class="sc">==</span> <span class="st">'country_iso_code'</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code, country, fuel, year, source, pj_ref) <span class="ot">-&gt;</span> aidres_production_country_ref</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>aidres_production_country_ref</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>aidres_2_0_results <span class="sc">|&gt;</span> <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="st">'product_flow_kt_y'</span><span class="sc">:</span><span class="st">'total_energy_vectors_pj_y'</span>, </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">'indicators'</span>, <span class="at">values_to =</span> <span class="st">'value'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">round</span>(value,<span class="dv">3</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(indicators <span class="sc">==</span> <span class="st">'product_flow_kt_y'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(scenario_id <span class="sc">==</span> <span class="dv">0</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>         is_reference_route <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(is_mix, is_reference_route)) <span class="sc">|&gt;</span> </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_2_0_sectors, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'sector_id'</span> <span class="sc">==</span> <span class="st">'sector_id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_2_0_configurations, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'configuration_id'</span> <span class="sc">==</span> <span class="st">'configuration_id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aidres_2_0_products, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'product_id'</span> <span class="sc">==</span> <span class="st">'product_id'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">'nuts3'</span>, <span class="st">'sector'</span>, <span class="st">'product'</span>, <span class="st">'configuration'</span>, <span class="st">'indicators'</span>, <span class="st">'value'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'sector_id'</span> <span class="ot">=</span> sector) <span class="sc">|&gt;</span> </span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'product_id'</span> <span class="ot">=</span> product) <span class="sc">|&gt;</span> </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sector_id =</span> <span class="fu">tolower</span>(sector_id)) <span class="sc">|&gt;</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(product_id <span class="sc">!=</span> <span class="st">'fertiliser-nitric-acid'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(product_id <span class="sc">!=</span> <span class="st">'fertiliser-urea'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">'production_route_name'</span> <span class="ot">=</span> configuration) <span class="sc">|&gt;</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">'indicators'</span>, <span class="at">values_from =</span> <span class="st">'value'</span>)<span class="sc">|&gt;</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_position</span>(nuts3, <span class="fu">c</span>(<span class="at">country_code =</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="at">nuts_id =</span><span class="dv">2</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(country_code, sector_id, product_id, production_route_name) <span class="sc">|&gt;</span> </span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">production_kt_y =</span> <span class="fu">sum</span>(product_flow_kt_y)) <span class="sc">|&gt;</span>  <span class="fu">ungroup</span>() <span class="ot">-&gt;</span>  aidres_2_0_production_country_2018</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>aidres_2_0_production_country_2018</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 186 × 5
+   country_code sector_id  product_id      production_route_name production_kt_y
+   &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;                           &lt;dbl&gt;
+ 1 AT           cement     cement          EU-mix-2018                    4214. 
+ 2 AT           chemical   chemical-PE     (NG)PE                           94.3
+ 3 AT           chemical   chemical-PEA    (NG)PEA                         130. 
+ 4 AT           chemical   chemical-olefi… (LN)O                          1273. 
+ 5 AT           fertiliser fertiliser-amm… (NG)NH3                         383. 
+ 6 AT           glass      glass-container (NG)                            577. 
+ 7 AT           refineries refineries-lig… REF-SMR                        6189. 
+ 8 AT           steel      steel-primary   BF-BOF                         6177  
+ 9 AT           steel      steel-secondary Scraps EAF                      708  
+10 BE           cement     cement          EU-mix-2018                    5538. 
+# ℹ 176 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="refinery-product-flow-2" class="level2">
+<h2 class="anchored" data-anchor-id="refinery-product-flow-2">Refinery product flow</h2>
+<p>AIDRES/AIDRES 2.0 only considers light liquid fuels with lower heating value (LHV) of 42.87 MJ/kg. AIDRES/AIDRES 2.0 product flow is reported in Million tonne. We are using the LHV value to convert the product flow into PJ.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>aidres_production_country_2018 <span class="sc">|&gt;</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sector_id, <span class="sc">-</span>production_route_name) <span class="sc">|&gt;</span> </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mt =</span> <span class="fu">round</span>(production_kt_y<span class="sc">/</span><span class="dv">1000</span>, <span class="dv">3</span>), <span class="at">.keep =</span> <span class="st">'unused'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> product_id, <span class="at">values_from =</span> mt) <span class="sc">|&gt;</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> refineries_light_liquid_fuel, <span class="at">names_to =</span> <span class="st">'product_id'</span>, <span class="at">values_to =</span> <span class="st">'mt'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pj_ref =</span> mt <span class="sc">*</span> <span class="dv">1000</span> <span class="sc">*</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">6</span> <span class="sc">*</span> <span class="fl">42.87</span><span class="sc">/</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">9</span>,</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">fuel =</span> <span class="st">'light_liquid_fuel'</span>,</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">source =</span> <span class="st">'aidres'</span>,</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">year =</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_codes, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'country_code'</span> <span class="sc">==</span> <span class="st">'country_iso_code'</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code, country, fuel, year, source, pj_ref) <span class="ot">-&gt;</span> aidres_production_country_ref</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>aidres_production_country_ref</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 21 × 6
@@ -663,6 +796,42 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
    &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
  1 AT           Austria  light_liquid_fuel  2018 aidres   265.
  2 BE           Belgium  light_liquid_fuel  2018 aidres  1064.
+ 3 BG           Bulgaria light_liquid_fuel  2018 aidres   268.
+ 4 CZ           Czechia  light_liquid_fuel  2018 aidres   263.
+ 5 DE           Germany  light_liquid_fuel  2018 aidres  3114.
+ 6 DK           Denmark  light_liquid_fuel  2018 aidres   238.
+ 7 EL           Greece   light_liquid_fuel  2018 aidres   577.
+ 8 ES           Spain    light_liquid_fuel  2018 aidres  1980.
+ 9 FI           Finland  light_liquid_fuel  2018 aidres   282.
+10 FR           France   light_liquid_fuel  2018 aidres  1611.
+# ℹ 11 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>aidres_2_0_production_country_2018 <span class="sc">|&gt;</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sector_id <span class="sc">==</span> <span class="st">'refineries'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sector_id) <span class="sc">|&gt;</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mt =</span> <span class="fu">round</span>(production_kt_y<span class="sc">/</span><span class="dv">1000</span>, <span class="dv">3</span>), <span class="at">.keep =</span> <span class="st">'unused'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> product_id, <span class="at">values_from =</span> mt) <span class="sc">|&gt;</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> refineries_light_liquid_fuel, <span class="at">names_to =</span> <span class="st">'product_id'</span>,<span class="at">values_to =</span> <span class="st">'mt'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pj_ref =</span> mt <span class="sc">*</span> <span class="dv">1000</span> <span class="sc">*</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">6</span> <span class="sc">*</span> <span class="fl">42.87</span><span class="sc">/</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">9</span>,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">fuel =</span> <span class="st">'light_liquid_fuel'</span>,</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">source =</span> <span class="st">'aidres'</span>,</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">year =</span> <span class="dv">2018</span>) <span class="sc">|&gt;</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_codes, <span class="at">by =</span><span class="fu">join_by</span>(<span class="st">'country_code'</span> <span class="sc">==</span> <span class="st">'country_iso_code'</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code, country, fuel, year, source, pj_ref) <span class="ot">-&gt;</span> aidres_2_0_production_country_ref</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>aidres_2_0_production_country_ref</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 21 × 6
+   country_code country  fuel               year source pj_ref
+   &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+ 1 AT           Austria  light_liquid_fuel  2018 aidres   265.
+ 2 BE           Belgium  light_liquid_fuel  2018 aidres   883.
  3 BG           Bulgaria light_liquid_fuel  2018 aidres   268.
  4 CZ           Czechia  light_liquid_fuel  2018 aidres   263.
  5 DE           Germany  light_liquid_fuel  2018 aidres  3114.
@@ -682,10 +851,10 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(aidres_production_country_ref, ref_energy_to_idees, ref_output_eurostat) <span class="sc">|&gt;</span> </span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="ot">-&gt;</span> ref_data_sources</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>ref_data_sources</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(aidres_production_country_ref, ref_energy_to_idees, ref_output_eurostat) <span class="sc">|&gt;</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="ot">-&gt;</span> ref_data_sources</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>ref_data_sources</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 75 × 6
@@ -704,6 +873,31 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 # ℹ 65 more rows</code></pre>
 </div>
 </div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(aidres_2_0_production_country_ref, ref_energy_to_idees, ref_output_eurostat) <span class="sc">|&gt;</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="ot">-&gt;</span> ref_data_sources_2_0</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>ref_data_sources_2_0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 75 × 6
+   country_code country  fuel               year source   pj_ref
+   &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;
+ 1 AT           Austria  light_liquid_fuel  2018 aidres     265.
+ 2 AT           Austria  light_liquid_fuel  2018 idees      278.
+ 3 AT           Austria  light_liquid_fuel  2018 eurostat   278.
+ 4 BE           Belgium  light_liquid_fuel  2018 aidres     883.
+ 5 BE           Belgium  light_liquid_fuel  2018 idees      833.
+ 6 BE           Belgium  light_liquid_fuel  2018 eurostat   833.
+ 7 BG           Bulgaria light_liquid_fuel  2018 aidres     268.
+ 8 BG           Bulgaria light_liquid_fuel  2018 idees      185.
+ 9 BG           Bulgaria light_liquid_fuel  2018 eurostat   185.
+10 CY           Cyprus   light_liquid_fuel  2018 idees        0 
+# ℹ 65 more rows</code></pre>
+</div>
+</div>
 </section>
 <section id="data-comparison" class="level1">
 <h1>Data comparison</h1>
@@ -712,14 +906,14 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>output_dir <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'outputs'</span>, <span class="st">'refinery'</span>)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(output_dir)){</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Output directory doesn't exist. Creating a new one!"</span>)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(output_dir)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">"Output directory already exists. Not creating a new one!"</span>)</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>output_dir <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">'outputs'</span>, <span class="st">'refinery'</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(output_dir)){</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Output directory doesn't exist. Creating a new one!"</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(output_dir)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">"Output directory already exists. Not creating a new one!"</span>)</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Output directory doesn't exist. Creating a new one!"</code></pre>
@@ -731,29 +925,57 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  ref_data_sources <span class="sc">|&gt;</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(pj_ref, <span class="fu">fct_reorder</span>(country_code, pj_ref, <span class="at">.fun=</span>sum))) <span class="sc">+</span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()<span class="sc">+</span></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> source), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Light liquid fuel production in Refineries in AIDRES, EUROSTAT, and JRC-IDEES'</span>,</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">'Country'</span>,</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">'PJ'</span>) <span class="sc">+</span></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="ot">-&gt;</span> p1</span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  ref_data_sources <span class="sc">|&gt;</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(pj_ref, <span class="fu">fct_reorder</span>(country_code, pj_ref, <span class="at">.fun=</span>sum))) <span class="sc">+</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> source), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Light liquid fuel production in Refineries in AIDRES, EUROSTAT, and JRC-IDEES'</span>,</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">'Country'</span>,</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">'PJ'</span>) <span class="sc">+</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="ot">-&gt;</span> p1</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>    p1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="refinery_analysis_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="refinery_analysis_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggsave</span>(<span class="fu">here</span>(output_dir, <span class="st">'ref_pf_compare.pdf'</span>), <span class="at">width =</span> <span class="dv">14</span>, <span class="at">height =</span> <span class="dv">8</span>, <span class="at">units =</span> <span class="st">'in'</span>, <span class="at">dpi =</span> <span class="dv">900</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggsave</span>(<span class="fu">here</span>(output_dir, <span class="st">'ref_pf_compare.pdf'</span>), <span class="at">width =</span> <span class="dv">14</span>, <span class="at">height =</span> <span class="dv">8</span>, <span class="at">units =</span> <span class="st">'in'</span>, <span class="at">dpi =</span> <span class="dv">900</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  ref_data_sources_2_0 <span class="sc">|&gt;</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(pj_ref, <span class="fu">fct_reorder</span>(country_code, pj_ref, <span class="at">.fun=</span>sum))) <span class="sc">+</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> source), <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Light liquid fuel production in Refineries in AIDRES 2.0, EUROSTAT, and JRC-IDEES'</span>,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">'Country'</span>,</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">'PJ'</span>) <span class="sc">+</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="ot">-&gt;</span> p1</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>    p1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="refinery_analysis_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggsave</span>(<span class="fu">here</span>(output_dir, <span class="st">'ref_pf_compare_2_0.pdf'</span>), <span class="at">width =</span> <span class="dv">14</span>, <span class="at">height =</span> <span class="dv">8</span>, <span class="at">units =</span> <span class="st">'in'</span>, <span class="at">dpi =</span> <span class="dv">900</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -762,47 +984,47 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>ref_data_sources <span class="sc">|&gt;</span> </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>fuel, <span class="sc">-</span>year) <span class="sc">|&gt;</span> </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> source, <span class="at">values_from =</span> pj_ref) <span class="sc">|&gt;</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="at">replace =</span> <span class="dv">0</span>)),</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">2</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="sc">|&gt;</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">country_code =</span> <span class="st">'Code'</span>,</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">country =</span> <span class="st">'Name'</span>,</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">aidres =</span> <span class="st">'AIDRES'</span>,</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">idees =</span> <span class="st">'JRC-IDEES'</span>,</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">eurostat =</span> <span class="st">'EUROSTAT'</span></span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_spanner</span>(<span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Data Source**'</span>),</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_spanner</span>(<span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Country**'</span>),</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">'Light liquid fuel production (PJ) from refineries in 2018'</span>,</span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">'Comparison between AIDRES, JRC-IDEES, and EUROSTAT'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sub_zero</span>(<span class="at">zero_text =</span> <span class="st">'-'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">6</span>, <span class="at">color =</span> <span class="st">'gray'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>ref_data_sources <span class="sc">|&gt;</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>fuel, <span class="sc">-</span>year) <span class="sc">|&gt;</span> </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> source, <span class="at">values_from =</span> pj_ref) <span class="sc">|&gt;</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="at">replace =</span> <span class="dv">0</span>)),</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">2</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="sc">|&gt;</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">country_code =</span> <span class="st">'Code'</span>,</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">country =</span> <span class="st">'Name'</span>,</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">aidres =</span> <span class="st">'AIDRES'</span>,</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">idees =</span> <span class="st">'JRC-IDEES'</span>,</span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">eurostat =</span> <span class="st">'EUROSTAT'</span></span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_spanner</span>(<span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Data Source**'</span>),</span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_spanner</span>(<span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Country**'</span>),</span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">'Light liquid fuel production (PJ) from refineries in 2018'</span>,</span>
+<span id="cb52-20"><a href="#cb52-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">'Comparison between AIDRES, JRC-IDEES, and EUROSTAT'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb52-21"><a href="#cb52-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sub_zero</span>(<span class="at">zero_text =</span> <span class="st">'-'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb52-22"><a href="#cb52-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">6</span>, <span class="at">color =</span> <span class="st">'gray'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="juqvdooipf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#juqvdooipf table {
+<div id="xvyfumqlvs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xvyfumqlvs table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#juqvdooipf thead, #juqvdooipf tbody, #juqvdooipf tfoot, #juqvdooipf tr, #juqvdooipf td, #juqvdooipf th {
+#xvyfumqlvs thead, #xvyfumqlvs tbody, #xvyfumqlvs tfoot, #xvyfumqlvs tr, #xvyfumqlvs td, #xvyfumqlvs th {
   border-style: none;
 }
 
-#juqvdooipf p {
+#xvyfumqlvs p {
   margin: 0;
   padding: 0;
 }
 
-#juqvdooipf .gt_table {
+#xvyfumqlvs .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -828,12 +1050,12 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-left-color: #D3D3D3;
 }
 
-#juqvdooipf .gt_caption {
+#xvyfumqlvs .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#juqvdooipf .gt_title {
+#xvyfumqlvs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -845,7 +1067,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-bottom-width: 0;
 }
 
-#juqvdooipf .gt_subtitle {
+#xvyfumqlvs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -857,7 +1079,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-top-width: 0;
 }
 
-#juqvdooipf .gt_heading {
+#xvyfumqlvs .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -869,13 +1091,13 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-right-color: #D3D3D3;
 }
 
-#juqvdooipf .gt_bottom_border {
+#xvyfumqlvs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #5F5F5F;
 }
 
-#juqvdooipf .gt_col_headings {
+#xvyfumqlvs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #5F5F5F;
@@ -890,7 +1112,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-right-color: #D3D3D3;
 }
 
-#juqvdooipf .gt_col_heading {
+#xvyfumqlvs .gt_col_heading {
   color: #FFFFFF;
   background-color: #5F5F5F;
   font-size: 100%;
@@ -910,7 +1132,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   overflow-x: hidden;
 }
 
-#juqvdooipf .gt_column_spanner_outer {
+#xvyfumqlvs .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #5F5F5F;
   font-size: 100%;
@@ -922,15 +1144,15 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   padding-right: 4px;
 }
 
-#juqvdooipf .gt_column_spanner_outer:first-child {
+#xvyfumqlvs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#juqvdooipf .gt_column_spanner_outer:last-child {
+#xvyfumqlvs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#juqvdooipf .gt_column_spanner {
+#xvyfumqlvs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #5F5F5F;
@@ -942,11 +1164,11 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   width: 100%;
 }
 
-#juqvdooipf .gt_spanner_row {
+#xvyfumqlvs .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#juqvdooipf .gt_group_heading {
+#xvyfumqlvs .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -972,7 +1194,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   text-align: left;
 }
 
-#juqvdooipf .gt_empty_group_heading {
+#xvyfumqlvs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -987,15 +1209,15 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   vertical-align: middle;
 }
 
-#juqvdooipf .gt_from_md > :first-child {
+#xvyfumqlvs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#juqvdooipf .gt_from_md > :last-child {
+#xvyfumqlvs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#juqvdooipf .gt_row {
+#xvyfumqlvs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1014,7 +1236,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   overflow-x: hidden;
 }
 
-#juqvdooipf .gt_stub {
+#xvyfumqlvs .gt_stub {
   color: #333333;
   background-color: #D5D5D5;
   font-size: 100%;
@@ -1027,7 +1249,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   padding-right: 5px;
 }
 
-#juqvdooipf .gt_stub_row_group {
+#xvyfumqlvs .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1041,15 +1263,15 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   vertical-align: top;
 }
 
-#juqvdooipf .gt_row_group_first td {
+#xvyfumqlvs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#juqvdooipf .gt_row_group_first th {
+#xvyfumqlvs .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#juqvdooipf .gt_summary_row {
+#xvyfumqlvs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1059,16 +1281,16 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   padding-right: 5px;
 }
 
-#juqvdooipf .gt_first_summary_row {
+#xvyfumqlvs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #5F5F5F;
 }
 
-#juqvdooipf .gt_first_summary_row.thick {
+#xvyfumqlvs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#juqvdooipf .gt_last_summary_row {
+#xvyfumqlvs .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1078,7 +1300,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-bottom-color: #5F5F5F;
 }
 
-#juqvdooipf .gt_grand_summary_row {
+#xvyfumqlvs .gt_grand_summary_row {
   color: #333333;
   background-color: #D5D5D5;
   text-transform: inherit;
@@ -1088,7 +1310,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   padding-right: 5px;
 }
 
-#juqvdooipf .gt_first_grand_summary_row {
+#xvyfumqlvs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1098,7 +1320,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-top-color: #5F5F5F;
 }
 
-#juqvdooipf .gt_last_grand_summary_row_top {
+#xvyfumqlvs .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1108,11 +1330,11 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-bottom-color: #5F5F5F;
 }
 
-#juqvdooipf .gt_striped {
+#xvyfumqlvs .gt_striped {
   background-color: #F4F4F4;
 }
 
-#juqvdooipf .gt_table_body {
+#xvyfumqlvs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #5F5F5F;
@@ -1121,7 +1343,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-bottom-color: #5F5F5F;
 }
 
-#juqvdooipf .gt_footnotes {
+#xvyfumqlvs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1135,7 +1357,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-right-color: #D3D3D3;
 }
 
-#juqvdooipf .gt_footnote {
+#xvyfumqlvs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1144,7 +1366,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   padding-right: 5px;
 }
 
-#juqvdooipf .gt_sourcenotes {
+#xvyfumqlvs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1158,7 +1380,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   border-right-color: #D3D3D3;
 }
 
-#juqvdooipf .gt_sourcenote {
+#xvyfumqlvs .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1166,77 +1388,77 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
   padding-right: 5px;
 }
 
-#juqvdooipf .gt_left {
+#xvyfumqlvs .gt_left {
   text-align: left;
 }
 
-#juqvdooipf .gt_center {
+#xvyfumqlvs .gt_center {
   text-align: center;
 }
 
-#juqvdooipf .gt_right {
+#xvyfumqlvs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#juqvdooipf .gt_font_normal {
+#xvyfumqlvs .gt_font_normal {
   font-weight: normal;
 }
 
-#juqvdooipf .gt_font_bold {
+#xvyfumqlvs .gt_font_bold {
   font-weight: bold;
 }
 
-#juqvdooipf .gt_font_italic {
+#xvyfumqlvs .gt_font_italic {
   font-style: italic;
 }
 
-#juqvdooipf .gt_super {
+#xvyfumqlvs .gt_super {
   font-size: 65%;
 }
 
-#juqvdooipf .gt_footnote_marks {
+#xvyfumqlvs .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#juqvdooipf .gt_asterisk {
+#xvyfumqlvs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#juqvdooipf .gt_indent_1 {
+#xvyfumqlvs .gt_indent_1 {
   text-indent: 5px;
 }
 
-#juqvdooipf .gt_indent_2 {
+#xvyfumqlvs .gt_indent_2 {
   text-indent: 10px;
 }
 
-#juqvdooipf .gt_indent_3 {
+#xvyfumqlvs .gt_indent_3 {
   text-indent: 15px;
 }
 
-#juqvdooipf .gt_indent_4 {
+#xvyfumqlvs .gt_indent_4 {
   text-indent: 20px;
 }
 
-#juqvdooipf .gt_indent_5 {
+#xvyfumqlvs .gt_indent_5 {
   text-indent: 25px;
 }
 
-#juqvdooipf .katex-display {
+#xvyfumqlvs .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#juqvdooipf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xvyfumqlvs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 20%">
@@ -1245,13 +1467,13 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <col style="width: 20%">
 </colgroup>
 <thead>
-<tr class="header gt_heading">
-<th colspan="5" class="gt_heading gt_title gt_font_normal">Light liquid fuel production (PJ) from refineries in 2018</th>
+<tr class="gt_heading header">
+<td colspan="5" class="gt_heading gt_title gt_font_normal">Light liquid fuel production (PJ) from refineries in 2018</td>
 </tr>
-<tr class="odd gt_heading">
-<th colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Comparison between AIDRES, JRC-IDEES, and EUROSTAT</th>
+<tr class="gt_heading even">
+<td colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Comparison between AIDRES, JRC-IDEES, and EUROSTAT</td>
 </tr>
-<tr class="header gt_col_headings gt_spanner_row">
+<tr class="gt_col_headings gt_spanner_row header">
 <th colspan="2" id="<div data-qmd-base64=&quot;KipDb3VudHJ5Kio=&quot;><div class='gt_from_md'><p><strong>Country</strong></p>
 </div></div>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"></span>
 <p><strong>Country</strong></p>
@@ -1261,7 +1483,7 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <p><strong>Data Source</strong></p>
 </th>
 </tr>
-<tr class="odd gt_col_headings">
+<tr class="gt_col_headings even">
 <th id="Code" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Code</th>
 <th id="Name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Name</th>
 <th id="AIDRES" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">AIDRES</th>
@@ -1415,7 +1637,713 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <td class="gt_row gt_left" headers="country">Netherlands</td>
 <td class="gt_row gt_right" headers="aidres">1764.14</td>
 <td class="gt_row gt_right" headers="idees">1367.49</td>
-<td class="gt_row gt_right" headers="eurostat">1367.17</td>
+<td class="gt_row gt_right" headers="eurostat">1366.92</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">PL</td>
+<td class="gt_row gt_left gt_striped" headers="country">Poland</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">691.96</td>
+<td class="gt_row gt_right gt_striped" headers="idees">775.70</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">775.67</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">PT</td>
+<td class="gt_row gt_left" headers="country">Portugal</td>
+<td class="gt_row gt_right" headers="aidres">289.93</td>
+<td class="gt_row gt_right" headers="idees">396.26</td>
+<td class="gt_row gt_right" headers="eurostat">396.24</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">RO</td>
+<td class="gt_row gt_left gt_striped" headers="country">Romania</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">221.55</td>
+<td class="gt_row gt_right gt_striped" headers="idees">407.48</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">407.46</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SE</td>
+<td class="gt_row gt_left" headers="country">Sweden</td>
+<td class="gt_row gt_right" headers="aidres">601.72</td>
+<td class="gt_row gt_right" headers="idees">589.58</td>
+<td class="gt_row gt_right" headers="eurostat">589.56</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">SI</td>
+<td class="gt_row gt_left gt_striped" headers="country">Slovenia</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">-</td>
+<td class="gt_row gt_right gt_striped" headers="idees">-</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">-</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">SK</td>
+<td class="gt_row gt_left" headers="country">Slovakia</td>
+<td class="gt_row gt_right" headers="aidres">158.62</td>
+<td class="gt_row gt_right" headers="idees">177.83</td>
+<td class="gt_row gt_right" headers="eurostat">177.82</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>ref_data_sources_2_0 <span class="sc">|&gt;</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>fuel, <span class="sc">-</span>year) <span class="sc">|&gt;</span> </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> source, <span class="at">values_from =</span> pj_ref) <span class="sc">|&gt;</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="at">replace =</span> <span class="dv">0</span>)),</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">2</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="sc">|&gt;</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">country_code =</span> <span class="st">'Code'</span>,</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">country =</span> <span class="st">'Name'</span>,</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">aidres =</span> <span class="st">'AIDRES 2.0'</span>,</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">idees =</span> <span class="st">'JRC-IDEES'</span>,</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">eurostat =</span> <span class="st">'EUROSTAT'</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_spanner</span>(<span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Data Source**'</span>),</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_spanner</span>(<span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Country**'</span>),</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">'Light liquid fuel production (PJ) from refineries in 2018'</span>,</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">'Comparison between AIDRES 2.0, JRC-IDEES, and EUROSTAT'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sub_zero</span>(<span class="at">zero_text =</span> <span class="st">'-'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">6</span>, <span class="at">color =</span> <span class="st">'gray'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="aiknvceeyy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#aiknvceeyy table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#aiknvceeyy thead, #aiknvceeyy tbody, #aiknvceeyy tfoot, #aiknvceeyy tr, #aiknvceeyy td, #aiknvceeyy th {
+  border-style: none;
+}
+
+#aiknvceeyy p {
+  margin: 0;
+  padding: 0;
+}
+
+#aiknvceeyy .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#aiknvceeyy .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#aiknvceeyy .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#aiknvceeyy .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#aiknvceeyy .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#aiknvceeyy .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#aiknvceeyy .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#aiknvceeyy .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #5F5F5F;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#aiknvceeyy .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #5F5F5F;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#aiknvceeyy .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#aiknvceeyy .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#aiknvceeyy .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#aiknvceeyy .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#aiknvceeyy .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#aiknvceeyy .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  vertical-align: middle;
+}
+
+#aiknvceeyy .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#aiknvceeyy .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#aiknvceeyy .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: none;
+  border-top-width: 1px;
+  border-top-color: #D5D5D5;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D5D5D5;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D5D5D5;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#aiknvceeyy .gt_stub {
+  color: #333333;
+  background-color: #D5D5D5;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D5D5D5;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aiknvceeyy .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#aiknvceeyy .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#aiknvceeyy .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#aiknvceeyy .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aiknvceeyy .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #5F5F5F;
+}
+
+#aiknvceeyy .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#aiknvceeyy .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#aiknvceeyy .gt_grand_summary_row {
+  color: #333333;
+  background-color: #D5D5D5;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aiknvceeyy .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #5F5F5F;
+}
+
+#aiknvceeyy .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #5F5F5F;
+}
+
+#aiknvceeyy .gt_striped {
+  background-color: #F4F4F4;
+}
+
+#aiknvceeyy .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#aiknvceeyy .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#aiknvceeyy .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aiknvceeyy .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#aiknvceeyy .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aiknvceeyy .gt_left {
+  text-align: left;
+}
+
+#aiknvceeyy .gt_center {
+  text-align: center;
+}
+
+#aiknvceeyy .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#aiknvceeyy .gt_font_normal {
+  font-weight: normal;
+}
+
+#aiknvceeyy .gt_font_bold {
+  font-weight: bold;
+}
+
+#aiknvceeyy .gt_font_italic {
+  font-style: italic;
+}
+
+#aiknvceeyy .gt_super {
+  font-size: 65%;
+}
+
+#aiknvceeyy .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#aiknvceeyy .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#aiknvceeyy .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#aiknvceeyy .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#aiknvceeyy .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#aiknvceeyy .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#aiknvceeyy .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#aiknvceeyy .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#aiknvceeyy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="gt_heading header">
+<td colspan="5" class="gt_heading gt_title gt_font_normal">Light liquid fuel production (PJ) from refineries in 2018</td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Comparison between AIDRES 2.0, JRC-IDEES, and EUROSTAT</td>
+</tr>
+<tr class="gt_col_headings gt_spanner_row header">
+<th colspan="2" id="<div data-qmd-base64=&quot;KipDb3VudHJ5Kio=&quot;><div class='gt_from_md'><p><strong>Country</strong></p>
+</div></div>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"></span>
+<p><strong>Country</strong></p>
+</th>
+<th colspan="3" id="<div data-qmd-base64=&quot;KipEYXRhIFNvdXJjZSoq&quot;><div class='gt_from_md'><p><strong>Data Source</strong></p>
+</div></div>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"></span>
+<p><strong>Data Source</strong></p>
+</th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="Code" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Code</th>
+<th id="Name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Name</th>
+<th id="AIDRES 2.0" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">AIDRES 2.0</th>
+<th id="JRC-IDEES" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">JRC-IDEES</th>
+<th id="EUROSTAT" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">EUROSTAT</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">AT</td>
+<td class="gt_row gt_left" headers="country">Austria</td>
+<td class="gt_row gt_right" headers="aidres">265.32</td>
+<td class="gt_row gt_right" headers="idees">278.41</td>
+<td class="gt_row gt_right" headers="eurostat">278.39</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">BE</td>
+<td class="gt_row gt_left gt_striped" headers="country">Belgium</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">883.42</td>
+<td class="gt_row gt_right gt_striped" headers="idees">833.23</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">833.19</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">BG</td>
+<td class="gt_row gt_left" headers="country">Bulgaria</td>
+<td class="gt_row gt_right" headers="aidres">268.02</td>
+<td class="gt_row gt_right" headers="idees">185.19</td>
+<td class="gt_row gt_right" headers="eurostat">185.18</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">CY</td>
+<td class="gt_row gt_left gt_striped" headers="country">Cyprus</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">-</td>
+<td class="gt_row gt_right gt_striped" headers="idees">-</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">-</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">CZ</td>
+<td class="gt_row gt_left" headers="country">Czechia</td>
+<td class="gt_row gt_right" headers="aidres">262.58</td>
+<td class="gt_row gt_right" headers="idees">210.62</td>
+<td class="gt_row gt_right" headers="eurostat">210.61</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">DE</td>
+<td class="gt_row gt_left gt_striped" headers="country">Germany</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">3113.91</td>
+<td class="gt_row gt_right gt_striped" headers="idees">2843.70</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">2843.56</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">DK</td>
+<td class="gt_row gt_left" headers="country">Denmark</td>
+<td class="gt_row gt_right" headers="aidres">237.97</td>
+<td class="gt_row gt_right" headers="idees">292.79</td>
+<td class="gt_row gt_right" headers="eurostat">292.78</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">EE</td>
+<td class="gt_row gt_left gt_striped" headers="country">Estonia</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">-</td>
+<td class="gt_row gt_right gt_striped" headers="idees">-</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">-</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">EL</td>
+<td class="gt_row gt_left" headers="country">Greece</td>
+<td class="gt_row gt_right" headers="aidres">577.12</td>
+<td class="gt_row gt_right" headers="idees">837.90</td>
+<td class="gt_row gt_right" headers="eurostat">837.86</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">ES</td>
+<td class="gt_row gt_left gt_striped" headers="country">Spain</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">1980.21</td>
+<td class="gt_row gt_right gt_striped" headers="idees">2032.79</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">2032.69</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">FI</td>
+<td class="gt_row gt_left" headers="country">Finland</td>
+<td class="gt_row gt_right" headers="aidres">281.70</td>
+<td class="gt_row gt_right" headers="idees">500.52</td>
+<td class="gt_row gt_right" headers="eurostat">500.50</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">FR</td>
+<td class="gt_row gt_left gt_striped" headers="country">France</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">1610.97</td>
+<td class="gt_row gt_right gt_striped" headers="idees">1621.71</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">1621.64</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">HR</td>
+<td class="gt_row gt_left" headers="country">Croatia</td>
+<td class="gt_row gt_right" headers="aidres">183.27</td>
+<td class="gt_row gt_right" headers="idees">114.79</td>
+<td class="gt_row gt_right" headers="eurostat">114.79</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">HU</td>
+<td class="gt_row gt_left gt_striped" headers="country">Hungary</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">221.55</td>
+<td class="gt_row gt_right gt_striped" headers="idees">198.19</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">198.18</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">IE</td>
+<td class="gt_row gt_left" headers="country">Ireland</td>
+<td class="gt_row gt_right" headers="aidres">98.47</td>
+<td class="gt_row gt_right" headers="idees">83.83</td>
+<td class="gt_row gt_right" headers="eurostat">83.82</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">IT</td>
+<td class="gt_row gt_left gt_striped" headers="country">Italy</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">2467.08</td>
+<td class="gt_row gt_right gt_striped" headers="idees">2071.88</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">2071.78</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">LT</td>
+<td class="gt_row gt_left" headers="country">Lithuania</td>
+<td class="gt_row gt_right" headers="aidres">259.84</td>
+<td class="gt_row gt_right" headers="idees">298.94</td>
+<td class="gt_row gt_right" headers="eurostat">298.92</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">LU</td>
+<td class="gt_row gt_left gt_striped" headers="country">Luxembourg</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">-</td>
+<td class="gt_row gt_right gt_striped" headers="idees">-</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">-</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">LV</td>
+<td class="gt_row gt_left" headers="country">Latvia</td>
+<td class="gt_row gt_right" headers="aidres">-</td>
+<td class="gt_row gt_right" headers="idees">-</td>
+<td class="gt_row gt_right" headers="eurostat">-</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country_code">MT</td>
+<td class="gt_row gt_left gt_striped" headers="country">Malta</td>
+<td class="gt_row gt_right gt_striped" headers="aidres">-</td>
+<td class="gt_row gt_right gt_striped" headers="idees">-</td>
+<td class="gt_row gt_right gt_striped" headers="eurostat">-</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country_code">NL</td>
+<td class="gt_row gt_left" headers="country">Netherlands</td>
+<td class="gt_row gt_right" headers="aidres">1649.25</td>
+<td class="gt_row gt_right" headers="idees">1367.49</td>
+<td class="gt_row gt_right" headers="eurostat">1366.92</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left gt_striped" headers="country_code">PL</td>
@@ -1471,15 +2399,29 @@ dbl (42): solution_id, configuration_id, scenario_id, aidres_sector_id, hori...
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ref_data_sources <span class="sc">|&gt;</span> </span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>fuel, <span class="sc">-</span>year) <span class="sc">|&gt;</span> </span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'pj'</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code<span class="sc">:</span> source, unit, pj_ref) <span class="sc">|&gt;</span> </span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> source, <span class="at">values_from =</span> pj_ref) <span class="sc">|&gt;</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="at">replace =</span> <span class="dv">0</span>)),</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">1</span>))) <span class="sc">|&gt;</span> </span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="sc">|&gt;</span> </span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">write_xlsx</span>(<span class="fu">here</span>(output_dir,<span class="st">'diff_ref_prod_flow_llf.xlsx'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>ref_data_sources <span class="sc">|&gt;</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>fuel, <span class="sc">-</span>year) <span class="sc">|&gt;</span> </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'pj'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code<span class="sc">:</span> source, unit, pj_ref) <span class="sc">|&gt;</span> </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> source, <span class="at">values_from =</span> pj_ref) <span class="sc">|&gt;</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="at">replace =</span> <span class="dv">0</span>)),</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">1</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="sc">|&gt;</span> </span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">write_xlsx</span>(<span class="fu">here</span>(output_dir,<span class="st">'diff_ref_prod_flow_llf.xlsx'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>ref_data_sources_2_0 <span class="sc">|&gt;</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>fuel, <span class="sc">-</span>year) <span class="sc">|&gt;</span> </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">unit =</span> <span class="st">'pj'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_code<span class="sc">:</span> source, unit, pj_ref) <span class="sc">|&gt;</span> </span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> source, <span class="at">values_from =</span> pj_ref) <span class="sc">|&gt;</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="at">replace =</span> <span class="dv">0</span>)),</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">1</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(country_code) <span class="sc">|&gt;</span> </span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">write_xlsx</span>(<span class="fu">here</span>(output_dir,<span class="st">'diff_ref_prod_flow_llf_2_0.xlsx'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1500,252 +2442,257 @@ Mate, Rozsai, Jaxa-Rozen Marc, Salvucci Raffaele, Sikora Przemyslaw, Tattini Jac
 <div id="ref-aidres_report" class="csl-entry" role="listitem">
 Vermeiren, Karolien, Wim Clymans, Lorenz Hambsch, and Leen Van Esch. 2023. <span>“AIDRES - Advancing Industrial Decarbonization by Assessing the Future Use of Renewable Energies in Industrial Processes.”</span> European Commission, Joint Research Centre. <a href="http://data.europa.eu/89h/14914982-70a9-4d1d-a2fc-cdee4a1d833d">http://data.europa.eu/89h/14914982-70a9-4d1d-a2fc-cdee4a1d833d</a>.
 </div>
-</div></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{das2024,
-  author = {Das, Partha and Valkering, Pieter},
+</div></section><section class="quarto-appendix-contents" id="quarto-reuse"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div class="quarto-appendix-contents"><div><a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{das2026,
+  author = {Das, Partha and Valkering, Pieter and Van de Put, Hans},
   title = {Analyzing {Refinery} {Sector} {Product} {Flow} of {Light}
     {Liquid} {Fuels}},
-  date = {2024-12-18},
+  date = {2026-01-29},
   langid = {en}
 }
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-das2024" class="csl-entry quarto-appendix-citeas" role="listitem">
-Das, Partha, and Pieter Valkering. 2024. <span>“Analyzing Refinery
-Sector Product Flow of Light Liquid Fuels.”</span> December 18, 2024.
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-das2026" class="csl-entry quarto-appendix-citeas" role="listitem">
+Das, Partha, Pieter Valkering, and Hans Van de Put. 2026.
+<span>“Analyzing Refinery Sector Product Flow of Light Liquid
+Fuels.”</span> January 29, 2026.
 </div></div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1753,185 +2700,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 
 

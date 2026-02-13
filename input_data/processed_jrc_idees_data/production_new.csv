@@ -1,0 +1,433 @@
+country_code,sector_id,to_node,Industry,actual_capacity,unit_capacity,conversion_production,actual_capacity_converted,unit,2030,2050
+AT,chemical,other-chemicals,other-chemicals-production-alternative,563.2926613785368,kt ethylene eq.,1.0,563.2926613785368,kt_ethylene_eq_yr,563.2926613785368,563.2926613785368
+AT,chemical,pharmaceuticals,pharmaceuticals-production-alternative,165.1334965456764,kt ethylene eq.,1.0,165.1334965456764,kt_ethylene_eq_yr,165.1334965456764,165.1334965456764
+AT,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,11254.680021736443,TJ,277.78,3126325.016437949,mwh_yr,3126325.016437949,3126325.016437949
+AT,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,12623.14963113264,TJ,277.78,3506458.5045360243,mwh_yr,3506458.5045360243,3506458.5045360243
+AT,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+AT,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+AT,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,401.531081620984,kt,1.0,401.531081620984,kt_yr,401.531081620984,401.531081620984
+AT,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,433.8333333333333,kt lead eq.,1.0,433.8333333333333,kt_lead_eq_yr,433.8333333333333,433.8333333333333
+AT,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,11865.67365422339,kt bricks eq.,1.0,11865.67365422339,kt_bricks_eq_yr,11865.67365422339,11865.67365422339
+AT,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,10831.200319360974,TJ,277.78,3008690.824712091,mwh_yr,3008690.824712091,3008690.824712091
+AT,pulp-and-paper,paper,paper-production-alternative,5065.26,kt,1.0,5065.26,kt_yr,5065.26,5065.26
+AT,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,235.6580000000002,kt paper eq.,1.0,235.6580000000002,kt_paper_eq_yr,235.6580000000002,235.6580000000002
+AT,pulp-and-paper,pulp,pulp-production-alternative,2004.48,kt,1.0,2004.48,kt_yr,2004.48,2004.48
+AT,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,1358.4966566416974,TJ,277.78,377363.20128193067,mwh_yr,377363.20128193067,377363.20128193067
+AT,transport-equipment,transport-equipment,transport-equipment-production-alternative,3395.168657934153,TJ,277.78,943109.949800949,mwh_yr,943109.949800949,943109.949800949
+AT,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,10833.442239556229,TJ,277.78,3009313.5853039287,mwh_yr,3009313.5853039287,3009313.5853039287
+BE,chemical,other-chemicals,other-chemicals-production-alternative,776.6163944199163,kt ethylene eq.,1.0,776.6163944199163,kt_ethylene_eq_yr,776.6163944199163,776.6163944199163
+BE,chemical,pharmaceuticals,pharmaceuticals-production-alternative,342.5337652261748,kt ethylene eq.,1.0,342.5337652261748,kt_ethylene_eq_yr,342.5337652261748,342.5337652261748
+BE,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,34569.55181614487,TJ,277.78,9602730.103488721,mwh_yr,9602730.103488721,9602730.103488721
+BE,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,6495.43808269879,TJ,277.78,1804302.7906120697,mwh_yr,1804302.7906120697,1804302.7906120697
+BE,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+BE,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+BE,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+BE,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,2010.722367340461,kt lead eq.,1.0,2010.722367340461,kt_lead_eq_yr,2010.722367340461,2010.722367340461
+BE,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,12772.2053006968,kt bricks eq.,1.0,12772.2053006968,kt_bricks_eq_yr,12772.2053006968,12772.2053006968
+BE,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,9294.51654247299,TJ,277.78,2581830.8051681467,mwh_yr,2581830.8051681467,2581830.8051681467
+BE,pulp-and-paper,paper,paper-production-alternative,1699.566600489988,kt,1.0,1699.566600489988,kt_yr,1699.566600489988,1699.566600489988
+BE,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,699.3296349135492,kt paper eq.,1.0,699.3296349135492,kt_paper_eq_yr,699.3296349135492,699.3296349135492
+BE,pulp-and-paper,pulp,pulp-production-alternative,514.9772434029182,kt,1.0,514.9772434029182,kt_yr,514.9772434029182,514.9772434029182
+BE,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,3326.7113592603964,TJ,277.78,924093.8813753529,mwh_yr,924093.8813753529,924093.8813753529
+BE,transport-equipment,transport-equipment,transport-equipment-production-alternative,2598.892701201319,TJ,277.78,721920.4145397024,mwh_yr,721920.4145397024,721920.4145397024
+BE,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,5243.286383058747,TJ,277.78,1456480.0914860584,mwh_yr,1456480.0914860584,1456480.0914860584
+BG,chemical,other-chemicals,other-chemicals-production-alternative,914.0932034161731,kt ethylene eq.,1.0,914.0932034161731,kt_ethylene_eq_yr,914.0932034161731,914.0932034161731
+BG,chemical,pharmaceuticals,pharmaceuticals-production-alternative,76.16325225062657,kt ethylene eq.,1.0,76.16325225062657,kt_ethylene_eq_yr,76.16325225062657,76.16325225062657
+BG,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,5534.082600416555,TJ,277.78,1537257.4647437104,mwh_yr,1537257.4647437104,1537257.4647437104
+BG,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,3121.0452172893356,TJ,277.78,866963.9404586316,mwh_yr,866963.9404586316,866963.9404586316
+BG,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+BG,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+BG,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,8.421273316366593,kt,1.0,8.421273316366593,kt_yr,8.421273316366593,8.421273316366593
+BG,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,460.6666666666667,kt lead eq.,1.0,460.6666666666667,kt_lead_eq_yr,460.6666666666667,460.6666666666667
+BG,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,5810.81957163433,kt bricks eq.,1.0,5810.81957163433,kt_bricks_eq_yr,5810.81957163433,5810.81957163433
+BG,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,5536.387092158877,TJ,277.78,1537897.6064598926,mwh_yr,1537897.6064598926,1537897.6064598926
+BG,pulp-and-paper,paper,paper-production-alternative,394.06,kt,1.0,394.06,kt_yr,394.06,394.06
+BG,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,42.78300000000004,kt paper eq.,1.0,42.78300000000004,kt_paper_eq_yr,42.78300000000004,42.78300000000004
+BG,pulp-and-paper,pulp,pulp-production-alternative,231.23,kt,1.0,231.23,kt_yr,231.23,231.23
+BG,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,1093.6327162745054,TJ,277.78,303789.29592673207,mwh_yr,303789.29592673207,303789.29592673207
+BG,transport-equipment,transport-equipment,transport-equipment-production-alternative,427.3396370150288,TJ,277.78,118706.4043700347,mwh_yr,118706.4043700347,118706.4043700347
+BG,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,1631.2997534928872,TJ,277.78,453142.4455252542,mwh_yr,453142.4455252542,453142.4455252542
+CY,chemical,other-chemicals,other-chemicals-production-alternative,4.33016097774867,kt ethylene eq.,1.0,4.33016097774867,kt_ethylene_eq_yr,4.33016097774867,4.33016097774867
+CY,chemical,pharmaceuticals,pharmaceuticals-production-alternative,6.701399710051626,kt ethylene eq.,1.0,6.701399710051626,kt_ethylene_eq_yr,6.701399710051626,6.701399710051626
+CY,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,837.028513223757,TJ,277.78,232509.7804032952,mwh_yr,232509.7804032952,232509.7804032952
+CY,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,42.319830782996874,TJ,277.78,11755.60259490087,mwh_yr,11755.60259490087,11755.60259490087
+CY,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+CY,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+CY,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+CY,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,0.0,kt lead eq.,1.0,0.0,kt_lead_eq_yr,0.0,0.0
+CY,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,808.7799423785334,kt bricks eq.,1.0,808.7799423785334,kt_bricks_eq_yr,808.7799423785334,808.7799423785334
+CY,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,461.1693040557784,TJ,277.78,128103.60928061411,mwh_yr,128103.60928061411,128103.60928061411
+CY,pulp-and-paper,paper,paper-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+CY,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,6.570953544738511,kt paper eq.,1.0,6.570953544738511,kt_paper_eq_yr,6.570953544738511,6.570953544738511
+CY,pulp-and-paper,pulp,pulp-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+CY,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,8.304572778868094,TJ,277.78,2306.844226513979,mwh_yr,2306.844226513979,2306.844226513979
+CY,transport-equipment,transport-equipment,transport-equipment-production-alternative,3.549469539477923,TJ,277.78,985.9716486761773,mwh_yr,985.9716486761773,985.9716486761773
+CY,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,10.733662519364806,TJ,277.78,2981.5967746291553,mwh_yr,2981.5967746291553,2981.5967746291553
+CZ,chemical,other-chemicals,other-chemicals-production-alternative,490.5245158768137,kt ethylene eq.,1.0,490.5245158768137,kt_ethylene_eq_yr,490.5245158768137,490.5245158768137
+CZ,chemical,pharmaceuticals,pharmaceuticals-production-alternative,412.352789815161,kt ethylene eq.,1.0,412.352789815161,kt_ethylene_eq_yr,412.352789815161,412.352789815161
+CZ,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,12009.804159641466,TJ,277.78,3336083.399465206,mwh_yr,3336083.399465206,3336083.399465206
+CZ,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,16919.568001876934,TJ,277.78,4699917.599561375,mwh_yr,4699917.599561375,4699917.599561375
+CZ,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+CZ,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+CZ,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,75.95482489745376,kt,1.0,75.95482489745376,kt_yr,75.95482489745376,75.95482489745376
+CZ,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,219.7674418604651,kt lead eq.,1.0,219.7674418604651,kt_lead_eq_yr,219.7674418604651,219.7674418604651
+CZ,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,11392.32743244403,kt bricks eq.,1.0,11392.32743244403,kt_bricks_eq_yr,11392.32743244403,11392.32743244403
+CZ,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,10356.466827168586,TJ,277.78,2876819.3552508894,mwh_yr,2876819.3552508894,2876819.3552508894
+CZ,pulp-and-paper,paper,paper-production-alternative,828.9962408913033,kt,1.0,828.9962408913033,kt_yr,828.9962408913033,828.9962408913033
+CZ,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,260.7390660964343,kt paper eq.,1.0,260.7390660964343,kt_paper_eq_yr,260.7390660964343,260.7390660964343
+CZ,pulp-and-paper,pulp,pulp-production-alternative,577.4144792652212,kt,1.0,577.4144792652212,kt_yr,577.4144792652212,577.4144792652212
+CZ,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,3448.00321917775,TJ,277.78,957786.3342231953,mwh_yr,957786.3342231953,957786.3342231953
+CZ,transport-equipment,transport-equipment,transport-equipment-production-alternative,12508.407184774447,TJ,277.78,3474585.3477866454,mwh_yr,3474585.3477866454,3474585.3477866454
+CZ,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,4272.1807685358735,TJ,277.78,1186726.3738838949,mwh_yr,1186726.3738838949,1186726.3738838949
+DE,chemical,other-chemicals,other-chemicals-production-alternative,8141.74150718065,kt ethylene eq.,1.0,8141.74150718065,kt_ethylene_eq_yr,8141.74150718065,8141.74150718065
+DE,chemical,pharmaceuticals,pharmaceuticals-production-alternative,3021.497553749924,kt ethylene eq.,1.0,3021.497553749924,kt_ethylene_eq_yr,3021.497553749924,3021.497553749924
+DE,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,106681.52032082842,TJ,277.78,29633992.714719716,mwh_yr,29633992.714719716,29633992.714719716
+DE,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,117001.66742010626,TJ,277.78,32500723.175957114,mwh_yr,32500723.175957114,32500723.175957114
+DE,non-ferrous-metals,alumina,alumina-production-alternative,1899.385163802225,kt,1.0,1899.385163802225,kt_yr,1899.385163802225,1899.385163802225
+DE,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,500.0,kt,1.0,500.0,kt_yr,500.0,500.0
+DE,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,645.9942310561496,kt,1.0,645.9942310561496,kt_yr,645.9942310561496,645.9942310561496
+DE,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,2514.879008179959,kt lead eq.,1.0,2514.879008179959,kt_lead_eq_yr,2514.879008179959,2514.879008179959
+DE,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,53899.14257918444,kt bricks eq.,1.0,53899.14257918444,kt_bricks_eq_yr,53899.14257918444,53899.14257918444
+DE,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,98910.91394315043,TJ,277.78,27475473.675128322,mwh_yr,27475473.675128322,27475473.675128322
+DE,pulp-and-paper,paper,paper-production-alternative,23124.61,kt,1.0,23124.61,kt_yr,23124.61,23124.61
+DE,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,2213.18608695652,kt paper eq.,1.0,2213.18608695652,kt_paper_eq_yr,2213.18608695652,2213.18608695652
+DE,pulp-and-paper,pulp,pulp-production-alternative,2327.03,kt,1.0,2327.03,kt_yr,2327.03,2327.03
+DE,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,7728.117479426314,TJ,277.78,2146716.4734350415,mwh_yr,2146716.4734350415,2146716.4734350415
+DE,transport-equipment,transport-equipment,transport-equipment-production-alternative,63678.600459114256,TJ,277.78,17688641.635532755,mwh_yr,17688641.635532755,17688641.635532755
+DE,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,35098.29855202903,TJ,277.78,9749605.371782623,mwh_yr,9749605.371782623,9749605.371782623
+DK,chemical,other-chemicals,other-chemicals-production-alternative,579.2609731557014,kt ethylene eq.,1.0,579.2609731557014,kt_ethylene_eq_yr,579.2609731557014,579.2609731557014
+DK,chemical,pharmaceuticals,pharmaceuticals-production-alternative,310.2006608816703,kt ethylene eq.,1.0,310.2006608816703,kt_ethylene_eq_yr,310.2006608816703,310.2006608816703
+DK,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,13761.163626724276,TJ,277.78,3822576.0322314687,mwh_yr,3822576.0322314687,3822576.0322314687
+DK,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,5237.451022889498,TJ,277.78,1454859.1451382446,mwh_yr,1454859.1451382446,1454859.1451382446
+DK,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+DK,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+DK,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+DK,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,0.0,kt lead eq.,1.0,0.0,kt_lead_eq_yr,0.0,0.0
+DK,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,8938.570831633439,kt bricks eq.,1.0,8938.570831633439,kt_bricks_eq_yr,8938.570831633439,8938.570831633439
+DK,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,6791.654388235627,TJ,277.78,1886585.7559640924,mwh_yr,1886585.7559640924,1886585.7559640924
+DK,pulp-and-paper,paper,paper-production-alternative,298.7389387755102,kt,1.0,298.7389387755102,kt_yr,298.7389387755102,298.7389387755102
+DK,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,39.98225047287209,kt paper eq.,1.0,39.98225047287209,kt_paper_eq_yr,39.98225047287209,39.98225047287209
+DK,pulp-and-paper,pulp,pulp-production-alternative,4.83,kt,1.0,4.83,kt_yr,4.83,4.83
+DK,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,402.60190091109155,TJ,277.78,111834.756035083,mwh_yr,111834.756035083,111834.756035083
+DK,transport-equipment,transport-equipment,transport-equipment-production-alternative,360.38512882006796,TJ,277.78,100107.78108363847,mwh_yr,100107.78108363847,100107.78108363847
+DK,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,1095.8773467002736,TJ,277.78,304412.809366402,mwh_yr,304412.809366402,304412.809366402
+EE,chemical,other-chemicals,other-chemicals-production-alternative,22.7471461663554,kt ethylene eq.,1.0,22.7471461663554,kt_ethylene_eq_yr,22.7471461663554,22.7471461663554
+EE,chemical,pharmaceuticals,pharmaceuticals-production-alternative,3.654248377956399,kt ethylene eq.,1.0,3.654248377956399,kt_ethylene_eq_yr,3.654248377956399,3.654248377956399
+EE,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,1383.5153051182615,TJ,277.78,384312.8814557506,mwh_yr,384312.8814557506,384312.8814557506
+EE,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,949.7714967148096,TJ,277.78,263827.52635743975,mwh_yr,263827.52635743975,263827.52635743975
+EE,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+EE,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+EE,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+EE,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,5.397520058351567,kt lead eq.,1.0,5.397520058351567,kt_lead_eq_yr,5.397520058351567,5.397520058351567
+EE,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,6.86015565280257,kt bricks eq.,1.0,6.86015565280257,kt_bricks_eq_yr,6.86015565280257,6.86015565280257
+EE,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,930.2907416103212,TJ,277.78,258416.162204515,mwh_yr,258416.162204515,258416.162204515
+EE,pulp-and-paper,paper,paper-production-alternative,70.4,kt,1.0,70.4,kt_yr,70.4,70.4
+EE,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,67.67228915662652,kt paper eq.,1.0,67.67228915662652,kt_paper_eq_yr,67.67228915662652,67.67228915662652
+EE,pulp-and-paper,pulp,pulp-production-alternative,260.0,kt,1.0,260.0,kt_yr,260.0,260.0
+EE,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,227.74070734892925,TJ,277.78,63261.81368738556,mwh_yr,63261.81368738556,63261.81368738556
+EE,transport-equipment,transport-equipment,transport-equipment-production-alternative,198.50295495904052,TJ,277.78,55140.15082852227,mwh_yr,55140.15082852227,55140.15082852227
+EE,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,1247.0927351412904,TJ,277.78,346417.41996754764,mwh_yr,346417.41996754764,346417.41996754764
+EL,chemical,other-chemicals,other-chemicals-production-alternative,40.64987556581421,kt ethylene eq.,1.0,40.64987556581421,kt_ethylene_eq_yr,40.64987556581421,40.64987556581421
+EL,chemical,pharmaceuticals,pharmaceuticals-production-alternative,30.0400998593048,kt ethylene eq.,1.0,30.0400998593048,kt_ethylene_eq_yr,30.0400998593048,30.0400998593048
+EL,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,9635.409319174416,TJ,277.78,2676524.000680269,mwh_yr,2676524.000680269,2676524.000680269
+EL,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,2004.4509580039244,TJ,277.78,556796.3871143301,mwh_yr,556796.3871143301,556796.3871143301
+EL,non-ferrous-metals,alumina,alumina-production-alternative,720.0,kt,1.0,720.0,kt_yr,720.0,720.0
+EL,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,184.0,kt,1.0,184.0,kt_yr,184.0,184.0
+EL,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+EL,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,274.2,kt lead eq.,1.0,274.2,kt_lead_eq_yr,274.2,274.2
+EL,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,3325.0,kt bricks eq.,1.0,3325.0,kt_bricks_eq_yr,3325.0,3325.0
+EL,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,6511.38289352864,TJ,277.78,1808731.9401643854,mwh_yr,1808731.9401643854,1808731.9401643854
+EL,pulp-and-paper,paper,paper-production-alternative,374.82,kt,1.0,374.82,kt_yr,374.82,374.82
+EL,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,93.70499999999996,kt paper eq.,1.0,93.70499999999996,kt_paper_eq_yr,93.70499999999996,93.70499999999996
+EL,pulp-and-paper,pulp,pulp-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+EL,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,933.138923947879,TJ,277.78,259207.3302942418,mwh_yr,259207.3302942418,259207.3302942418
+EL,transport-equipment,transport-equipment,transport-equipment-production-alternative,131.10598381242167,TJ,277.78,36418.62018341449,mwh_yr,36418.62018341449,36418.62018341449
+EL,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,614.4491904027112,TJ,277.78,170681.6961100651,mwh_yr,170681.6961100651,170681.6961100651
+ES,chemical,other-chemicals,other-chemicals-production-alternative,2659.02198331164,kt ethylene eq.,1.0,2659.02198331164,kt_ethylene_eq_yr,2659.02198331164,2659.02198331164
+ES,chemical,pharmaceuticals,pharmaceuticals-production-alternative,916.1059122016635,kt ethylene eq.,1.0,916.1059122016635,kt_ethylene_eq_yr,916.1059122016635,916.1059122016635
+ES,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,56596.48694963803,TJ,277.78,15721372.144870449,mwh_yr,15721372.144870449,15721372.144870449
+ES,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,21593.714335842516,TJ,277.78,5998301.968210334,mwh_yr,5998301.968210334,5998301.968210334
+ES,non-ferrous-metals,alumina,alumina-production-alternative,1550.319334246287,kt,1.0,1550.319334246287,kt_yr,1550.319334246287,1550.319334246287
+ES,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,200.0,kt,1.0,200.0,kt_yr,200.0,200.0
+ES,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+ES,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,1752.998333333333,kt lead eq.,1.0,1752.998333333333,kt_lead_eq_yr,1752.998333333333,1752.998333333333
+ES,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,45331.69532933906,kt bricks eq.,1.0,45331.69532933906,kt_bricks_eq_yr,45331.69532933906,45331.69532933906
+ES,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,37687.625097286225,TJ,277.78,10468868.499524167,mwh_yr,10468868.499524167,10468868.499524167
+ES,pulp-and-paper,paper,paper-production-alternative,6658.9,kt,1.0,6658.9,kt_yr,6658.9,6658.9
+ES,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,831.534725274725,kt paper eq.,1.0,831.534725274725,kt_paper_eq_yr,831.534725274725,831.534725274725
+ES,pulp-and-paper,pulp,pulp-production-alternative,1748.84,kt,1.0,1748.84,kt_yr,1748.84,1748.84
+ES,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,6027.432887688272,TJ,277.78,1674300.307542048,mwh_yr,1674300.307542048,1674300.307542048
+ES,transport-equipment,transport-equipment,transport-equipment-production-alternative,13692.060570265334,TJ,277.78,3803380.585208304,mwh_yr,3803380.585208304,3803380.585208304
+ES,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,11872.631702178114,TJ,277.78,3297979.634231036,mwh_yr,3297979.634231036,3297979.634231036
+FI,chemical,other-chemicals,other-chemicals-production-alternative,754.419016232864,kt ethylene eq.,1.0,754.419016232864,kt_ethylene_eq_yr,754.419016232864,754.419016232864
+FI,chemical,pharmaceuticals,pharmaceuticals-production-alternative,157.7930543375121,kt ethylene eq.,1.0,157.7930543375121,kt_ethylene_eq_yr,157.7930543375121,157.7930543375121
+FI,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,9072.964144907584,TJ,277.78,2520287.9801724283,mwh_yr,2520287.9801724283,2520287.9801724283
+FI,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,7799.359466303661,TJ,277.78,2166506.0725498307,mwh_yr,2166506.0725498307,2166506.0725498307
+FI,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+FI,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+FI,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,25.405,kt,1.0,25.405,kt_yr,25.405,25.405
+FI,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,988.1843868916226,kt lead eq.,1.0,988.1843868916226,kt_lead_eq_yr,988.1843868916226,988.1843868916226
+FI,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,5613.386379586746,kt bricks eq.,1.0,5613.386379586746,kt_bricks_eq_yr,5613.386379586746,5613.386379586746
+FI,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,13025.049462147657,TJ,277.78,3618098.239595376,mwh_yr,3618098.239595376,3618098.239595376
+FI,pulp-and-paper,paper,paper-production-alternative,8660.0,kt,1.0,8660.0,kt_yr,8660.0,8660.0
+FI,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,298.7817258883252,kt paper eq.,1.0,298.7817258883252,kt_paper_eq_yr,298.7817258883252,298.7817258883252
+FI,pulp-and-paper,pulp,pulp-production-alternative,10960.0,kt,1.0,10960.0,kt_yr,10960.0,10960.0
+FI,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,450.81199922977356,TJ,277.78,125226.55714604649,mwh_yr,125226.55714604649,125226.55714604649
+FI,transport-equipment,transport-equipment,transport-equipment-production-alternative,1275.5299513553935,TJ,277.78,354316.70988750114,mwh_yr,354316.70988750114,354316.70988750114
+FI,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,10503.603991758917,TJ,277.78,2917691.116830792,mwh_yr,2917691.116830792,2917691.116830792
+FR,chemical,other-chemicals,other-chemicals-production-alternative,8101.820397928086,kt ethylene eq.,1.0,8101.820397928086,kt_ethylene_eq_yr,8101.820397928086,8101.820397928086
+FR,chemical,pharmaceuticals,pharmaceuticals-production-alternative,1776.750354106116,kt ethylene eq.,1.0,1776.750354106116,kt_ethylene_eq_yr,1776.750354106116,1776.750354106116
+FR,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,108001.82138030739,TJ,277.78,30000745.94302178,mwh_yr,30000745.94302178,30000745.94302178
+FR,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,40686.13102719267,TJ,277.78,11301793.476733578,mwh_yr,11301793.476733578,11301793.476733578
+FR,non-ferrous-metals,alumina,alumina-production-alternative,299.6724727807293,kt,1.0,299.6724727807293,kt_yr,299.6724727807293,299.6724727807293
+FR,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,440.0,kt,1.0,440.0,kt_yr,440.0,440.0
+FR,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,161.3744609715343,kt,1.0,161.3744609715343,kt_yr,161.3744609715343,161.3744609715343
+FR,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,1154.066666666667,kt lead eq.,1.0,1154.066666666667,kt_lead_eq_yr,1154.066666666667,1154.066666666667
+FR,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,48819.45077789431,kt bricks eq.,1.0,48819.45077789431,kt_bricks_eq_yr,48819.45077789431,48819.45077789431
+FR,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,49805.14214466373,TJ,277.78,13834872.38494469,mwh_yr,13834872.38494469,13834872.38494469
+FR,pulp-and-paper,paper,paper-production-alternative,6597.0,kt,1.0,6597.0,kt_yr,6597.0,6597.0
+FR,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,998.7567567567562,kt paper eq.,1.0,998.7567567567562,kt_paper_eq_yr,998.7567567567562,998.7567567567562
+FR,pulp-and-paper,pulp,pulp-production-alternative,1615.0,kt,1.0,1615.0,kt_yr,1615.0,1615.0
+FR,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,5105.082034944625,TJ,277.78,1418089.6876669177,mwh_yr,1418089.6876669177,1418089.6876669177
+FR,transport-equipment,transport-equipment,transport-equipment-production-alternative,22536.139950471865,TJ,277.78,6260088.955442074,mwh_yr,6260088.955442074,6260088.955442074
+FR,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,11997.451468070525,TJ,277.78,3332652.06880063,mwh_yr,3332652.06880063,3332652.06880063
+HR,chemical,other-chemicals,other-chemicals-production-alternative,58.23754909785276,kt ethylene eq.,1.0,58.23754909785276,kt_ethylene_eq_yr,58.23754909785276,58.23754909785276
+HR,chemical,pharmaceuticals,pharmaceuticals-production-alternative,20.78240550215006,kt ethylene eq.,1.0,20.78240550215006,kt_ethylene_eq_yr,20.78240550215006,20.78240550215006
+HR,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,3488.701686664064,TJ,277.78,969091.5545215436,mwh_yr,969091.5545215436,969091.5545215436
+HR,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,1488.4248789238636,TJ,277.78,413454.6628674708,mwh_yr,413454.6628674708,413454.6628674708
+HR,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+HR,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+HR,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,112.965,kt,1.0,112.965,kt_yr,112.965,112.965
+HR,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,5.1,kt lead eq.,1.0,5.1,kt_lead_eq_yr,5.1,5.1
+HR,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,3002.643040021828,kt bricks eq.,1.0,3002.643040021828,kt_bricks_eq_yr,3002.643040021828,3002.643040021828
+HR,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,2854.5441783724973,TJ,277.78,792935.2818683123,mwh_yr,792935.2818683123,792935.2818683123
+HR,pulp-and-paper,paper,paper-production-alternative,374.17,kt,1.0,374.17,kt_yr,374.17,374.17
+HR,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,140.58,kt paper eq.,1.0,140.58,kt_paper_eq_yr,140.58,140.58
+HR,pulp-and-paper,pulp,pulp-production-alternative,47.57,kt,1.0,47.57,kt_yr,47.57,47.57
+HR,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,450.8031552617599,TJ,277.78,125224.10046861165,mwh_yr,125224.10046861165,125224.10046861165
+HR,transport-equipment,transport-equipment,transport-equipment-production-alternative,232.83465849999078,TJ,277.78,64676.811438127435,mwh_yr,64676.811438127435,64676.811438127435
+HR,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,1783.2012539142818,TJ,277.78,495337.64431230916,mwh_yr,495337.64431230916,495337.64431230916
+HU,chemical,other-chemicals,other-chemicals-production-alternative,731.1661225075669,kt ethylene eq.,1.0,731.1661225075669,kt_ethylene_eq_yr,731.1661225075669,731.1661225075669
+HU,chemical,pharmaceuticals,pharmaceuticals-production-alternative,320.596182382577,kt ethylene eq.,1.0,320.596182382577,kt_ethylene_eq_yr,320.596182382577,320.596182382577
+HU,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,14844.824926603053,TJ,277.78,4123595.4681117954,mwh_yr,4123595.4681117954,4123595.4681117954
+HU,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,12394.169685500743,TJ,277.78,3442852.4552383963,mwh_yr,3442852.4552383963,3442852.4552383963
+HU,non-ferrous-metals,alumina,alumina-production-alternative,250.0,kt,1.0,250.0,kt_yr,250.0,250.0
+HU,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+HU,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,50.0,kt,1.0,50.0,kt_yr,50.0,50.0
+HU,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,0.0,kt lead eq.,1.0,0.0,kt_lead_eq_yr,0.0,0.0
+HU,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,7430.489972745298,kt bricks eq.,1.0,7430.489972745298,kt_bricks_eq_yr,7430.489972745298,7430.489972745298
+HU,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,11378.73139573953,TJ,277.78,3160784.007108527,mwh_yr,3160784.007108527,3160784.007108527
+HU,pulp-and-paper,paper,paper-production-alternative,867.01,kt,1.0,867.01,kt_yr,867.01,867.01
+HU,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,163.0394117647059,kt paper eq.,1.0,163.0394117647059,kt_paper_eq_yr,163.0394117647059,163.0394117647059
+HU,pulp-and-paper,pulp,pulp-production-alternative,56.88,kt,1.0,56.88,kt_yr,56.88,56.88
+HU,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,779.7917990114254,TJ,277.78,216610.56592939372,mwh_yr,216610.56592939372,216610.56592939372
+HU,transport-equipment,transport-equipment,transport-equipment-production-alternative,5648.396184101937,TJ,277.78,1569011.4920198359,mwh_yr,1569011.4920198359,1569011.4920198359
+HU,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,2735.203744139244,TJ,277.78,759784.8960469991,mwh_yr,759784.8960469991,759784.8960469991
+IE,chemical,other-chemicals,other-chemicals-production-alternative,145.2492646615911,kt ethylene eq.,1.0,145.2492646615911,kt_ethylene_eq_yr,145.2492646615911,145.2492646615911
+IE,chemical,pharmaceuticals,pharmaceuticals-production-alternative,546.3345299382586,kt ethylene eq.,1.0,546.3345299382586,kt_ethylene_eq_yr,546.3345299382586,546.3345299382586
+IE,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,10002.045035822395,TJ,277.78,2778368.070050745,mwh_yr,2778368.070050745,2778368.070050745
+IE,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,3801.801788152254,TJ,277.78,1056064.500712933,mwh_yr,1056064.500712933,1056064.500712933
+IE,non-ferrous-metals,alumina,alumina-production-alternative,1883.0,kt,1.0,1883.0,kt_yr,1883.0,1883.0
+IE,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+IE,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+IE,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,70.0,kt lead eq.,1.0,70.0,kt_lead_eq_yr,70.0,70.0
+IE,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,3648.245969068736,kt bricks eq.,1.0,3648.245969068736,kt_bricks_eq_yr,3648.245969068736,3648.245969068736
+IE,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,4238.749904428867,TJ,277.78,1177439.9484522506,mwh_yr,1177439.9484522506,1177439.9484522506
+IE,pulp-and-paper,paper,paper-production-alternative,60.0,kt,1.0,60.0,kt_yr,60.0,60.0
+IE,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,60.0,kt paper eq.,1.0,60.0,kt_paper_eq_yr,60.0,60.0
+IE,pulp-and-paper,pulp,pulp-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+IE,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,449.93985295348364,TJ,277.78,124984.29235341867,mwh_yr,124984.29235341867,124984.29235341867
+IE,transport-equipment,transport-equipment,transport-equipment-production-alternative,116.81908329451325,TJ,277.78,32450.00495754989,mwh_yr,32450.00495754989,32450.00495754989
+IE,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,2895.9424741618136,TJ,277.78,804434.9004726685,mwh_yr,804434.9004726685,804434.9004726685
+IT,chemical,other-chemicals,other-chemicals-production-alternative,2065.081811517844,kt ethylene eq.,1.0,2065.081811517844,kt_ethylene_eq_yr,2065.081811517844,2065.081811517844
+IT,chemical,pharmaceuticals,pharmaceuticals-production-alternative,1653.037062709352,kt ethylene eq.,1.0,1653.037062709352,kt_ethylene_eq_yr,1653.037062709352,1653.037062709352
+IT,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,68361.98171883033,TJ,277.78,18989591.281856686,mwh_yr,18989591.281856686,18989591.281856686
+IT,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,86216.30892406788,TJ,277.78,23949166.292927574,mwh_yr,23949166.292927574,23949166.292927574
+IT,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+IT,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+IT,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,587.5489200923628,kt,1.0,587.5489200923628,kt_yr,587.5489200923628,587.5489200923628
+IT,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,1880.5,kt lead eq.,1.0,1880.5,kt_lead_eq_yr,1880.5,1880.5
+IT,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,60135.37156930233,kt bricks eq.,1.0,60135.37156930233,kt_bricks_eq_yr,60135.37156930233,60135.37156930233
+IT,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,51175.743624436094,TJ,277.78,14215598.063995857,mwh_yr,14215598.063995857,14215598.063995857
+IT,pulp-and-paper,paper,paper-production-alternative,9889.0,kt,1.0,9889.0,kt_yr,9889.0,9889.0
+IT,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,3377.333333333333,kt paper eq.,1.0,3377.333333333333,kt_paper_eq_yr,3377.333333333333,3377.333333333333
+IT,pulp-and-paper,pulp,pulp-production-alternative,243.0,kt,1.0,243.0,kt_yr,243.0,243.0
+IT,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,21276.830088003684,TJ,277.78,5910277.861845663,mwh_yr,5910277.861845663,5910277.861845663
+IT,transport-equipment,transport-equipment,transport-equipment-production-alternative,9480.040808373486,TJ,277.78,2633365.7357499865,mwh_yr,2633365.7357499865,2633365.7357499865
+IT,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,11229.966731707667,TJ,277.78,3119460.1587337554,mwh_yr,3119460.1587337554,3119460.1587337554
+LT,chemical,other-chemicals,other-chemicals-production-alternative,10.37472080800744,kt ethylene eq.,1.0,10.37472080800744,kt_ethylene_eq_yr,10.37472080800744,10.37472080800744
+LT,chemical,pharmaceuticals,pharmaceuticals-production-alternative,0.0,kt ethylene eq.,1.0,0.0,kt_ethylene_eq_yr,0.0,0.0
+LT,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,3973.138406323771,TJ,277.78,1103658.386508617,mwh_yr,1103658.386508617,1103658.386508617
+LT,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,860.8134244081461,TJ,277.78,239116.7530320948,mwh_yr,239116.7530320948,239116.7530320948
+LT,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LT,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LT,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LT,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,0.0,kt lead eq.,1.0,0.0,kt_lead_eq_yr,0.0,0.0
+LT,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,484.5691323161786,kt bricks eq.,1.0,484.5691323161786,kt_bricks_eq_yr,484.5691323161786,484.5691323161786
+LT,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,2324.2199280965997,TJ,277.78,645621.8116266734,mwh_yr,645621.8116266734,645621.8116266734
+LT,pulp-and-paper,paper,paper-production-alternative,154.28,kt,1.0,154.28,kt_yr,154.28,154.28
+LT,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,30.89555897435897,kt paper eq.,1.0,30.89555897435897,kt_paper_eq_yr,30.89555897435897,30.89555897435897
+LT,pulp-and-paper,pulp,pulp-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LT,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,680.6047719048181,TJ,277.78,189058.39353972036,mwh_yr,189058.39353972036,189058.39353972036
+LT,transport-equipment,transport-equipment,transport-equipment-production-alternative,174.74596878335532,TJ,277.78,48540.93520864044,mwh_yr,48540.93520864044,48540.93520864044
+LT,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,1997.1790571304327,TJ,277.78,554776.3984896915,mwh_yr,554776.3984896915,554776.3984896915
+LU,chemical,other-chemicals,other-chemicals-production-alternative,25.04390339045081,kt ethylene eq.,1.0,25.04390339045081,kt_ethylene_eq_yr,25.04390339045081,25.04390339045081
+LU,chemical,pharmaceuticals,pharmaceuticals-production-alternative,10.25396774137136,kt ethylene eq.,1.0,10.25396774137136,kt_ethylene_eq_yr,10.25396774137136,10.25396774137136
+LU,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,446.5894505416352,TJ,277.78,124053.61757145541,mwh_yr,124053.61757145541,124053.61757145541
+LU,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,876.7492434509702,TJ,277.78,243543.40484581047,mwh_yr,243543.40484581047,243543.40484581047
+LU,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LU,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LU,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LU,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,0.0,kt lead eq.,1.0,0.0,kt_lead_eq_yr,0.0,0.0
+LU,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,51.0,kt bricks eq.,1.0,51.0,kt_bricks_eq_yr,51.0,51.0
+LU,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,2222.3385795468675,TJ,277.78,617321.2106265288,mwh_yr,617321.2106265288,617321.2106265288
+LU,pulp-and-paper,paper,paper-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LU,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,66.76526850234208,kt paper eq.,1.0,66.76526850234208,kt_paper_eq_yr,66.76526850234208,66.76526850234208
+LU,pulp-and-paper,pulp,pulp-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LU,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,59.73432776429094,TJ,277.78,16593.001566364735,mwh_yr,16593.001566364735,16593.001566364735
+LU,transport-equipment,transport-equipment,transport-equipment-production-alternative,15.152688812636878,TJ,277.78,4209.113898374271,mwh_yr,4209.113898374271,4209.113898374271
+LU,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,176.46813865405082,TJ,277.78,49019.31955532223,mwh_yr,49019.31955532223,49019.31955532223
+LV,chemical,other-chemicals,other-chemicals-production-alternative,21.45115886161533,kt ethylene eq.,1.0,21.45115886161533,kt_ethylene_eq_yr,21.45115886161533,21.45115886161533
+LV,chemical,pharmaceuticals,pharmaceuticals-production-alternative,18.73320298820351,kt ethylene eq.,1.0,18.73320298820351,kt_ethylene_eq_yr,18.73320298820351,18.73320298820351
+LV,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,1644.2049014291576,TJ,277.78,456727.23751899134,mwh_yr,456727.23751899134,456727.23751899134
+LV,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,406.94901339269023,TJ,277.78,113042.29694022148,mwh_yr,113042.29694022148,113042.29694022148
+LV,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LV,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LV,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LV,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,0.0,kt lead eq.,1.0,0.0,kt_lead_eq_yr,0.0,0.0
+LV,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,1628.803299051348,kt bricks eq.,1.0,1628.803299051348,kt_bricks_eq_yr,1628.803299051348,1628.803299051348
+LV,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,964.4814906175548,TJ,277.78,267913.66846374434,mwh_yr,267913.66846374434,267913.66846374434
+LV,pulp-and-paper,paper,paper-production-alternative,37.89326384095234,kt,1.0,37.89326384095234,kt_yr,37.89326384095234,37.89326384095234
+LV,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,12.63108794698411,kt paper eq.,1.0,12.63108794698411,kt_paper_eq_yr,12.63108794698411,12.63108794698411
+LV,pulp-and-paper,pulp,pulp-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+LV,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,150.59632954555346,TJ,277.78,41832.64842116384,mwh_yr,41832.64842116384,41832.64842116384
+LV,transport-equipment,transport-equipment,transport-equipment-production-alternative,132.99045052171348,TJ,277.78,36942.087345921565,mwh_yr,36942.087345921565,36942.087345921565
+LV,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,9493.253875089322,TJ,277.78,2637036.0614223117,mwh_yr,2637036.0614223117,2637036.0614223117
+MT,chemical,other-chemicals,other-chemicals-production-alternative,8.646652947607228,kt ethylene eq.,1.0,8.646652947607228,kt_ethylene_eq_yr,8.646652947607228,8.646652947607228
+MT,chemical,pharmaceuticals,pharmaceuticals-production-alternative,7.121994208099044,kt ethylene eq.,1.0,7.121994208099044,kt_ethylene_eq_yr,7.121994208099044,7.121994208099044
+MT,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,208.954825860722,TJ,277.78,58043.47152759135,mwh_yr,58043.47152759135,58043.47152759135
+MT,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,238.85491262158274,TJ,277.78,66349.11762802325,mwh_yr,66349.11762802325,66349.11762802325
+MT,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+MT,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+MT,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+MT,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,0.0,kt lead eq.,1.0,0.0,kt_lead_eq_yr,0.0,0.0
+MT,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,0.0,kt bricks eq.,1.0,0.0,kt_bricks_eq_yr,0.0,0.0
+MT,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,526.5595623655217,TJ,277.78,146267.71523389462,mwh_yr,146267.71523389462,146267.71523389462
+MT,pulp-and-paper,paper,paper-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+MT,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,27.03481927322905,kt paper eq.,1.0,27.03481927322905,kt_paper_eq_yr,27.03481927322905,27.03481927322905
+MT,pulp-and-paper,pulp,pulp-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+MT,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,74.69610205834847,TJ,277.78,20749.083229768035,mwh_yr,20749.083229768035,20749.083229768035
+MT,transport-equipment,transport-equipment,transport-equipment-production-alternative,42.1819227357246,TJ,277.78,11717.294497529578,mwh_yr,11717.294497529578,11717.294497529578
+MT,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,0.0,TJ,277.78,0.0,mwh_yr,0.0,0.0
+NL,chemical,other-chemicals,other-chemicals-production-alternative,1087.77524358839,kt ethylene eq.,1.0,1087.77524358839,kt_ethylene_eq_yr,1087.77524358839,1087.77524358839
+NL,chemical,pharmaceuticals,pharmaceuticals-production-alternative,163.0273339824983,kt ethylene eq.,1.0,163.0273339824983,kt_ethylene_eq_yr,163.0273339824983,163.0273339824983
+NL,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,40479.80281379982,TJ,277.78,11244479.625617312,mwh_yr,11244479.625617312,11244479.625617312
+NL,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,12173.427567620412,TJ,277.78,3381534.709733598,mwh_yr,3381534.709733598,3381534.709733598
+NL,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+NL,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,46.7,kt,1.0,46.7,kt_yr,46.7,46.7
+NL,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+NL,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,640.6666666666667,kt lead eq.,1.0,640.6666666666667,kt_lead_eq_yr,640.6666666666667,640.6666666666667
+NL,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,3863.6,kt bricks eq.,1.0,3863.6,kt_bricks_eq_yr,3863.6,3863.6
+NL,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,18583.161322380718,TJ,277.78,5162030.552130915,mwh_yr,5162030.552130915,5162030.552130915
+NL,pulp-and-paper,paper,paper-production-alternative,2942.0,kt,1.0,2942.0,kt_yr,2942.0,2942.0
+NL,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,368.191011235955,kt paper eq.,1.0,368.191011235955,kt_paper_eq_yr,368.191011235955,368.191011235955
+NL,pulp-and-paper,pulp,pulp-production-alternative,37.0,kt,1.0,37.0,kt_yr,37.0,37.0
+NL,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,1988.17078769862,TJ,277.78,552274.0814069225,mwh_yr,552274.0814069225,552274.0814069225
+NL,transport-equipment,transport-equipment,transport-equipment-production-alternative,2415.8120742751876,TJ,277.78,671064.2779921616,mwh_yr,671064.2779921616,671064.2779921616
+NL,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,1576.3803894989817,TJ,277.78,437886.9445950271,mwh_yr,437886.9445950271,437886.9445950271
+PL,chemical,other-chemicals,other-chemicals-production-alternative,2830.104611904958,kt ethylene eq.,1.0,2830.104611904958,kt_ethylene_eq_yr,2830.104611904958,2830.104611904958
+PL,chemical,pharmaceuticals,pharmaceuticals-production-alternative,106.2017271275387,kt ethylene eq.,1.0,106.2017271275387,kt_ethylene_eq_yr,106.2017271275387,106.2017271275387
+PL,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,44221.887158963946,TJ,277.78,12283955.815017004,mwh_yr,12283955.815017004,12283955.815017004
+PL,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,19206.291206512236,TJ,277.78,5335123.571344969,mwh_yr,5335123.571344969,5335123.571344969
+PL,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+PL,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+PL,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,506.147,kt,1.0,506.147,kt_yr,506.147,506.147
+PL,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,1260.426756242119,kt lead eq.,1.0,1260.426756242119,kt_lead_eq_yr,1260.426756242119,1260.426756242119
+PL,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,20000.0,kt bricks eq.,1.0,20000.0,kt_bricks_eq_yr,20000.0,20000.0
+PL,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,26258.347958528997,TJ,277.78,7294043.895920184,mwh_yr,7294043.895920184,7294043.895920184
+PL,pulp-and-paper,paper,paper-production-alternative,5323.94,kt,1.0,5323.94,kt_yr,5323.94,5323.94
+PL,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,203.7524279835393,kt paper eq.,1.0,203.7524279835393,kt_paper_eq_yr,203.7524279835393,203.7524279835393
+PL,pulp-and-paper,pulp,pulp-production-alternative,1749.18,kt,1.0,1749.18,kt_yr,1749.18,1749.18
+PL,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,2654.3821629987483,TJ,277.78,737334.2772377923,mwh_yr,737334.2772377923,737334.2772377923
+PL,transport-equipment,transport-equipment,transport-equipment-production-alternative,10170.55599807323,TJ,277.78,2825177.0451447815,mwh_yr,2825177.0451447815,2825177.0451447815
+PL,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,21664.605457839007,TJ,277.78,6017994.104078518,mwh_yr,6017994.104078518,6017994.104078518
+PT,chemical,other-chemicals,other-chemicals-production-alternative,342.0094921316405,kt ethylene eq.,1.0,342.0094921316405,kt_ethylene_eq_yr,342.0094921316405,342.0094921316405
+PT,chemical,pharmaceuticals,pharmaceuticals-production-alternative,54.25758428488122,kt ethylene eq.,1.0,54.25758428488122,kt_ethylene_eq_yr,54.25758428488122,54.25758428488122
+PT,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,9835.457378332638,TJ,277.78,2732093.3505532397,mwh_yr,2732093.3505532397,2732093.3505532397
+PT,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,3638.8002735794303,TJ,277.78,1010785.9399948941,mwh_yr,1010785.9399948941,1010785.9399948941
+PT,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+PT,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+PT,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,24.08483810291015,kt,1.0,24.08483810291015,kt_yr,24.08483810291015,24.08483810291015
+PT,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,87.37467511849927,kt lead eq.,1.0,87.37467511849927,kt_lead_eq_yr,87.37467511849927,87.37467511849927
+PT,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,9648.255607203697,kt bricks eq.,1.0,9648.255607203697,kt_bricks_eq_yr,9648.255607203697,9648.255607203697
+PT,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,4625.47190008468,TJ,277.78,1284863.5844055223,mwh_yr,1284863.5844055223,1284863.5844055223
+PT,pulp-and-paper,paper,paper-production-alternative,2247.0,kt,1.0,2247.0,kt_yr,2247.0,2247.0
+PT,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,238.2408376963353,kt paper eq.,1.0,238.2408376963353,kt_paper_eq_yr,238.2408376963353,238.2408376963353
+PT,pulp-and-paper,pulp,pulp-production-alternative,2809.0,kt,1.0,2809.0,kt_yr,2809.0,2809.0
+PT,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,6810.005943112228,TJ,277.78,1891683.4508777144,mwh_yr,1891683.4508777144,1891683.4508777144
+PT,transport-equipment,transport-equipment,transport-equipment-production-alternative,1868.3843876440988,TJ,277.78,518999.8151997777,mwh_yr,518999.8151997777,518999.8151997777
+PT,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,2769.001018367007,TJ,277.78,769173.1028819871,mwh_yr,769173.1028819871,769173.1028819871
+RO,chemical,other-chemicals,other-chemicals-production-alternative,1285.746833231639,kt ethylene eq.,1.0,1285.746833231639,kt_ethylene_eq_yr,1285.746833231639,1285.746833231639
+RO,chemical,pharmaceuticals,pharmaceuticals-production-alternative,53.50652534799023,kt ethylene eq.,1.0,53.50652534799023,kt_ethylene_eq_yr,53.50652534799023,53.50652534799023
+RO,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,11701.452937812881,TJ,277.78,3250429.5970656616,mwh_yr,3250429.5970656616,3250429.5970656616
+RO,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,8923.953540517849,TJ,277.78,2478895.814485048,mwh_yr,2478895.814485048,2478895.814485048
+RO,non-ferrous-metals,alumina,alumina-production-alternative,426.8961903304773,kt,1.0,426.8961903304773,kt_yr,426.8961903304773,426.8961903304773
+RO,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,293.0,kt,1.0,293.0,kt_yr,293.0,293.0
+RO,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,7.072067208830868,kt,1.0,7.072067208830868,kt_yr,7.072067208830868,7.072067208830868
+RO,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,128.0,kt lead eq.,1.0,128.0,kt_lead_eq_yr,128.0,128.0
+RO,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,4765.482383646889,kt bricks eq.,1.0,4765.482383646889,kt_bricks_eq_yr,4765.482383646889,4765.482383646889
+RO,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,9286.898926316311,TJ,277.78,2579714.783752145,mwh_yr,2579714.783752145,2579714.783752145
+RO,pulp-and-paper,paper,paper-production-alternative,631.02,kt,1.0,631.02,kt_yr,631.02,631.02
+RO,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,202.8278571428572,kt paper eq.,1.0,202.8278571428572,kt_paper_eq_yr,202.8278571428572,202.8278571428572
+RO,pulp-and-paper,pulp,pulp-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+RO,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,2863.54940491992,TJ,277.78,795436.7536986553,mwh_yr,795436.7536986553,795436.7536986553
+RO,transport-equipment,transport-equipment,transport-equipment-production-alternative,6789.246803870777,TJ,277.78,1885916.9771792241,mwh_yr,1885916.9771792241,1885916.9771792241
+RO,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,5245.152708689752,TJ,277.78,1456998.5194198391,mwh_yr,1456998.5194198391,1456998.5194198391
+SE,chemical,other-chemicals,other-chemicals-production-alternative,205.5758843903093,kt ethylene eq.,1.0,205.5758843903093,kt_ethylene_eq_yr,205.5758843903093,205.5758843903093
+SE,chemical,pharmaceuticals,pharmaceuticals-production-alternative,194.5958212739357,kt ethylene eq.,1.0,194.5958212739357,kt_ethylene_eq_yr,194.5958212739357,194.5958212739357
+SE,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,8293.069608580789,TJ,277.78,2303648.8758715712,mwh_yr,2303648.8758715712,2303648.8758715712
+SE,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,8875.312497834877,TJ,277.78,2465384.305648572,mwh_yr,2465384.305648572,2465384.305648572
+SE,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+SE,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,124.0,kt,1.0,124.0,kt_yr,124.0,124.0
+SE,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+SE,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,521.6055039308615,kt lead eq.,1.0,521.6055039308615,kt_lead_eq_yr,521.6055039308615,521.6055039308615
+SE,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,1376.545132520372,kt bricks eq.,1.0,1376.545132520372,kt_bricks_eq_yr,1376.545132520372,1376.545132520372
+SE,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,23564.38729408382,TJ,277.78,6545715.502550603,mwh_yr,6545715.502550603,6545715.502550603
+SE,pulp-and-paper,paper,paper-production-alternative,8924.0,kt,1.0,8924.0,kt_yr,8924.0,8924.0
+SE,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,166.2983870967743,kt paper eq.,1.0,166.2983870967743,kt_paper_eq_yr,166.2983870967743,166.2983870967743
+SE,pulp-and-paper,pulp,pulp-production-alternative,11697.0,kt,1.0,11697.0,kt_yr,11697.0,11697.0
+SE,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,458.3053189783146,TJ,277.78,127308.0515057962,mwh_yr,127308.0515057962,127308.0515057962
+SE,transport-equipment,transport-equipment,transport-equipment-production-alternative,5763.41590475331,TJ,277.78,1600961.6700223745,mwh_yr,1600961.6700223745,1600961.6700223745
+SE,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,12199.296818315004,TJ,277.78,3388720.6701915413,mwh_yr,3388720.6701915413,3388720.6701915413
+SI,chemical,other-chemicals,other-chemicals-production-alternative,127.2731944917425,kt ethylene eq.,1.0,127.2731944917425,kt_ethylene_eq_yr,127.2731944917425,127.2731944917425
+SI,chemical,pharmaceuticals,pharmaceuticals-production-alternative,77.04911580182717,kt ethylene eq.,1.0,77.04911580182717,kt_ethylene_eq_yr,77.04911580182717,77.04911580182717
+SI,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,1421.6049155031203,TJ,277.78,394893.4134284567,mwh_yr,394893.4134284567,394893.4134284567
+SI,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,4541.225825614169,TJ,277.78,1261461.7098391035,mwh_yr,1261461.7098391035,1261461.7098391035
+SI,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+SI,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,65.0,kt,1.0,65.0,kt_yr,65.0,65.0
+SI,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,10.23627321430401,kt,1.0,10.23627321430401,kt_yr,10.23627321430401,10.23627321430401
+SI,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,84.0,kt lead eq.,1.0,84.0,kt_lead_eq_yr,84.0,84.0
+SI,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,2100.0,kt bricks eq.,1.0,2100.0,kt_bricks_eq_yr,2100.0,2100.0
+SI,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,2313.1035501496503,TJ,277.78,642533.9041605698,mwh_yr,642533.9041605698,642533.9041605698
+SI,pulp-and-paper,paper,paper-production-alternative,635.0,kt,1.0,635.0,kt_yr,635.0,635.0
+SI,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,37.94736842105267,kt paper eq.,1.0,37.94736842105267,kt_paper_eq_yr,37.94736842105267,37.94736842105267
+SI,pulp-and-paper,pulp,pulp-production-alternative,86.0,kt,1.0,86.0,kt_yr,86.0,86.0
+SI,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,296.35554433957566,TJ,277.78,82321.64310664732,mwh_yr,82321.64310664732,82321.64310664732
+SI,transport-equipment,transport-equipment,transport-equipment-production-alternative,684.3015224225045,TJ,277.78,190085.27689852327,mwh_yr,190085.27689852327,190085.27689852327
+SI,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,1088.07842309714,TJ,277.78,302246.4243679235,mwh_yr,302246.4243679235,302246.4243679235
+SK,chemical,other-chemicals,other-chemicals-production-alternative,144.0180653183953,kt ethylene eq.,1.0,144.0180653183953,kt_ethylene_eq_yr,144.0180653183953,144.0180653183953
+SK,chemical,pharmaceuticals,pharmaceuticals-production-alternative,80.34514500059265,kt ethylene eq.,1.0,80.34514500059265,kt_ethylene_eq_yr,80.34514500059265,80.34514500059265
+SK,food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,3011.2495510907925,TJ,277.78,836464.9003020002,mwh_yr,836464.9003020002,836464.9003020002
+SK,machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,5020.31027799869,TJ,277.78,1394541.789022476,mwh_yr,1394541.789022476,1394541.789022476
+SK,non-ferrous-metals,alumina,alumina-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+SK,non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,163.995,kt,1.0,163.995,kt_yr,163.995,163.995
+SK,non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,0.0,kt,1.0,0.0,kt_yr,0.0,0.0
+SK,non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,53.01266666666666,kt lead eq.,1.0,53.01266666666666,kt_lead_eq_yr,53.01266666666666,53.01266666666666
+SK,ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,2250.0,kt bricks eq.,1.0,2250.0,kt_bricks_eq_yr,2250.0,2250.0
+SK,other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,4180.828411616416,TJ,277.78,1161350.516178808,mwh_yr,1161350.516178808,1161350.516178808
+SK,pulp-and-paper,paper,paper-production-alternative,1018.51,kt,1.0,1018.51,kt_yr,1018.51,1018.51
+SK,pulp-and-paper,printing-and-media,printing-and-media-production-alternative,240.8834782608695,kt paper eq.,1.0,240.8834782608695,kt_paper_eq_yr,240.8834782608695,240.8834782608695
+SK,pulp-and-paper,pulp,pulp-production-alternative,768.69,kt,1.0,768.69,kt_yr,768.69,768.69
+SK,textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,406.7109409336162,TJ,277.78,112976.1651725399,mwh_yr,112976.1651725399,112976.1651725399
+SK,transport-equipment,transport-equipment,transport-equipment-production-alternative,4189.764717754966,TJ,277.78,1163832.8432979744,mwh_yr,1163832.8432979744,1163832.8432979744
+SK,wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,774.6562692904522,TJ,277.78,215184.0184835018,mwh_yr,215184.0184835018,215184.0184835018

@@ -1,5 +1,5 @@
 ---
-title: "Analyzing Chemical Sector enrgy consumption"
+title: "Analyzing Chemical Sector energy consumption"
 subtitle: "AIDRES, JRC-IDEES, EUROSTAT"
 date: last-modified
 date-format: long
@@ -9,6 +9,10 @@ author:
     - name: 'VITO'
       url: https://vito.be/nl
  - name: Pieter Valkering
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
+ - name: Hans Van de Put
    affiliation: 
     - name: 'VITO'
       url: https://vito.be/nl
@@ -31,7 +35,7 @@ funding:
 
 # Introduction
 
-This is a stand-alone quarto document with code chunks and documentation for comparing Chemical sector energy consumption in AIDRES, EUROSTAT, and JRC-IDEES databases.
+This is a stand-alone quarto document with code chunks and documentation for comparing Chemical sector energy consumption in AIDRES, AIDRES 2.0, EUROSTAT, and JRC-IDEES databases.
 
 AIDRES only covers 'basic chemicals' omitting chlorine. However, in JRC IDEES database there is a breakup of basic chemical, other chemical, and pharma. Though AIDRES has separate fertilizer sector, we add it to chemical for comparison purpose. First, we compare AIDRES chemical data with JRC-IDEES basic chemical. Subsequently, we add chlorine energy consumption from Eurochlor database to the AIDRES and compare AIDRES + Eurochlor (Chlorine) with JRC_IDEES basic chemicals.
 
@@ -43,12 +47,14 @@ Therefore, three comparison steps:
 -   Compare with AIDRES + Eurochlor (Chlorine) vs JRC-IDEES basic chemicals
 -   Compare AIDRES + Eurochlor (Chlorine) + Chem others JRC-IDEES, total JRC-IDEES, and EUROSTAT + non-energy
 
-# Using this file
+Exactly the same comparison is made between AIDRES 2.0, EUROSTAT and JRC-IDEES
+
+## Using this file
 
 The files are produced using [R](https://posit.co/download/rstudio-desktop/) and [RStudio](https://posit.co/download/rstudio-desktop/).
 Though this document can be executed using command line, it is recommended to use `RStudio` for rendering.
 
-Clone this repository to your computer. Open the `mopo_repo.Rproj` (`RStudio needs to be installed`) file. Open `refinery_analysis.qmd` and click on `render button` (Crtl + Shift + K).
+Clone this repository to your computer. Open the `mopo_repo.Rproj` (`RStudio needs to be installed`) file. Open `chemical_analysis.qmd` and click on `render button` (Crtl + Shift + K).
 
 # Loading libraries
 
@@ -71,7 +77,7 @@ for (p in mypackages){
 
 # Reading country names and codes
 
-This is provided with the repository by default in the `input_data\europe_country_codes` directory by default.
+This is provided with the repository by default in the `input_data\europe_country_codes` directory.
 
 ```{r}
 country_codes <- read_xlsx(here('input_data', 'europe_country_codes', 'europe_country_code.xlsx'), sheet = 1)
@@ -203,13 +209,13 @@ chem_fec_bc <- chem_fec_bc |>
 
 ```
 
-# AIDRES Chemical sector energy consumption
+# AIDRES + AIDRES 2.0 Chemical sector energy consumption
 
 ## Establishing AIDRES database connection and fetching tables
 
 AIDRES database is open source [@aidres_report]. However the data is available as a raw `.sql` file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. The data is also available as an Excel workbook. However, it is very customized to be used for specific analysis.
 
-## Importing AIDRES data from local `.csv` files
+## Importing AIDRES and AIDRES 2.0 data from local `.csv` files
 
 However, for an external user setting up a PostgreSQL server is not straight forward. Therefore, AIDRES tables are provided with this repository in the `input_data\aidres_data` directory.
 
@@ -250,25 +256,28 @@ aidres_configurations|> collect() |> write_csv(here(aidres_data, 'aidres_configu
 aidres_perton|> collect() |> write_csv(here(aidres_data, 'aidres_perton.csv'))
 ```
 
-Reading the AIDRES data from `.csv` files. 
+### Reading the AIDRES and AIDRES 2.0 data from `.csv` files. 
 
 ```{r}
 #| warning: false
 
 aidres_scenarios <- read_csv(here(aidres_data, 'aidres_scenarios.csv'))
-
 aidres_sectors <- read_csv(here(aidres_data, 'aidres_sectors.csv'))
-
 aidres_result <- read_csv(here(aidres_data, 'aidres_result.csv'))
-
 aidres_configurations <- read_csv(here(aidres_data, 'aidres_configurations.csv'))
-
 aidres_perton <- read_csv(here(aidres_data, 'aidres_perton.csv'))
+
+aidres_2_0_sectors <- read_csv2(here(aidres_data, 'aidres_2_0_sectors.csv'))
+aidres_2_0_results <- read_delim(here(aidres_data, "aidres_2_0_results.csv"),
+                                 delim = ";",
+                                 locale = locale(decimal_mark = ".", grouping_mark = ","),
+                                 guess_max = 6000)
+aidres_2_0_configurations <- read_csv2(here(aidres_data, 'aidres_2_0_configurations.csv'))
 ```
 
 ## Energy consumption all sectors in 2018
 
-Energy consumption by different production routes in different sectors
+Energy consumption by different production routes in different sectors (AIDRES)
 
 ```{r}
 #| warning: false
@@ -279,7 +288,7 @@ aidres_result |> clean_names() |>
   mutate(value = round(value,3)) |>
   filter(is_ref_scenario == 1,
          is_ref_route == 1) |> 
-  select(-c(is_pareto_solution, is_direct_emission_solution, is_mix)) |> 
+  select(-c(is_pareto_solution, is_direct_emission_solution, is_mix)) |>
   left_join(aidres_sectors, by =join_by('aidres_sector_id' == 'id')) |> 
   select(-description) |> 
   left_join(aidres_configurations, by =join_by('aidres_sector_id' == 'aidres_sector_id', 
@@ -301,7 +310,40 @@ aidres_result |> clean_names() |>
   aidres_energy_all
 ```
 
+Energy consumption by different production routes in different sectors (AIDRES 2.0)
+
+```{r}
+#| warning: false
+
+aidres_2_0_results |> clean_names() |> 
+  filter(product_id != 12 & product_id != 13) |>
+  select(nuts3, contains('id'), contains('is_'), contains('_pj_y')) |>
+  mutate(across(contains('_pj_y'), as.numeric)) |> 
+  pivot_longer('alternative_fuel_mixture_usage_pj_y':'total_energy_vectors_pj_y', names_to = 'indicators', values_to = 'value') |>
+mutate(value = round(value,3)) |>
+  filter(scenario_id == 0,
+         is_reference_route == 1) |> 
+  select(-c(is_mix, is_reference_route)) |> 
+  left_join(aidres_2_0_sectors, by =join_by('sector_id' == 'sector_id')) |> 
+  left_join(aidres_2_0_configurations, by =join_by('configuration_id' == 'configuration_id')) |> 
+  select(c('nuts3','sector','product_id','configuration','indicators', 'value')) |> 
+  mutate(value = ifelse(is.na(value), 0, value),
+         sector = tolower(sector)) |>
+  rename('production_route_name' = configuration)|> 
+  arrange(nuts3, sector, product_id, production_route_name, .by_group = TRUE) |> 
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2))|>
+  group_by(country_code, sector, indicators) |> 
+  summarise(country_total = sum(value)) |> 
+  ungroup() |> 
+  left_join(country_codes, by =join_by('country_code' == 'country_iso_code')) |> 
+  select(country_code, country, everything()) |> 
+  pivot_wider(names_from = sector, values_from = country_total)-> aidres_2_0_energy_all
+aidres_2_0_energy_all
+```
+
 ## Chemical sector energy consumption
+
+Energy consumption for chemical sector (AIDRES)
 
 ```{r}
 aidres_cleaned_chem <- aidres_energy_all |> 
@@ -322,6 +364,30 @@ aidres_cleaned_chem <- aidres_energy_all |>
   pivot_wider(names_from = metadata, values_from = pj)
 
 aidres_cleaned_chem
+```
+
+Energy consumption for chemical sector (AIDRES 2.0)
+
+```{r}
+aidres_2_0_cleaned_chem <- aidres_2_0_energy_all |> 
+  select(country_code:indicators, chemical, fertiliser) |> 
+  mutate(chemical = rowSums(cbind(chemical, fertiliser), na.rm = TRUE), .keep = 'unused') |> 
+  mutate(indicators = str_replace(indicators, "\\_usage_pj_y", "")) |> 
+  mutate(indicators = str_replace(indicators, "\\_pj_y", "")) |> 
+  rename('chem_aidres' = chemical,
+         'fuel' = indicators) |> 
+  pivot_longer(cols = chem_aidres, names_to = 'metadata', values_to = 'pj') |> 
+  pivot_wider(names_from = fuel, values_from = pj) |> 
+  rename('total' = total_energy_vectors) |> 
+  mutate(solid_fossil_fuels = rowSums(cbind(coal, coke, coal_steel), na.rm = TRUE),
+         renew_bio = rowSums(cbind(biomass, biomass_waste), na.rm = TRUE),
+         non_renew_waste = rowSums(cbind(plastic_mix, alternative_fuel_mixture), na.rm = TRUE),
+         oil_petro_products = rowSums(cbind(crude_oil, naphtha), na.rm = TRUE)) |> 
+  select(-c(ammonia,alternative_fuel_mixture, coal, coal_steel, coke, biomass, biomass_waste, plastic_mix, crude_oil, naphtha)) |> 
+  pivot_longer(cols = -c(country_code:metadata), names_to = 'fuel', values_to = 'pj') |> 
+  pivot_wider(names_from = metadata, values_from = pj)
+
+aidres_2_0_cleaned_chem
 ```
 
 # EUROSTAT Chemical Energy Consumption
@@ -379,7 +445,7 @@ chem_energy_eurostat <- dat_aggregated_chem |>
 chem_energy_eurostat
 ```
 
-### Joining AIDRES and EUROSTAT Chemical energy consumption
+### Joining AIDRES/AIDRES 2.0 and EUROSTAT Chemical energy consumption
 
 ```{r}
 
@@ -391,9 +457,19 @@ chem_eurostat_aidres <- chem_energy_eurostat |>
   separate_wider_delim(metadata, delim = '_', names = c('sector', 'source'))
 
 chem_eurostat_aidres 
+
+
+chem_eurostat_aidres_2_0 <- chem_energy_eurostat |> 
+  full_join(aidres_2_0_cleaned_chem, by = join_by(country_code, country, fuel)) |> 
+  select(country_code, country, fuel, everything()) |> 
+  pivot_longer(cols = chem_eurostat:chem_aidres, names_to = 'metadata', values_to = 'pj') |> 
+  mutate(pj = round(pj, 2))|> 
+  separate_wider_delim(metadata, delim = '_', names = c('sector', 'source'))
+
+chem_eurostat_aidres_2_0
 ```
 
-### Compare AIDRES Chemical + Fertiliser vs JRC-IDEES basic chemicals
+## Compare AIDRES/AIDRES 2.0 Chemical + Fertiliser vs JRC-IDEES basic chemicals
 
 ### Creating output directory
 
@@ -429,8 +505,16 @@ chem_eurostat_aidres |> filter(sector == 'chem',
   select(-year) |> 
   rbind(chem_fec_bc1) |> 
   arrange(country_code, fuel) -> compare_aidres_idess_basic_chem
-
 compare_aidres_idess_basic_chem
+
+chem_eurostat_aidres_2_0 |> filter(sector == 'chem',
+                   source != 'eurostat') |> 
+  select(-country, -sector) |> 
+  select(-year) |> 
+  rbind(chem_fec_bc1) |> 
+  arrange(country_code, fuel) -> compare_aidres_2_0_idess_basic_chem
+
+compare_aidres_2_0_idess_basic_chem
 ```
 
 ### Plots
@@ -457,6 +541,24 @@ p_chem_compare
 
 ggsave(here(output_dir, 'chem_fec_basic_compare_total_aidres_idees.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
 
+
+compare_aidres_2_0_idess_basic_chem |> 
+  filter(fuel == 'total') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 2) +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the chemical sector in AIDRES 2.0 and JRC-IDEES',
+       subtitle = 'Only Basic Chemical componenet of JRC IDEES is compared with Aidres. Chlorine is missing in AIDRES',
+       y = 'Country',
+       x = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare
+
+p_chem_compare
+
+ggsave(here(output_dir, 'chem_fec_basic_compare_total_aidres_2_0_idees.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+
 ```
 
 #### Comparison graph fuels
@@ -479,6 +581,23 @@ compare_aidres_idess_basic_chem |>
 p_chem_compare
 
 ggsave(here(output_dir, 'chem_fec_basic_compare_fuel_aidres_idees.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+
+
+compare_aidres_2_0_idess_basic_chem |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 2) +
+  facet_wrap(~fuel, ncol = 4, scales = "free") +
+  theme_bw() +
+  labs(title = 'Fuel-wise energy consumption in the chemical sector in AIDRES 2.0 and JRC-IDEES',
+       subtitle = 'Only Basic Chemical componenet of JRC IDEES is compared with Aidres 2.0. Chlorine is missing in AIDRES',
+       y = 'country') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare
+
+p_chem_compare
+
+ggsave(here(output_dir, 'chem_fec_basic_compare_fuel_aidres_2_0_idees.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
 ```
 
 ### Diff file
@@ -487,12 +606,15 @@ ggsave(here(output_dir, 'chem_fec_basic_compare_fuel_aidres_idees.pdf'), width =
 compare_aidres_idess_basic_chem |> 
   pivot_wider(values_from = pj, names_from = source) |>
   write_xlsx(here(output_dir, 'diff_chem_basic_aidres_idees.xlsx'))
+
+compare_aidres_2_0_idess_basic_chem |> 
+  pivot_wider(values_from = pj, names_from = source) |>
+  write_xlsx(here(output_dir, 'diff_chem_basic_aidres_2_0_idees.xlsx'))
 ```
 
 ## Filling the gap for Basic Chemical
 
 AIDRES does not contain the information of Chlorine. Eurochlor database is used to procure country wise Chlorine production. Specific energy consumption values of various process routes for Chlorine production is taken from JRC-EU-TIMES model.
-
 
 ### Creating input directory for Chlorine data
 
@@ -545,7 +667,7 @@ chlorine_production_energy <- left_join(chlorine_data_2018, chlorine_sec,
 chlorine_production_energy
 ```
 
-#### Prepare AIDRES, and JRC-IDEES data
+#### Prepare AIDRES/AIDRES 2.0, and JRC-IDEES data
 
 ```{r}
 
@@ -563,11 +685,16 @@ chem_eurostat_aidres |> filter(sector == 'chem') |>
   select(-country, -sector, -year) |> 
   rbind(chem_fec_bc_) |> 
   arrange(country_code, fuel) -> chem_basic_energy
-
 chem_basic_energy
+
+chem_eurostat_aidres_2_0 |> filter(sector == 'chem') |> 
+  select(-country, -sector, -year) |> 
+  rbind(chem_fec_bc_) |> 
+  arrange(country_code, fuel) -> chem_basic_energy_2_0
+chem_basic_energy_2_0
 ```
 
-#### Joining Chlorine data with AIDRES
+#### Joining Chlorine data with AIDRES/AIDRES 2.0
 
 ```{r}
 
@@ -579,9 +706,18 @@ chem_basic_energy2 <- chem_basic_energy |>
   mutate(pj = replace_na(pj, 0))
 
 chem_basic_energy2
+
+chem_basic_energy_2_0_2 <- chem_basic_energy_2_0 |> 
+  pivot_wider(values_from = pj, names_from = source) |> 
+  left_join(chlorine_production_energy, by = join_by('country_code', 'fuel')) |> 
+  mutate(aidres = rowSums(cbind(aidres, pj_cl), na.rm = TRUE), .keep = 'unused') |> 
+  pivot_longer(cols = eurostat:idees, names_to = 'source', values_to = 'pj') |> 
+  mutate(pj = replace_na(pj, 0))
+
+chem_basic_energy_2_0_2
 ```
 
-### Compare AIDRES Chemical + Fertilizer + Eurochlor (Chlorine) with IDEES Basic Chemicals
+### Compare AIDRES/AIDRES 2.0 Chemical + Fertilizer + Eurochlor (Chlorine) with IDEES Basic Chemicals
 
 #### Comparison graph total
 
@@ -602,6 +738,22 @@ chem_basic_energy2 |>
 
 p_chem_compare
 ggsave(here(output_dir,'chem_fec_basic_compare_total_with_cl.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+
+chem_basic_energy_2_0_2 |> 
+  filter(fuel == 'total') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_point(aes(colour = source), size = 2) +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the 
+       Basic Chemical Sector in AIDRES 2.0, and JRC-IDEES',
+       subtitle = 'Chlorine added to AIDRES 2.0 from Eurochlor 2018 database',
+       y = 'country',
+       y = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare_2_0
+
+p_chem_compare_2_0
+ggsave(here(output_dir,'chem_fec_basic_compare_total_with_cl_2_0.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
 ```
 
 #### Comparison graph fuels
@@ -625,6 +777,23 @@ chem_basic_energy2 |>
 
 p_chem_compare_fuel
 ggsave(here(output_dir, 'chem_fec_basic_compare_fuel_with_cl.pdf'), width = 10, height = 12, units = 'in', dpi = 900)
+
+chem_basic_energy_2_0_2 |> 
+  filter(source!= 'eurostat') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 2) +
+  facet_wrap(~fuel, ncol = 4, scales = "free") +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the Basic Chemical Sector in AIDRES 2.0, and JRC-IDEES',
+       subtitle = 'Chlorine added to AIDRES 2.0 from Eurochlor 2018 database',
+       y = 'Country',
+       y = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare_fuel_2_0
+
+p_chem_compare_fuel_2_0
+ggsave(here(output_dir, 'chem_fec_basic_compare_fuel_with_cl_2_0.pdf'), width = 10, height = 12, units = 'in', dpi = 900)
 ```
 
 #### Diff file
@@ -633,6 +802,10 @@ ggsave(here(output_dir, 'chem_fec_basic_compare_fuel_with_cl.pdf'), width = 10, 
 chem_basic_energy |> 
   pivot_wider(values_from = pj, names_from = source) |>
   write_xlsx(here(output_dir, 'diff_chem_basic_with_cl.xlsx'))
+
+chem_basic_energy_2_0 |> 
+  pivot_wider(values_from = pj, names_from = source) |>
+  write_xlsx(here(output_dir, 'diff_chem_basic_with_cl_2_0.xlsx'))
 ```
 
 # Other Chemicals and Pharmaceuticals
@@ -889,9 +1062,16 @@ chem_basic_energy2 |>
   reframe(pj = sum(pj)) -> chem_fec_source
 
 chem_fec_source
+
+chem_basic_energy_2_0_2 |> 
+  rbind(chem_others_idees) |> 
+  group_by(country_code, fuel, source) |> 
+  reframe(pj = sum(pj)) -> chem_fec_source_2_0
+
+chem_fec_source_2_0
 ```
 
-## Compare AIDRES + Eurochlor (Chlorine) + Chem Others JRC-IDEES, total IDEES, EUROSTAT Chemical + non energy
+## Compare AIDRES/AIDRES 2.0 + Eurochlor (Chlorine) + Chem Others JRC-IDEES, total IDEES, EUROSTAT Chemical + non energy
 
 Prepare data
 
@@ -910,6 +1090,20 @@ chem_basic_energy2 |> pivot_wider(names_from = source, values_from = pj) |>
   pivot_longer(eurostat:idees, names_to = 'source', values_to = 'pj') -> chem_fec_source2
 
 chem_fec_source2
+
+chem_basic_energy_2_0_2 |> pivot_wider(names_from = source, values_from = pj) |> 
+  rename('idees_basic' = idees,
+         'aidres_cl' = aidres) |> 
+  pivot_longer(cols = eurostat:idees_basic, names_to = 'source', values_to = 'pj') |> 
+  rbind(chem_others_idees) |> 
+  arrange(country_code, fuel, source) |> 
+  pivot_wider(names_from = source, values_from = pj) |> 
+  mutate(aidres = rowSums(cbind(aidres_cl,idees_oth), na.rm=TRUE),
+         idees = rowSums(cbind(idees_oth,idees_basic), na.rm = TRUE),
+         .keep = 'unused') |> 
+  pivot_longer(eurostat:idees, names_to = 'source', values_to = 'pj') -> chem_fec_source_2_0_2
+
+chem_fec_source_2_0_2
 ```
 
 
@@ -933,6 +1127,23 @@ chem_fec_source2 |>
 p_chem_compare
 
 ggsave(here(output_dir, 'chem_fec_total_compare_total_aidres_idees_eurostat.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+
+chem_fec_source_2_0_2 |> 
+  filter(fuel == 'total') |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_point(aes(colour = source), size = 2) +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the chemical sector in AIDRES 2.0 and JRC-IDEES and Eurostat',
+       subtitle = 'Total JRC-IDEES vs AIDRES 2.0 Chemical + Fertiliser vs Eurostat Chemical + Non energy',
+       y = 'Country',
+       x = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare_2_0
+
+p_chem_compare_2_0
+
+ggsave(here(output_dir, 'chem_fec_total_compare_total_aidres_2_0_idees_eurostat.pdf'), width = 10, height = 10, units = 'in', dpi = 900)
+
 ```
 
 ### Comparison graph fuels
@@ -955,6 +1166,22 @@ chem_fec_source2 |>
 p_chem_compare
 
 ggsave(here(output_dir, 'chem_fec_total_compare_fuel_aidres_idees_eurostat.pdf'), width = 10, height = 12, units = 'in', dpi = 900)
+
+chem_fec_source_2_0_2 |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_point(aes(colour = source), size = 2) +
+  facet_wrap(~fuel, ncol = 4, scales = "free") +
+  theme_bw() +
+  labs(title = 'Total energy consumption in the chemical sector in AidRes 2.0 and JRC-IDEES and Eurostat',
+       subtitle = 'Total JRC IDEES vs Aidres 2.0 Chemical + Fertiliser vs Eurostat Chemical + Non energy',
+       y = 'Country',
+       x = 'PJ') +
+  theme(legend.position = "bottom")+
+  theme(legend.title=element_blank()) -> p_chem_compare_2_0
+
+p_chem_compare_2_0
+
+ggsave(here(output_dir, 'chem_fec_total_compare_fuel_aidres_2_0_idees_eurostat.pdf'), width = 10, height = 12, units = 'in', dpi = 900)
 ```
 
 ### Diff file
@@ -963,9 +1190,13 @@ ggsave(here(output_dir, 'chem_fec_total_compare_fuel_aidres_idees_eurostat.pdf')
 chem_fec_source |> 
   pivot_wider(values_from = pj, names_from = source) |>
   write_xlsx(here(output_dir, 'diff_chem_total_aidres_idees_eurostat.xlsx'))
+
+chem_fec_source_2_0 |> 
+  pivot_wider(values_from = pj, names_from = source) |>
+  write_xlsx(here(output_dir, 'diff_chem_total_aidres_2_0_idees_eurostat.xlsx'))
 ```
 
-## AIDRES+ data for EU case study
+## AIDRES+ data for EU case study (not used!)
 
 ### AIDRES+ data for Chlorine, and Other Chemicals
 
@@ -974,6 +1205,7 @@ For other chemicals specific energy consumption values is calculated using JRC-I
 Final energy demand for Other Chemicals, specific energy consumption of Other Chemicals, Chlorine production volume, and specific energy consumption for Chlorine is written to `outputs/chemicals/chem_aidres_extra.xlsx' file.` 
 
 ```{r}
+#| eval: false
 
 left_join(chem_fec_oc3, chem_oth_process_eff, by = join_by('process')) |> 
   mutate(pj_idees = gj_idees*efficiency/10^6) |> 
@@ -1021,3 +1253,4 @@ chlorine_data_2018
                    'chlorine_sec' = chlorine_sec_),
               here(output_dir,'chem_aidres_extra.xlsx'))
 ```
+

@@ -1,0 +1,17 @@
+sector_id,to_node,Industry,unit,emission,2025,std,2030,2040,2050
+ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-alternative,tco2_t_bricks_eq,co2_emission,0.04821611776977142,0.061345676063634086,0.04821611776977142,0.04821611776977142,0.04821611776977142
+chemical,other-chemicals,other-chemicals-production-alternative,tco2_t_ethylene_eq,co2_emission,0.6877911521240344,0.20328335618610863,0.6877911521240344,0.6877911521240344,0.6877911521240344
+chemical,pharmaceuticals,pharmaceuticals-production-alternative,tco2_t_ethylene_eq,co2_emission,0.5557111127605897,0.3220060834541917,0.5557111127605897,0.5557111127605897,0.5557111127605897
+food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-alternative,tco2_mwh,co2_emission,0.0,0.0,0.0,0.0,0.0
+machinery-equipment,machinery-equipment,machinery-equipment-production-alternative,tco2_mwh,co2_emission,0.024870079219970948,0.012035027312714915,0.024870079219970948,0.024870079219970948,0.024870079219970948
+non-ferrous-metals,alumina,alumina-production-alternative,tco2_t,co2_emission,0.420738164157357,0.09463543279899003,0.420738164157357,0.420738164157357,0.420738164157357
+non-ferrous-metals,aluminium-primary,aluminium-primary-production-alternative,tco2_t,co2_emission,1.4446974656674707,0.28497311200247344,1.4446974656674707,1.4446974656674707,1.4446974656674707
+non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-alternative,tco2_t,co2_emission,0.0,0.0,0.0,0.0,0.0
+non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-alternative,tco2_t_lead_eq,co2_emission,0.13091496971679248,0.1583515284612341,0.13091496971679248,0.13091496971679248,0.13091496971679248
+other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-alternative,tco2_mwh,co2_emission,0.0,0.0,0.0,0.0,0.0
+pulp-and-paper,paper,paper-production-alternative,tco2_t,co2_emission,0.0,0.0,0.0,0.0,0.0
+pulp-and-paper,printing-and-media,printing-and-media-production-alternative,tco2_t_paper_eq,co2_emission,0.0,0.0,0.0,0.0,0.0
+pulp-and-paper,pulp,pulp-production-alternative,tco2_t,co2_emission,0.0,0.0,0.0,0.0,0.0
+textiles-and-leather,leather-and-textile,leather-and-textile-production-alternative,tco2_mwh,co2_emission,0.0,0.0,0.0,0.0,0.0
+transport-equipment,transport-equipment,transport-equipment-production-alternative,tco2_mwh,co2_emission,0.022496154819408462,0.011285232760995642,0.022496154819408462,0.022496154819408462,0.022496154819408462
+wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-alternative,tco2_mwh,co2_emission,0.0,0.0,0.0,0.0,0.0

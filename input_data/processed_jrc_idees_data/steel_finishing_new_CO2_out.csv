@@ -1,0 +1,5 @@
+sector_id,to_node,Industry,classification_1,unit,2025,std,emission,2030,2040,2050
+steel,electric-arc-steel,steel-electric-arc-finishing-alternative,Steel: Product finishing,tco2_t,0.0,0.0,co2_emission,0.0,0.0,0.0
+steel,electric-arc-steel,steel-electric-arc-rolling-alternative,"Steel: Furnaces, refining and rolling",tco2_t,0.0,0.0,co2_emission,0.0,0.0,0.0
+steel,integrated-steelworks-steel,steel-integrated-steelworks-finishing-alternative,Steel: Product finishing,tco2_t,0.0,0.0,co2_emission,0.0,0.0,0.0
+steel,integrated-steelworks-steel,steel-integrated-steelworks-rolling-alternative,"Steel: Furnaces, refining and rolling",tco2_t,0.0,0.0,co2_emission,0.0,0.0,0.0

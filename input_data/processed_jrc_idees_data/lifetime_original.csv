@@ -1,0 +1,17 @@
+sector_id,to_node,Industry,unit,life
+ceramics-and-other-non-metallic-mineral-products-excluding-cement-and-glass,ceramics-and-other-non-metalic-minerals,ceramics-and-other-non-metalic-minerals-production-reference,yr,30
+chemical,other-chemicals,other-chemicals-production-reference,yr,30
+chemical,pharmaceuticals,pharmaceuticals-production-reference,yr,30
+food-beverages-and-tobacco,food-beverages-tobacco,food-beverages-tobacco-production-reference,yr,30
+machinery-equipment,machinery-equipment,machinery-equipment-production-reference,yr,30
+non-ferrous-metals,alumina,alumina-production-reference,yr,30
+non-ferrous-metals,aluminium-primary,aluminium-primary-production-reference,yr,30
+non-ferrous-metals,aluminium-secondary,aluminium-secondary-production-reference,yr,30
+non-ferrous-metals,other-non-ferrous-metals,other-non-ferrous-metals-production-reference,yr,30
+other-industrial-sectors,other-industrial-sectors,other-industrial-sectors_production-reference,yr,30
+pulp-and-paper,paper,paper-production-reference,yr,30
+pulp-and-paper,printing-and-media,printing-and-media-production-reference,yr,30
+pulp-and-paper,pulp,pulp-production-reference,yr,30
+textiles-and-leather,leather-and-textile,leather-and-textile-production-reference,yr,30
+transport-equipment,transport-equipment,transport-equipment-production-reference,yr,30
+wood-and-wood-products,wood-and-wood-products,wood-and-wood-products_production-reference,yr,30

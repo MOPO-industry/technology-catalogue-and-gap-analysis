@@ -12,6 +12,10 @@ author:
    affiliation: 
     - name: 'VITO'
       url: https://vito.be/nl
+ - name: Hans Van de Put
+   affiliation: 
+    - name: 'VITO'
+      url: https://vito.be/nl
 format: 
   html:
     code-fold: true
@@ -64,7 +68,7 @@ for (p in mypackages){
 
 # Reading country names and codes
 
-This is provided with the repository by default in the `input_data\europe_country_codes` directory by default.
+This is provided with the repository by default in the `input_data\europe_country_codes` directory.
 
 ```{r}
 country_codes <- read_xlsx(here('input_data', 'europe_country_codes', 'europe_country_code.xlsx'), sheet = 1)
@@ -76,7 +80,7 @@ country_codes
 
 AIDRES database is open source [@aidres_report]. However the data is available as a raw `.sql` file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. The data is also available as an Excel workbook. However, it is very customized to be used for specific analysis.
 
-## Importing AIDRES data from local `.csv` files
+## Importing AIDRES and AIDRES 2.0 data from local `.csv` files
 
 However, for an external user setting up a PostgreSQL server is not straight forward. Therefore, AIDRES tables are provided with this repository in the `input_data\aidres_data` directory.
 
@@ -123,14 +127,18 @@ aidres_perton|> collect() |> write_csv(here(aidres_data, 'aidres_perton.csv'))
 #| warning: false
 
 aidres_scenarios <- read_csv(here(aidres_data, 'aidres_scenarios.csv'))
-
 aidres_sectors <- read_csv(here(aidres_data, 'aidres_sectors.csv'))
-
 aidres_result <- read_csv(here(aidres_data, 'aidres_result.csv'))
-
 aidres_configurations <- read_csv(here(aidres_data, 'aidres_configurations.csv'))
-
 aidres_perton <- read_csv(here(aidres_data, 'aidres_perton.csv'))
+
+aidres_2_0_sectors <- read_csv2(here(aidres_data, 'aidres_2_0_sectors.csv'))
+aidres_2_0_results <- read_delim(here(aidres_data, "aidres_2_0_results.csv"),
+                                 delim = ";",
+                                 locale = locale(decimal_mark = ".", grouping_mark = ","),
+                                 guess_max = 6000)
+aidres_2_0_configurations <- read_csv2(here(aidres_data, 'aidres_2_0_configurations.csv'))
+aidres_2_0_products <- read_csv2(here(aidres_data, 'aidres_2_0_products.csv'))
 ```
 
 ## Steel production in 2018
@@ -164,7 +172,37 @@ aidres_result |> clean_names() |>
   aidres_production_country_2018
 ```
 
-Filtering only Steel sector production data
+First we extract the Production volumes of different products in various sectors from AIDRES 2.0 database.
+
+```{r}
+#| warning: false
+aidres_2_0_results |> clean_names() |> 
+  pivot_longer('product_flow_kt_y':'total_energy_vectors_pj_y', 
+               names_to = 'indicators', values_to = 'value') |>
+  mutate(value = round(value,3)) |> 
+  filter(indicators == 'product_flow_kt_y') |> 
+  filter(scenario_id == 0,
+         is_reference_route == 1) |> 
+  select(-c(is_mix, is_reference_route)) |> 
+  left_join(aidres_2_0_sectors, by =join_by('sector_id' == 'sector_id')) |>
+  left_join(aidres_2_0_configurations, by =join_by('configuration_id' == 'configuration_id')) |>
+  left_join(aidres_2_0_products, by =join_by('product_id' == 'product_id')) |>
+  select(c('nuts3', 'sector', 'product', 'configuration', 'indicators', 'value')) |>
+  rename('sector_id' = sector) |> 
+  rename('product_id' = product) |> 
+  mutate(sector_id = tolower(sector_id)) |>
+  filter(product_id != 'fertiliser-nitric-acid') |> 
+  filter(product_id != 'fertiliser-urea') |> 
+  rename('production_route_name' = configuration) |>
+  pivot_wider(names_from = 'indicators', values_from = 'value')|>
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2)) |>
+  group_by(country_code, sector_id, product_id, production_route_name) |> 
+  summarise(production_kt_y = sum(product_flow_kt_y)) |>  ungroup() ->  aidres_2_0_production_country_2018
+
+aidres_2_0_production_country_2018
+```
+
+Filtering only Steel sector production data (AIDRES)
 
 ```{r}
 
@@ -185,9 +223,30 @@ isi_aidres_production_comp <- aidres_production_country_2018 |>
   isi_aidres_production_comp
 ```
 
+Filtering only Steel sector production data (AIDRES 2.0)
+
+```{r}
+
+isi_aidres_2_0_production_comp <- aidres_2_0_production_country_2018 |> 
+  filter(sector_id == 'steel') |> 
+  select(-sector_id) |> 
+  pivot_longer(production_kt_y, values_to = 'kt', names_to = 'source') |> 
+  mutate(source = 'aidres')  |> 
+  pivot_wider(names_from = product_id, values_from = kt) |> 
+  clean_names() |> 
+  pivot_longer(cols = steel_primary: steel_secondary, names_to = 'product_id',values_to = 'kt') |> 
+  filter(!is.na(kt))
+
+        # mutate(steel_total = rowSums(cbind(steel_primary, steel_secondary), na.rm = TRUE)) 
+        # pivot_longer(cols = steel_primary:steel_total, names_to = 'product_id', values_to = 'kt') |> 
+        # mutate(kt = replace_na(kt, 0))
+      
+  isi_aidres_2_0_production_comp
+```
+
 ## Energy consumption for Steel production in 2018
 
-First we calculate Energy consumption by different production routes in different sectors. 
+First we calculate Energy consumption by different production routes in different sectors (AIDRES). 
 
 ```{r}
 #| warning: false
@@ -220,7 +279,38 @@ aidres_result |> clean_names() |>
   aidres_energy_all
 ```
 
-Filtering out Steel sector energy consumption and aggregating fuels to EUROSTAT aggregated commodities.
+First we calculate Energy consumption by different production routes in different sectors (AIDRES 2.0). 
+
+```{r}
+#| warning: false
+
+aidres_2_0_results |> clean_names() |> 
+  pivot_longer('alternative_fuel_mixture_usage_pj_y':'total_energy_vectors_pj_y', 
+               names_to = 'indicators', values_to = 'value') |>
+  mutate(value = round(value,3)) |> 
+  filter(scenario_id == 0,
+         is_reference_route == 1) |> 
+  select(-c(is_mix, is_reference_route)) |> 
+  left_join(aidres_2_0_sectors, by =join_by('sector_id' == 'sector_id')) |>
+  left_join(aidres_2_0_configurations, by =join_by('configuration_id' == 'configuration_id')) |>
+  left_join(aidres_2_0_products, by =join_by('product_id' == 'product_id')) |>
+  select(c('nuts3', 'sector', 'product', 'configuration', 'indicators', 'value')) |>
+  rename('sector_id' = sector) |> 
+  rename('product_id' = product) |> 
+  mutate(sector_id = tolower(sector_id)) |>
+  filter(product_id != 'fertiliser-nitric-acid') |> 
+  filter(product_id != 'fertiliser-urea') |> 
+  rename('production_route_name' = configuration) |>
+  separate_wider_position(nuts3, c(country_code = 2, 1, nuts_id =2)) |>
+  group_by(country_code, sector_id, indicators) |> 
+  summarise(country_total = sum(value)) |>
+  left_join(country_codes, by =join_by('country_code' == 'country_iso_code')) |> 
+  pivot_wider(names_from = sector_id, values_from = country_total) -> aidres_2_0_energy_all
+
+  aidres_2_0_energy_all
+```
+
+Filtering out Steel sector energy consumption and aggregating fuels to EUROSTAT aggregated commodities (AIDRES).
 
 ```{r}
 
@@ -242,6 +332,30 @@ aidres_cleaned_steel <- aidres_energy_all |>
   pivot_wider(names_from = metadata, values_from = pj)
 
 aidres_cleaned_steel
+```
+
+Filtering out Steel sector energy consumption and aggregating fuels to EUROSTAT aggregated commodities (AIDRES 2.0).
+
+```{r}
+
+aidres_2_0_cleaned_steel <- aidres_2_0_energy_all |> 
+  select(country_code:country, steel) |> 
+  mutate(indicators = str_replace(indicators, "\\_usage_pj_y", "")) |> 
+  mutate(indicators = str_replace(indicators, "\\_pj_y", "")) |> 
+  rename('steel_aidres' = steel,
+         'fuel' = indicators) |> 
+  pivot_longer(cols = c(steel_aidres), names_to = 'metadata', values_to = 'pj') |> 
+  pivot_wider(names_from = fuel, values_from = pj) |> 
+  rename('total' = total_energy_vectors) |> 
+  mutate(solid_fossil_fuels = rowSums(cbind(coal, coke, coal_steel), na.rm = TRUE),
+         renew_bio = rowSums(cbind(biomass, biomass_waste), na.rm = TRUE),
+         non_renew_waste = rowSums(cbind(plastic_mix, alternative_fuel_mixture), na.rm = TRUE),
+         oil_petro_products = rowSums(cbind(crude_oil, naphtha), na.rm = TRUE)) |> 
+  select(-c(alternative_fuel_mixture, coal, coke, biomass, biomass_waste, plastic_mix, crude_oil, naphtha, coal_steel)) |> 
+  pivot_longer(cols = -c(country_code:metadata), names_to = 'fuel', values_to = 'pj') |>
+  pivot_wider(names_from = metadata, values_from = pj)
+
+  aidres_2_0_cleaned_steel
 ```
 
 # EUROSTAT Steel energy consumption
@@ -314,9 +428,9 @@ steel_energy_eurostat <- dat_aggregated |>
 steel_energy_eurostat
 ```
 
-## Comparison of Steel sector energy consumption between AIDRES and EUROSTAT
+## Comparison of Steel sector energy consumption between AIDRES/AIDRES 2.0 and EUROSTAT
 
-AIDRES data still does not have energy consumption from steel finishing and rolling.
+AIDRES and AIDRES 2.0 data still do not have energy consumption from steel finishing and rolling.
 
 ### Creating output directory
 
@@ -333,7 +447,7 @@ dir.create(output_dir)
 }
 ```
 
-### Joining AIDRES and EUROSTAT Steel energy consumption
+### Joining AIDRES/AIDRES 2.0 and EUROSTAT Steel energy consumption
 
 ```{r}
 
@@ -345,6 +459,18 @@ steel_eurostat_aidres <- steel_energy_eurostat |>
   separate_wider_delim(metadata, delim = '_', names = c('sector', 'source'))
 
 steel_eurostat_aidres 
+```
+
+```{r}
+
+steel_eurostat_aidres_2_0 <- steel_energy_eurostat |> 
+  full_join(aidres_2_0_cleaned_steel, by = join_by(country_code, country, fuel)) |> 
+  select(country_code, country, fuel, everything()) |> 
+  pivot_longer(cols = steel_eurostat:steel_aidres, names_to = 'metadata', values_to = 'pj') |> 
+  mutate(pj = round(pj, 2))|> 
+  separate_wider_delim(metadata, delim = '_', names = c('sector', 'source'))
+
+steel_eurostat_aidres_2_0 
 ```
 
 ### Plot
@@ -373,6 +499,28 @@ Total energy consumption only
           ggsave(here(output_dir, 'steel_fec_compare_tot_no_fr.svg'), width = 12, height = 7, units = 'in', dpi = 900)
 ```
 
+```{r,  fig.width=10,fig.height=8}
+#| warning: false
+
+  steel_eurostat_aidres_2_0 |> filter(fuel == 'total') |>
+    filter(sector == 'steel') |> 
+    ggplot(aes(pj, fct_reorder(country_code, pj, .fun=sum))) +
+    geom_line()+
+    geom_point(aes(colour = source), size = 1.5) +
+    theme_bw() +
+    labs(title = 'Total energy consumption in the steel sector in AIDRES 2.0 and EUROSTAT',
+         subtitle = 'Rolling and finishing energy is missing in AIDRES 2.0 database',
+         y = 'country',
+         x = 'PJ') +
+    theme(legend.position = "bottom") +
+    theme(legend.title = element_blank()) -> p3
+    p3
+    
+     ggsave(here(output_dir, 'steel_fec_compare_tot_no_fr_2_0.pdf'), width = 14, height = 8, units = 'in', dpi = 900)
+     
+          ggsave(here(output_dir, 'steel_fec_compare_tot_no_fr_2_0.svg'), width = 12, height = 7, units = 'in', dpi = 900)
+```
+
 Total energy consumption by fuel
 
 ```{r,  fig.width=10,fig.height=12}
@@ -397,6 +545,28 @@ Total energy consumption by fuel
           ggsave(here(output_dir, 'steel_fec_compare_fuel_no_fr.svg'), width = 12, height = 7, units = 'in', dpi = 900)
 ```
 
+```{r,  fig.width=10,fig.height=12}
+#| warning: false
+
+  steel_eurostat_aidres_2_0 |>
+    filter(sector == 'steel') |> 
+    ggplot(aes(pj, fct_reorder(country_code, pj, .fun=sum))) +
+    geom_line()+
+    geom_point(aes(colour = source), size = 1.5) +
+    facet_wrap(~fuel, ncol = 5, scales = "free") +
+    theme_bw() +
+    labs(title = 'Total energy consumption by fuel in the steel sector in AIDRES 2.0 and EUROSTAT',
+         subtitle = 'Rolling and finishing energy is missing in AIDRES 2.0 database',
+         y = 'country',
+         x = 'PJ')+
+    theme(legend.title = element_blank()) -> p20
+    p20
+    
+     ggsave(here(output_dir, 'steel_fec_compare_fuel_no_fr_2_0.pdf'), width = 16, height = 8, units = 'in', dpi = 900)
+     
+          ggsave(here(output_dir, 'steel_fec_compare_fuel_no_fr_2_0.svg'), width = 12, height = 7, units = 'in', dpi = 900)
+```
+
 ### Tables
 
 Steel sector energy consumption by fuel
@@ -415,6 +585,20 @@ steel_eurostat_aidres |>
 steel_energy_eurostat_aidres
 ```
 
+```{r}
+steel_eurostat_aidres_2_0 |> 
+  select(-sector) |> 
+  arrange(country_code, source, fuel) |> 
+  pivot_wider(names_from = fuel, values_from = pj) |> 
+  mutate(across(.cols = -(1:4), .fns = ~replace_na(., replace = 0)),
+         across(.cols = -(1:4), .fns = ~round(., 2))) |> 
+  arrange(country_code) |> 
+  pivot_longer(electricity:total, names_to = 'fuel', values_to = 'pj') |> 
+  pivot_wider(names_from = source, values_from = pj) -> steel_energy_eurostat_aidres_2_0
+
+steel_energy_eurostat_aidres_2_0
+```
+
 
 ### Diff files
 
@@ -425,16 +609,21 @@ steel_energy_eurostat_aidres |>
    write_xlsx(here(output_dir, 'diff_no_finishing_rolling_fuel.xlsx'))
 ```
 
+```{r}
+steel_energy_eurostat_aidres_2_0 |> 
+   write_xlsx(here(output_dir, 'diff_no_finishing_rolling_fuel_2_0.xlsx'))
+```
+
 # Adding rolling and finishing energy from JRC-IDEES
 
-AIDRES data still does not have energy consumption from steel finishing and rolling. JRC IDEES has breakup of total energy consumption of the whole steel sector in various sub-parts like rolling and finishing. Rolling and finishing data is taken from IRC IDEES and added on top of AIDRES final energy consumption by fuel. The resulting 'total' final energy is then compared with EUROSTAT data. Steel production data is also compared between JRC IDEES and AIDRES
+AIDRES/AIDRES 2.0 data still does not have energy consumption from steel finishing and rolling. JRC IDEES has breakup of total energy consumption of the whole steel sector in various sub-parts like rolling and finishing. Rolling and finishing data is taken from IRC IDEES and added on top of AIDRES final energy consumption by fuel. The resulting 'total' final energy is then compared with EUROSTAT data. Steel production data is also compared between JRC IDEES and AIDRES
 
 
 ## JRC-IDEES Steel Production volume, Rolling, and Finishing Energy
 
 JRC-IDEES database is used first to produce historical trends of primary and secondary steel production in countries and then compare with AIDRES for the year 2018.
 
-Subsequently, energy consumption for rolling and finishing is taken from JRC-IDEES and added to AIDRES for calibration.
+Subsequently, energy consumption for rolling and finishing is taken from JRC-IDEES and added to AIDRES/AIDRES 2.0 for calibration.
 
 ## Download IDEES excel files
 
@@ -614,10 +803,35 @@ ggsave(here(output_dir, 'steel_production_aidres_2018.pdf'), width = 14, height 
 ggsave(here(output_dir, 'steel_production_aidres_2018.svg'), width = 14, height = 8, units = 'in', dpi = 900)
 ```
 
+Production AIDRES 2.0
 
-### Comparison of Steel Production between AIDRES and JRC-IDEES
+```{r}
 
-We compare AIDRES steel production with JRC-IDEES for the year 2018.
+ aidres_2_0_production_country_2018 |> 
+        filter(sector_id == 'steel') |> 
+        select(-sector_id, -production_route_name) |> 
+    mutate(mt = round(production_kt_y/1000, 3), .keep = 'unused') |> 
+
+ggplot(aes(mt, fct_reorder(country_code, mt, .fun = sum)))+
+        geom_col(aes(fill = product_id), width = .6)+
+        theme_bw()+
+        labs(title = paste0('Steel sector production volume comparison for year 2018 2.0'),
+             y = 'Country',
+             x = 'Million Ton') + 
+theme(legend.position = "bottom") +
+theme(legend.title = element_blank())+
+scale_fill_brewer(palette = "Set2") -> p50
+  p50
+  
+ggsave(here(output_dir, 'steel_production_aidres_2018_2_0.pdf'), width = 14, height = 13, units = 'in', dpi = 900)
+  
+ggsave(here(output_dir, 'steel_production_aidres_2018_2_0.svg'), width = 14, height = 8, units = 'in', dpi = 900)
+```
+
+
+### Comparison of Steel Production between AIDRES/AIDRES 2.0 and JRC-IDEES
+
+We compare AIDRES/AIDRES 2.0 steel production with JRC-IDEES for the year 2018.
 
 #### Plot
 
@@ -660,6 +874,45 @@ ggsave(here(output_dir, paste0('steel_production_compare', 2018, '.svg')), width
 
 ```
 
+```{r, fig.width=10, fig.height=7}
+#| warning: false
+
+isi_production_allyear_plot |> 
+  mutate(source = 'idees') |> 
+  mutate(mt = round(mt,3)) -> isi_production_allyear_plot
+
+  aidres_2_0_production_country_2018 |> 
+        filter(sector_id == 'steel') |> 
+        select(-sector_id, -production_route_name) |> 
+    mutate(mt = round(production_kt_y/1000, 3), .keep = 'unused') |> 
+    pivot_wider(names_from = product_id, values_from = mt) |>
+    clean_names() |> 
+    mutate(steel_total = rowSums(cbind(steel_primary, steel_secondary), na.rm = TRUE)) |> 
+    pivot_longer(cols = steel_primary:steel_total, names_to = 'product_id', values_to = 'mt') |> 
+    mutate(source = 'aidres')  -> aidres_2_0_production_country_plot
+  
+  
+    bind_rows(isi_production_allyear_plot |> filter(year == 2018) |> select(-year), 
+            aidres_2_0_production_country_plot) |> 
+    ggplot(aes(mt, fct_reorder(country_code, mt, .fun = sum)))+
+        geom_line()+
+        geom_point(aes(colour = source), size = 1.5)+
+        facet_wrap(~product_id, ncol = 3)+
+        theme_bw()+
+        labs(title = paste0('Steel sector production volume comparison for year 2018 2.0'),
+             y = 'Country',
+             x = 'Million Ton') +
+theme(legend.position = "bottom") +
+theme(legend.title = element_blank()) -> p60
+
+p60
+    
+ggsave(here(output_dir, paste0('steel_production_compare', 2018, '.pdf')), width = 10, height = 8, units = 'in', dpi = 900)
+
+ggsave(here(output_dir, paste0('steel_production_compare', 2018, '.svg')), width = 14, height = 8, units = 'in', dpi = 900)
+
+```
+
 #### Diff file
 
 ```{r}
@@ -673,9 +926,20 @@ write_xlsx(list('year_2018' = prod_comp_2018),
 
 ```
 
+```{r}
+bind_rows(isi_production_allyear_plot |> filter(year == 2018) |> 
+            select(-year), aidres_2_0_production_country_plot) |> 
+  mutate(year = 2018) |> 
+  pivot_wider(values_from = mt, names_from = source) -> prod_comp_2018_2_0
+
+write_xlsx(list('year_2018' = prod_comp_2018_2_0),
+           here(output_dir, 'diff_production_volume_steel_2018_2_0.xlsx'))
+
+```
+
 ### Finishing and rolling energy
 
-As AIDRES does not include the energy consumption for refining, rolling, and finishing, these information are taken from JRC-IDEES database.
+As AIDRES/AIDRES 2.0 does not include the energy consumption for refining, rolling, and finishing, these information are taken from JRC-IDEES database.
 
 ### Rolling energy by fuel
 
@@ -710,8 +974,6 @@ read_data_isi_r_fec_pri <- function(country){
 test_list_isi_r_fec_pri <- lapply(country_codes$country_iso_code, read_data_isi_r_fec_pri)
 isi_r_fec_pri <- bind_rows(test_list_isi_r_fec_pri, .id = "id") |> select(-id)
 
-isi_r_fec_pri
-
 ```
 
 #### For secondary steel
@@ -744,8 +1006,6 @@ file_path <- paste0(idees_data, '/JRC-IDEES-2021_Industry_', country, ".xlsx")
 
 test_list_isi_r_fec_sec <- lapply(country_codes$country_iso_code, read_data_isi_r_fec_sec)
 isi_r_fec_sec <- bind_rows(test_list_isi_r_fec_sec, .id = "id") |> select(-id)
-
-isi_r_fec_sec
 ```
 
 #### Total rolling energy
@@ -867,7 +1127,7 @@ isi_tot_roll_finish <- left_join(isi_tot_finish, isi_tot_rolling, by = join_by(c
 isi_tot_roll_finish
 ```
 
-### Calculate total rolling and finishing energy for AIDRES Steel production
+### Calculate total rolling and finishing energy for AIDRES/AIDRES 2.0 Steel production
 
 To calculate the total energy consumption for rolling and finishing of steel (for AIDRES production volume) we first calculate the specific energy consumption of finishing and rolling by fuel using 2018 steel production and energy consumption data of JRC-IDEES.
 
@@ -884,7 +1144,7 @@ steel_data_idees <- isi_production_2018 |>
 steel_data_idees
 ```
 
-Joining with AIDRES production volume, calculating total finishing and rolling energy by fuel using AIDRES production volume and IDEES sec.
+Joining with AIDRES/AIDRES 2.0 production volume, calculating total finishing and rolling energy by fuel using AIDRES production volume and IDEES sec.
 
 ```{r}
 
@@ -901,7 +1161,22 @@ aidres_finishing_rolling_pj <- aidres_production_country_2018 |> rename('product
 aidres_finishing_rolling_pj
 ```
 
-### Comparing Energy consumption of AIDRES (with finishing and rolling from IDEES) with EUROSTAT
+```{r}
+
+aidres_2_0_finishing_rolling_pj <- aidres_2_0_production_country_2018 |> rename('product' = product_id,
+                                         'production_kt_aidres' = production_kt_y) |> 
+  filter(sector_id == 'steel') |> 
+  select(-sector_id) |> 
+  left_join(steel_data_idees, by = join_by('product', 'country_code')) |> 
+  mutate(total_pj_finish_aidres = gj_per_t_finish*production_kt_aidres*1000/10^6,
+         total_pj_roll_aidres = gj_per_t_roll*production_kt_aidres*1000/10^6) |> 
+  select(-production_kt_idees, -finish_gj_idees, -country_share_finish) |> 
+  select(country_code, product, fuel, everything())
+
+aidres_2_0_finishing_rolling_pj
+```
+
+### Comparing Energy consumption of AIDRES/AIDRES 2.0 (with finishing and rolling from IDEES) with EUROSTAT
 
 Summarizing finishing and rolling energy by country and fuel
 
@@ -914,7 +1189,16 @@ aidres_finishing_country_pj <- aidres_finishing_rolling_pj |>
 aidres_finishing_country_pj
 ```
 
-Add finishing and rolling data with EUROSTAT and AIDRES data
+```{r}
+aidres_2_0_finishing_country_pj <- aidres_2_0_finishing_rolling_pj |> 
+  group_by(country_code, fuel) |> 
+  summarise(finishing_pj = sum(total_pj_finish_aidres),
+            rolling_pj = sum(total_pj_roll_aidres), .groups = 'drop')
+
+aidres_2_0_finishing_country_pj
+```
+
+Add finishing and rolling data with EUROSTAT and AIDRES/AIDRES 2.0 data
 
 ```{r}
 
@@ -926,6 +1210,18 @@ data_all_finishing_rolling <- steel_eurostat_aidres |>
   pivot_longer(cols = eurostat:aidres, names_to = 'source', values_to = 'pj')
 
 data_all_finishing_rolling
+```
+
+```{r}
+
+data_all_finishing_rolling_2_0 <- steel_eurostat_aidres_2_0 |> 
+  pivot_wider(names_from = source, values_from = pj) |> 
+  left_join(aidres_2_0_finishing_country_pj, by = join_by(country_code,  fuel)) |> 
+  mutate(aidres = rowSums(cbind(aidres, finishing_pj, rolling_pj), na.rm = TRUE)) |> 
+  select(-finishing_pj, -rolling_pj) |> 
+  pivot_longer(cols = eurostat:aidres, names_to = 'source', values_to = 'pj')
+
+data_all_finishing_rolling_2_0
 ```
 
 ### Plotting and diff files
@@ -954,6 +1250,26 @@ theme(legend.title = element_blank())-> p4
     ggsave(here(output_dir, 'steel_fec_compare_fuel_fr.svg'), width = 12, height = 7, units = 'in', dpi = 900)
 ```
 
+```{r,   fig.width=10, fig.height=12}
+#|warning: false
+
+data_all_finishing_rolling_2_0 |> 
+  ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+  geom_line()+
+  geom_point(aes(colour = source), size = 1.5) +
+  facet_wrap(~fuel, ncol = 5, scales = "free") +
+  theme_bw() +
+  labs(title = 'Fuel wise total energy consumption in the steel sector in AIDRES 2.0 and EUROSTAT for the year 2018',
+       subtitle = 'Rolling and finishing energy is included in AIDRES 2.0 database from JRC-IDEES',
+       y = 'country',
+       x = 'PJ') +
+theme(legend.title = element_blank())-> p4
+  p4
+  ggsave(here(output_dir, 'steel_fec_compare_fuel_fr_2_0.pdf'), width = 16, height = 8, units = 'in', dpi = 900)
+  
+    ggsave(here(output_dir, 'steel_fec_compare_fuel_fr_2_0.svg'), width = 12, height = 7, units = 'in', dpi = 900)
+```
+
 plotting only total energy
 
 ```{r,  fig.width=10,fig.height=8}
@@ -977,6 +1293,27 @@ plotting only total energy
       ggsave(here(output_dir, 'steel_fec_compare_tot_fr.svg'), width = 12, height = 7, units = 'in', dpi = 900)
 ```
 
+```{r,  fig.width=10,fig.height=8}
+#|warning: false
+
+  data_all_finishing_rolling_2_0 |> 
+    filter(fuel == 'total') |> 
+    ggplot(aes(pj, fct_reorder(country_code, pj, .fun = sum))) +
+    geom_line()+
+    geom_point(aes(colour = source), size = 1.5) +
+    theme_bw() +
+  labs(title = 'Total energy consumption in the steel sector in AIDRES 2.0 and EUROSTAT',
+       subtitle = 'Rolling and finishing energy is included in AIDRES 2.0 database from JRC-IDEES for the year 2018',
+       y = 'country',
+       x = 'PJ') + 
+    theme(legend.position = "bottom") +
+    theme(legend.title = element_blank()) -> p5
+  p5
+   ggsave(here(output_dir, 'steel_fec_compare_tot_fr_2_0.pdf'), width = 10, height = 8, units = 'in', dpi = 900)
+   
+      ggsave(here(output_dir, 'steel_fec_compare_tot_fr_2_0.svg'), width = 12, height = 7, units = 'in', dpi = 900)
+```
+
 ### Diff files
 
 Fuel wise with finishing and rolling
@@ -988,13 +1325,20 @@ Fuel wise with finishing and rolling
    write_xlsx(here(output_dir, 'diff_with_finishing_rolling_fuel.xlsx'))
 ```
 
+```{r}
+   data_all_finishing_rolling_2_0 |>
+   select( -country) |>
+   pivot_wider(values_from = pj, names_from = source) |>
+   write_xlsx(here(output_dir, 'diff_with_finishing_rolling_fuel_2_0.xlsx'))
+```
+
 # Steel sector claibration w.r.t EUROSTAT data
 
-We have obtained the rolling and finishing data from JRC-IDEES. We also calculate corresponding sec values. Now, we calibrate the AIDRES final energy consumption w.r.t EUROSTAT values. Therefore, we subtract the total rolling and finishing energy from final energy  of EUROSTAT. This constitute the 'true' energy consumption for the process routes 'upto rolling and finishing'. Subsequently the sec factors are calculated for the process routes 'upto rolling and finishing'.
+We have obtained the rolling and finishing data from JRC-IDEES. We also calculate corresponding sec values. Now, we calibrate the AIDRES/AIDRES 2.0 final energy consumption w.r.t EUROSTAT values. Therefore, we subtract the total rolling and finishing energy from final energy  of EUROSTAT. This constitute the 'true' energy consumption for the process routes 'upto rolling and finishing'. Subsequently the sec factors are calculated for the process routes 'upto rolling and finishing'.
 
 ## Eurostat without finishing rolling
 
-We subtract the finishing and rolling energy for AIDRES steel production from total final energy consumption of EUROSTAT.
+We subtract the finishing and rolling energy for AIDRES/AIDRES 2.0 steel production from total final energy consumption of EUROSTAT.
 
 ```{r}
    eurostat_without_finishing_rolling <- steel_eurostat_aidres |> 
@@ -1009,6 +1353,21 @@ We subtract the finishing and rolling energy for AIDRES steel production from to
     select(-c(pj, finishing_pj, rolling_pj))
 
 eurostat_without_finishing_rolling
+```
+
+```{r}
+   eurostat_without_finishing_rolling_2_0 <- steel_eurostat_aidres_2_0 |> 
+    filter(sector == 'steel',
+           source == 'eurostat') |> 
+    select(-source) |> 
+    mutate(pj = replace_na(pj, 0)) |> 
+    left_join(aidres_2_0_finishing_country_pj, by = join_by('country_code', 'fuel')) |> 
+    mutate(finishing_pj = replace_na(finishing_pj, 0),
+           rolling_pj = replace_na(finishing_pj, 0)) |> 
+    mutate(without_finishing_pj = pj - finishing_pj - rolling_pj) |> 
+    select(-c(pj, finishing_pj, rolling_pj))
+
+eurostat_without_finishing_rolling_2_0
 ```
 
 EUROSTAT doesn't have primary/ secondary breakup. This is obtained from IDEES data.
@@ -1059,7 +1418,7 @@ file_path <- paste0(idees_data, '/JRC-IDEES-2021_Industry_', country, ".xlsx")
       isi_fec_sec <- bind_rows(test_list_isi_fec_sec, .id = "id") |> select(-id, -year)
 ```
 
-## Separating out finishing and rolling energy from total total final energy cnsumption in IDEES
+## Separating out finishing and rolling energy from total total final energy consumption in IDEES
 
 ```{r}
 
@@ -1108,7 +1467,19 @@ eurostat_without_finishing_rolling |> filter(sector == 'steel',
 left_join(steel_idees_fec_share_no_finish_roll, steel_eurostat_fec_no_finish, by = join_by('country_code')) |> 
         select(country_code, country, prod_route, prod_route_share, without_finishing_pj) |> 
         mutate(pj_route = without_finishing_pj*prod_route_share, .keep = 'unused') -> steel_eurostat_fec_prod_route
+steel_eurostat_fec_prod_route
+```
 
+```{r}
+
+eurostat_without_finishing_rolling_2_0 |> filter(sector == 'steel',
+                                             fuel == 'total') |> 
+  select(-sector, -fuel) -> steel_eurostat_fec_no_finish_2_0
+ 
+left_join(steel_idees_fec_share_no_finish_roll, steel_eurostat_fec_no_finish_2_0, by = join_by('country_code')) |> 
+        select(country_code, country, prod_route, prod_route_share, without_finishing_pj) |> 
+        mutate(pj_route = without_finishing_pj*prod_route_share, .keep = 'unused') -> steel_eurostat_fec_prod_route_2_0
+steel_eurostat_fec_prod_route_2_0
 ```
 
 #### New SECs for production routes no finishing and roling
@@ -1137,6 +1508,32 @@ steel_eurostat_aidres |>
 left_join(steel_eurostat_fec_prod_route, by=join_by(country_code, country), relationship = 'many-to-many') |> 
   select(country_code, country, prod_route, everything()) |> 
   mutate(fuel_route_pj = round(pj_route*fuel_share,3)) -> steel_fuel_route_pj
+steel_fuel_route_pj
+```
+
+```{r}
+
+steel_eurostat_aidres_2_0 |> 
+  filter(sector == 'steel',
+         source == 'eurostat') |> 
+  select(- sector, -source) |> 
+  pivot_wider(names_from = fuel, values_from = pj) |> 
+  mutate(solid_fossil_fuels  = solid_fossil_fuels / total,
+         electricity  = electricity / total,
+         natural_gas = natural_gas / total,
+         oil_petro_products = oil_petro_products / total,
+         renew_bio = renew_bio / total,
+         non_renew_waste = non_renew_waste / total,
+         hydrogen  = hydrogen / total,
+         methanol = methanol / total,
+         heat = heat/ total) |> 
+  select(-total) |> 
+  pivot_longer(cols = electricity:methanol, names_to = 'fuel', values_to = 'fuel_share') |> 
+
+left_join(steel_eurostat_fec_prod_route_2_0, by=join_by(country_code, country), relationship = 'many-to-many') |> 
+  select(country_code, country, prod_route, everything()) |> 
+  mutate(fuel_route_pj = round(pj_route*fuel_share,3)) -> steel_fuel_route_pj_2_0
+steel_fuel_route_pj_2_0
 ```
 
 #### Specific energy consumption factor upto finishing and rolling
@@ -1152,6 +1549,19 @@ left_join(steel_fuel_route_pj, steel_prod_aidres, by = join_by('country_code' ==
        select(-c(fuel_share, pj_route, fuel_route_pj, kt)) -> steel_aidres_fec_no_finish_roll
       
       steel_aidres_fec_no_finish_roll
+```
+
+```{r}
+
+isi_aidres_2_0_production_comp |> 
+  filter(product_id!= 'steel_total') -> steel_prod_aidres_2_0
+  
+left_join(steel_fuel_route_pj_2_0, steel_prod_aidres_2_0, by = join_by('country_code' == 'country_code', 'prod_route' == 'product_id')) |>
+        select(-source) |> 
+      mutate(sec_gj_t = fuel_route_pj*10^6/(kt*1000)) |> 
+       select(-c(fuel_share, pj_route, fuel_route_pj, kt)) -> steel_aidres_2_0_fec_no_finish_roll
+      
+      steel_aidres_2_0_fec_no_finish_roll
 ```
 
 #### Secs for finishing and rolling
@@ -1180,6 +1590,30 @@ sec_rolling_finish |>
 sec_finishing_steel
 ```
 
+```{r}
+
+aidres_2_0_finishing_rolling_pj |> filter(fuel != 'total') |> 
+  select(country_code, product, production_route_name, fuel, gj_per_t_finish, gj_per_t_roll) |> 
+  rename('sec_finish_gj_t' = gj_per_t_finish,
+         'sec_roll_gj_t' = gj_per_t_roll) |> 
+  mutate(product=replace(product, product=='steel-primary', 'steel_primary')) |> 
+  mutate(product= replace(product, product == 'steel-secondary', 'steel_secondary')) -> sec_rolling_finish_2_0
+
+sec_rolling_finish_2_0 |> 
+  select(-sec_finish_gj_t) |> 
+  mutate(production_route_name = paste0('rolling-', production_route_name)) |> 
+  pivot_wider(names_from = fuel, values_from = sec_roll_gj_t) -> sec_rolling_steel_2_0
+
+sec_rolling_steel_2_0
+
+sec_rolling_finish_2_0 |> 
+  select(-sec_roll_gj_t) |> 
+  mutate(production_route_name = paste0('finishing-', production_route_name)) |> 
+  pivot_wider(names_from = fuel, values_from = sec_finish_gj_t) -> sec_finishing_steel_2_0
+
+sec_finishing_steel_2_0
+```
+
 #### Adding finishing and rolling secs to the database
 
 ```{r}
@@ -1198,6 +1632,24 @@ steel_aidres_fec_no_finish_roll |> left_join(aidres_finishing_rolling_pj_, by = 
   filter(!is.na(production_route_name))-> steel_sec
   
   steel_sec
+```
+
+```{r}
+
+aidres_2_0_finishing_rolling_pj |> filter(fuel != 'total') |> 
+  select(country_code, product, production_route_name, fuel, gj_per_t_finish, gj_per_t_roll) |> 
+  rename('sec_finish_gj_t' = gj_per_t_finish,
+         'sec_roll_gj_t' = gj_per_t_roll) |> 
+  mutate(product=replace(product, product=='steel-primary', 'steel_primary')) |> 
+  mutate(product= replace(product, product == 'steel-secondary', 'steel_secondary')) -> aidres_2_0_finishing_rolling_pj_
+  
+steel_aidres_2_0_fec_no_finish_roll |> left_join(aidres_2_0_finishing_rolling_pj_, by = join_by('country_code' == 'country_code','prod_route' == 'product','fuel' == 'fuel','production_route_name' == 'production_route_name')) |> 
+  rename('sec_norf_gj_t' = sec_gj_t) |> 
+  select(country_code, country, everything()) |> 
+  arrange(country_code , prod_route ) |> 
+  filter(!is.na(production_route_name))-> steel_sec_2_0
+  
+  steel_sec_2_0
 ```
 
 #### Creating final data frame for steel
@@ -1232,6 +1684,39 @@ steel_sec_fr
 
 write_xlsx(list('sec_upto_rolling_finishing' = steel_sec_upto_fr,
                 'sec_finishing_rolling' = steel_sec_fr),
+          here(output_dir, 'steel_final_process_routes.xlsx') )
+```
+
+```{r}
+steel_sec_2_0 |>
+  mutate(unit = 'gj_t') |> 
+  rename('finishing' = sec_finish_gj_t ,
+         'rolling' = sec_roll_gj_t ,
+         'upto_roll_fin' = sec_norf_gj_t,
+         'prod_route' = production_route_name,
+         'product' =  'prod_route') |> 
+  pivot_longer(cols = c(finishing, upto_roll_fin,rolling) ,  names_to = 'process_route', values_to = 'value') |> 
+  mutate(value = round(value, 3)) -> steel_sec1_2_0
+  
+steel_sec1_2_0|> 
+  filter(process_route == 'upto_roll_fin') |> 
+  mutate(process_route = paste(prod_route, process_route, sep = '-')) |> 
+   select(-prod_route) |> 
+  pivot_wider(names_from = fuel, values_from = value) |> 
+  select(country_code:product, process_route, unit, everything()) -> steel_sec_upto_fr_2_0
+
+steel_sec_upto_fr_2_0
+  
+steel_sec1_2_0 |> 
+  filter(process_route != 'upto_roll_fin') |> 
+  select(-prod_route,) |> 
+  pivot_wider(names_from = fuel, values_from = value) |> 
+  select(country_code:product, process_route, unit, everything()) -> steel_sec_fr_2_0
+
+steel_sec_fr_2_0
+
+write_xlsx(list('sec_upto_rolling_finishing' = steel_sec_upto_fr_2_0,
+                'sec_finishing_rolling' = steel_sec_fr_2_0),
           here(output_dir, 'steel_final_process_routes.xlsx') )
 ```
 
