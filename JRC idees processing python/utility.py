@@ -153,7 +153,6 @@ def create_new_production_proces(df, mapping_new_processes, heat_pump_list):
     for i in df['country_code'].drop_duplicates().tolist():
         for k1, v1 in mapping_new_processes.items():
             for k2, v2 in v1.items():
-
                 if k2 in heat_pump_list:
                     new_efficiency = 2.85 # average of technology catalogue
                     new_CO2_intensity = 0
@@ -252,7 +251,8 @@ def useful_energy_per_capacity(product_list: list,
 
 
 def update_original_production_proces(df, mapping_original_processes):
-    for i in df['country_code'].drop_duplicates().tolist():
+    countries = df['country_code'].drop_duplicates().tolist()
+    for i in countries:
         for k1, v1 in mapping_original_processes.items():
             for k2, v2 in v1.items():
                 row_filter = ((df['classification_1'] == k2) &
@@ -463,9 +463,7 @@ def build_tc_production_co2_and_lifetime_tables(
 
     # Convert units for CO2 per capacity
     df = df.merge(mapping_CO2_tc, on='unit_CO2_emissions_per_capacity', how='left')
-    df['CO2_emissions_per_capacity_converted'] = (
-        df['CO2_emissions_per_capacity'] * df['conversion_co2_emissions']
-    )
+    df['CO2_emissions_per_capacity_converted'] = df['CO2_emissions_per_capacity'] * df['conversion_co2_emissions']
 
     # Tag scenario & emission field
     df['Industry'] = df['Industry'] + industry_suffix

@@ -305,8 +305,7 @@ new_out, new_sum, proces_energy_new_out_simplified, new_capex_opex = build_tc_en
     industry_mapping_tc=industry_mapping_tc,
     filter_jrc_sectors=filter_jrc_sectors,
     mapping_energy_tc=mapping_energy_tc,
-    energy_carrier_mapping_tc=energy_carrier_mapping_tc,
-)
+    energy_carrier_mapping_tc=energy_carrier_mapping_tc)
 
 df_capex_heat_pump = pd.DataFrame({
     "energy_carrier_EB": ["electricity-heat-pump", "electricity", "natural_gas"],
@@ -323,7 +322,6 @@ df_opex_heat_pump = pd.DataFrame({
     "2040": [opex_cst_heat_pump_2040, opex_cst_electric_steam_boiler_2040, opex_cst_gas_boiler],
     "2050": [opex_cst_heat_pump_2050, opex_cst_electric_steam_boiler_2050, opex_cst_gas_boiler]
 })
-
 new_capex = new_capex_opex.copy().merge(df_capex_heat_pump, on='energy_carrier_EB', how='left')
 new_opex = new_capex_opex.copy().merge(df_opex_heat_pump, on='energy_carrier_EB', how='left')
 
@@ -451,7 +449,6 @@ steel_finishing_original_out                   = outputs_original_steel['steel_f
 steel_finishing_original_out_energy_simplified = outputs_original_steel['energy_simplified']
 steel_finishing_original_out_CO2_simplified    = outputs_original_steel['co2_simplified']
 lifetime_steel_finishing_original_out          = outputs_original_steel['lifetime_out']
-
 
 # Export data for all processes not in AIDRES
 proces_energy_new_out_simplified.to_csv(r"../input_data/processed_jrc_idees_data/proces_energy_new.csv", index=False)

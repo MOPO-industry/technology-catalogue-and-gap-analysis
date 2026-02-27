@@ -1,0 +1,13 @@
+This repository contains a series of stand-alone Quarto documents (.html) with R scripts and documentation for analyzing and preparing input data for the Mopo Industry Technology Component from the AIDRES database and other sources. The quarto documents contain the detailed documentation on main assumptions, data classifications, data aggregation etc.  
+
+To access the data and documentation, clone this repository (https://github.com/MOPO-industry/technology-catalogue-and-gap-analysis) to your computer. For guidance, see: https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository
+
+Readily start browsing documentation and data analyses via the .html files. For further data analysis (advanced users), open the `mopo_repo.Rproj` (`RStudio needs to be installed`) file. Open for example `refinery_analysis.qmd` and click on `render button` (Crtl + Shift + K).
+
+The main Quarto file (technology_catalogue_aidres.html) contains the full workflow and documentation for building the mopo industry technology catalogue. Various sector specific files (xxx_analysis.html) provide underlying data comparisons with JRC-IDEES and EUROSTAT for main energy intensive sectors (steel, chemical, fertiliser, cement, glass, refineries). 
+ 
+The application draws from pre-processed input data (root > input_data). AIDRES data under this folder (root > input_data > aidres_data) contains updated AIDRES data files (aidres_2_0_xxx.csv) not yet published elsewhere (state February 2026). These updated files draw amongst others from the MIDDEN database as described in Mopo deliverable 2.2. For advanced users, code is provided for establishing an AIDRES database connection and fetching tables.  
+
+Full sector coverage is obtained by integrating data from JRC-IDEES (root > input_data > jrc_idees2021. Additional Python code used for preprocessing JRC-IDEES data for use in the technology catalogue is included in the folder ‘root > JRC idees processing python’. Full EU30 country coverage is obtained through a desktop analysis of production volumes in Norway, Switzerland and UK (root > input_data > extra_data). The same folder contains a datafile with data on industrial processes that could not be obtained from AIDRES of JRC-IDEES. 
+
+Main outputs (root > output_data) are the mopo industry dataset (root > output_data > technology_catalogue) and various sector specific analyses.

@@ -35,7 +35,7 @@ funding:
 
 # Introduction
 
-This is a stand-alone quarto document with code chunks and documentation for an application preparing raw input data for MOPO EU/ Industrial cluster case study directly from AIDRES database.
+This is a stand-alone quarto document with code chunks and documentation for an application preparing raw input data for MOPO EU/ Industrial cluster case study directly from the AIDRES database and other sources.
 
 
 # Using the application
@@ -43,7 +43,7 @@ This is a stand-alone quarto document with code chunks and documentation for an 
 The files are produced using [R](https://cran.r-project.org/) and [RStudio](https://posit.co/download/rstudio-desktop/).
 Though the scripts can be executed using command line, it is recommended to use `RStudio` for rendering.
 
-Clone this [repository](https://git.vito.be/scm/sesam/mopo_repo.git) in your computer. Open the `mopo_repo.Rproj` (`RStudio needs to be installed`) file. Open `refinery_analysis.qmd` and click on `render button` (Crtl + Shift + K).
+Clone this [repository](https://github.com/MOPO-industry/technology-catalogue-and-gap-analysis) to your computer. Readily start browsing documentation and data analyses via the .html files. For further data analysis (advanced users), open the `mopo_repo.Rproj` (`RStudio needs to be installed`) file. Open for example `refinery_analysis.qmd` and click on `render button` (Crtl + Shift + K).
 
 
 # Loading libraries
@@ -74,9 +74,9 @@ for (p in mypackages) {
 
 ## Establishing AIDRES database connection and fetching tables (not used)
 
-AIDRES database is open source [@aidres_report]. However the data is [available](https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/EIGL-Data/AIDRES/) as a raw `.sql` file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. The data is also available as an Excel workbook. However, it is very customized to be used for specific analysis.
+The AIDRES database is open source [@aidres_report]. However, the data is [available](https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/EIGL-Data/AIDRES/) as a raw `.sql` file which needs to be further used to setup a PostgreSQL database connection to fetch various tables. 
 
-In VITO we have set up a AIDRES postgreSQL database server. The following codes chunks are used to fetch the tables dynamically for the analysis.Username and password is not explicitly mentioned due to security reasons; they are read from a local R env profile file. For a different computer a separate profile files needs to be used.
+We have set up an AIDRES postgreSQL database server at VITO. The following code chunks are used to fetch the tables dynamically for the analysis. Username and password are not explicitly mentioned due to security reasons; they are read from a local R env profile file. For a different computer, a separate profile file needs to be used.
 
 These code chunks are currently deactivated, because we work with an updated version of the AIDRES database (AIDRES 2.0).
 
@@ -107,14 +107,14 @@ aidres_perton <- tbl(con, dbplyr::in_schema('aidres','model_perton'))
 
 ## Importing AIDRES 2.0 data from local `.csv` files
 
-We use an updated version of the AIDRES database (AIDRES 2.0), in which the production capacities of the chemical sector have been revised for both the Netherlands (based on Midden: https://www.pbl.nl/en/publications/manufacturing-industry-decarbonisation-data-exchange-network) and Flanders (based on the GPBV database: https://omgeving.vlaanderen.be/nl/omgevingsvergunning/meer/overzicht-gpbv-installaties-in-vlaanderen-industrie). This update was particularly important for the Netherlands, as the original AIDRES database did not include Chemelot. For the Netherlands actually not only the chemical sector, but also all other AIDRES sectors are updated based on Midden where necessary.
+We use an updated version of the AIDRES database (AIDRES 2.0), in which the production capacities of particularly the chemical sector have been revised for both the Netherlands (based on MIDDEN: https://www.pbl.nl/en/publications/manufacturing-industry-decarbonisation-data-exchange-network) and Flanders (based on the GPBV database: https://omgeving.vlaanderen.be/nl/omgevingsvergunning/meer/overzicht-gpbv-installaties-in-vlaanderen-industrie). For the Netherlands, also all other AIDRES sectors have been checked based on Midden and updated where necessary.
 
-The AIDRES 2.0 tables are included in this repository under input_data/aidres_data and consist of:
-aidres_2_0_scenarios.csv
-aidres_2_0_sectors.csv
-aidres_2_0_result.csv
-aidres_2_0_configurations.csv
-aidres_2_0_perton.csv
+The AIDRES 2.0 tables are included in this repository under input_data/aidres_data and consist of:  
+aidres_2_0_scenarios.csv  
+aidres_2_0_sectors.csv  
+aidres_2_0_result.csv  
+aidres_2_0_configurations.csv  
+aidres_2_0_perton.csv  
 
 This chunk of code reads the AIDRES 2.0 data `.csv` files. 
 
@@ -139,38 +139,46 @@ aidres_2_0_perton <- read_delim(here(aidres_data, "aidres_2_0_perton.csv"),
                                  delim = ";",
                                  locale = locale(decimal_mark = ".", grouping_mark = ","),
                                  guess_max = 6000)
+
+CCS_path <- here('input_data', 'aidres_data')
+CCS_correction <- read_xlsx(here(CCS_path, 'CCS capex correction.xlsx'), sheet = 'Sheet1', range = 'A1:M86')
+CCS_correction <- CCS_correction |> select('configuration_id', 'CAPEX to add (eur_ton product)')
+CCS_correction
 ```
 
 
 # Get additional data
 
-Get data on the CO2 consumption for the co electrolysis processes in AIDRES (based on Figure 12 and 13 of the final aidres report). For (COEL)FT-MEA, (COEL)MeOH-MEA, CO2 consumption in the final aidres report is expressed in ton CO2/t LLF, which is converted to ton CO2/MWh LLF based on a lower heating value of 11.91 MWh/t. For ((COEL)MeOH)O-MEA, ton CO2/ton LLF is converted to ton CO2/ton olefins by dividing by 2.15 (ton MeOH/ton LLF) and by (0.41 ton olefins/ton MeOH).
+Get data on the CO2 consumption for the co electrolysis processes in AIDRES (based on Figure 12 and 13 of the [final aidres report](https://op.europa.eu/en/publication-detail/-/publication/577d820d-5115-11ee-9220-01aa75ed71a1à)). For (COEL)FT-MEA, (COEL)MeOH-MEA, CO2 consumption in the final aidres report is expressed in ton CO2/ton of Light Liquid Fuels (LLF), which is converted to ton CO2/MWh LLF based on a lower heating value of 11.91 MWh/ton LLF. For ((COEL)MeOH)O-MEA, ton CO2/ton LLF is converted to ton CO2/ton olefins by dividing by 2.15 ton MeOH/ton LLF (source: original AIDRES report Figure 13) and by 0.41 ton olefins/ton MeOH (source: AIDRES configuration (MeOH)O).  
 
-Get additional data for the new hydrogen to Fischer-Tropsch and hydrogen to methanol processes from the Danish technology catalogue (https://ens.dk/en/analyses-and-statistics/technology-catalogues): ‘Hydrogen to Jet’ and ‘Methanol from hydrogen and carbon dioxide’. 
+Two new production routes for LLFs have been added based on the [Danish technology catalogue](https://ens.dk/en/analyses-and-statistics/technology-catalogues): ‘Hydrogen to Jet’ ((H2)FT-DC) and ‘Methanol from hydrogen and carbon dioxide’ ((H2)MeOH-DC).  
 
-For the ‘Hydrogen to Jet’ process, the capex is expressed in Meur_(MW_FT)_year, which is converted to (eur-yr)/mwh by multiplying by 1000000 eur/Meur and dividing by 8760 h/y. The fom already has the correct unit.
+For the ‘Hydrogen to Jet’ process, the overnight capex is expressed in Meur/MW Liquids, which is converted to (eur-yr)/mwh by multiplying by 1000000 eur/Meur and dividing by 8760 h/y. The fom already has the correct unit.  
 
-For the ‘Methanol from hydrogen and carbon dioxide’, the capex is expressed in Meur_(MW_methanol), which is converted to (eur-yr)/mwh by multiplying by 1000000 eur/Meur and dividing by 8760 h/y. The fom is expressed in 'keur_(MW_methanol_year)', which is multiplied by 1000 eur/keur and divided by 8760 h/year to convert to eur/mwh. 
+For the ‘Methanol from hydrogen and carbon dioxide’, the capex is expressed in Meur/MW_Methanol, which is converted to (eur-yr)/mwh by multiplying by 1000000 eur/Meur and dividing by 8760 h/y. The fom is expressed in 'keur_(MW_methanol_year)', which is multiplied by 1000 eur/keur and divided by 8760 h/year to convert to eur/mwh.  
 
-Check the 'extra_data_processed.xlsx' file (tab 'calculations') for more info on the calculations.
+Check the 'extra_data_processed.xlsx' file (tab 'calculations') for more info on the calculations.  
 
 ```{r}
 file_extra_data <- here('input_data', 'extra_data')
 extra_data_processes <- read_xlsx(here(file_extra_data, 'extra_data_processes.xlsx'), sheet = 'extra_data', range = 'A1:K20')
 ```
 
-Get production data for Switzerland, Norway and the UK retrieved from reports, websites or literature. More information on the data source can be found in the 'Mopo_Data_Collection_CH_NO_UK.xlsx' file.
+Get production data for Switzerland, Norway and the UK. More information on the data sources can be found in 'Mopo_Data_Collection_CH_NO_UK.xlsx'.  
+
 ```{r}
 extra_data_production <- read_xlsx(here(file_extra_data, 'Mopo_Data_Collection_CH_NO_UK.xlsx'), sheet = 'extra_data_CH_NO_UK', range = 'A1:N170')
 ```
 
+
 # AIDRES data for MOPO EU/ Industrial cluster case study
 
-Important general remarks:
-- Processing AIDRES 2.0 data to construct tables for the technology catalogue. To limit the number of production routes for the analysis we only select AIDRES 2.0 routes that are in the AIDES 2040 mix 
-- Both nitric acid and urea related data are not extracted from AIDRES 2.0, because of the risk of double counting the energy use for ammonia production.
-- Energy use is converted from pJ to MWh
-- For refineries, we are interested in the production of HC in MWh (not ton). Therefore ton HC is converted to MWh HC
+Important general remarks:  
+- Processing AIDRES 2.0 data to construct tables for the technology catalogue. To limit the number of production routes for the analysis we only select AIDRES 2.0 routes that are in the AIDRES 2040 mix  
+- Both nitric acid and urea related data are not extracted from AIDRES 2.0, because of the risk of double counting the energy use for ammonia production.  
+- Specific Energy Consumption is converted from PJ to MWh  
+- For LLF production in refineries, LLF is renamed to HC (HydroCarbons) and output units are converted from ton HC to MWh HC  
+
 
 ## Specific energy consumption factors
 
@@ -258,11 +266,12 @@ sec_perton_all |>
 sec_perton_all
 ```
 
+
 ## Costs: capex and fom
 
-Important remarks:
-- The cost figures from AIDRES 2.0 (in EUR2018) and from the Danish Technology Catalogue (in EUR2020) are converted to EUR2025 using historical inflation rates.
-- Annualized CAPEX values are converted to total CAPEX using a capital recovery factor based on a 6% interest rate. For all routes the lifetime of the original source is retained.
+Important remarks:  
+- The cost figures from AIDRES 2.0 (in EUR2018) and from the Danish Technology Catalogue (in EUR2020) are converted to EUR2025 using historical inflation rates.  
+- Annualized CAPEX values are converted to total CAPEX using a capital recovery factor based on a 6% interest rate. For all routes the lifetime of the original source is retained.  
 
 ```{r}
 extra_data_processes |> 
@@ -291,7 +300,11 @@ crf_40 <- (int_rate*(1+int_rate)^life_40)/((1+int_rate)^life_40 - 1)
 crf_30 <- (int_rate*(1+int_rate)^life_30)/((1+int_rate)^life_30 - 1)
 crf_25 <- (int_rate*(1+int_rate)^life_25)/((1+int_rate)^life_25 - 1)
 
-aidres_2_0_perton |> clean_names() |>
+aidres_2_0_perton |>
+  left_join(CCS_correction, by = "configuration_id") |> 
+  mutate(`CAPEX to add (eur_ton product)` = as.numeric(`CAPEX to add (eur_ton product)`)) |>
+ clean_names() |>
+  mutate(capex_eur_t = capex_eur_t + coalesce(capex_to_add_eur_ton_product, 0)) |>
   select(scenario_id:is_reference_route, contains('eur_t')) |>
   pivot_longer(opex_var_eur_t:capex_eur_t, names_to = 'indicators', values_to = 'eur_t') |>
   filter((horizon == 2030 & scenario_id == 1) | horizon == 2018) |>
@@ -387,6 +400,7 @@ costs_fom_perton_all <- costs_perton_all |>
 costs_fom_perton_all
 ```
 
+
 ## CO2 emissions and capture
 
 ```{r}
@@ -463,24 +477,26 @@ emission_co2_emission_perton_all
 
 ```
 
+
 ## Additional production data
+Preprocess additional production data for CH, NO, and UK from 'Mopo_Data_Collection_CH_NO_UK.xlsx'  
 
-Preprocess additional production data for CH, NO, and UK from 'Mopo_Data_Collection_CH_NO_UK.xlsx'
+Important remarks:  
+- We exclude the following products:  
+ 	- 'urea' (to avoid double counting ammonia production)  
+ 	- 'nitric acid' (to avoid double counting ammonia production)  
+ 	- 'chlorine' (added later for all countries)  
+- Preferred data from reliable sources listed in Mopo_Data_Collection_CH_NO_UK.xlsx (latest year); if unavailable, fall back to PyPSA-EUR values (see Tab ‘extra_data_choice’).  
+- For the products listed below, PyPSA-EUR 'production index' values are replaced with useful energy. Useful energy is obtained by applying product specific conversion factors from JRC‑IDEES ('input_data/processed_jrc_idees_data/useful_energy_per_production_index.csv'), generated by the 'jrc idees processing.py' script in the 'JRC idees processing python' folder (see below, Section 'Add production, production route and CO₂ emission data for non‑Aidres sectors'). 
 
-Important remarks: 
-- We exclude the following products: 
-  - 'urea' (to avoid double counting ammonia production) 
-  - 'nitric acid' (to avoid double counting ammonia production) 
-  - 'chlorine' (added later for all countries) 
-- Preferred data from specific sources listed in Mopo_Data_Collection_CH_NO_UK.xlsx (latest year); if unavailable, fall back to PyPSA values. 
-- For the products listed below, replace the PyPSA 'production index' with useful energy. Useful energy is obtained by applying product specific conversion factors from JRC‑IDEES ('input_data/processed_jrc_idees_data/useful_energy_per_production_index.csv'), generated by the 'jrc idees processing.py' script in the 'JRC idees processing python' folder (see section 'Add production, production route and CO₂ emission data for non‑Aidres sectors'): 
-  - food, beverages and tobacco
-  - leather and textile 
-  - transport equipment 
-  - machinery equipment 
-  - wood and wood products 
-  - other industrial sectors
-
+Applicable products with production index to useful energy conversion:  
+  - food, beverages and tobacco  
+  - leather and textile  
+  - transport equipment  
+  - machinery equipment  
+  - wood and wood products  
+  - other industrial sectors  
+  
 ```{r}
 to_node_year_production_factor_relation_2018 <- data.frame(
   to_node = c('glass-container', 'cement', 'chemical-PE', 
@@ -652,7 +668,8 @@ extra_data_production_processed <- extra_data_production |>
   mutate(`2018` = `2018o` * if_else(!is.na(useful_energy_per_capacity), useful_energy_per_capacity/0.0036, 1)) |>
   mutate(`2030` = `2030o` * if_else(!is.na(useful_energy_per_capacity), useful_energy_per_capacity/0.0036, 1)) |>
   mutate(`2050` = `2050o` * if_else(!is.na(useful_energy_per_capacity), useful_energy_per_capacity/0.0036, 1)) |>
-  mutate(unit = if_else(!is.na(useful_energy_per_capacity), "mwh_yr", unit))
+  mutate(unit = if_else(!is.na(useful_energy_per_capacity), "mwh/y", unit))
+
 
 extra_data_production_processed_2018 <- extra_data_production_processed |>
   select(c(country_code, sector_id, to_node, Industry, unit, `2018`))
@@ -663,17 +680,18 @@ extra_data_production_processed_2030_2050 <- extra_data_production_processed |>
 extra_data_production_processed
 ```
 
+
 ## Production
 
 ### Production volume at nuts0
-
-Aggregated product flow information at national level (nuts0). 
-Important remarks:
-- For 2018, production routes and product flow are mapped. However, for future years only product flow is mentioned
-- The AIDRES 2.0 database contains both the INEOS ethane cracker and the TOA cracker, but they, respectively, open in 2026 and close in 2027. Therefore we do the following:
-  - INEOS ethane cracker (BE211) operational in 2026: 1909 kt/y * 0.84 --> subtract from 2018
-  - TOA cracker (BE211) closure in 2027: 2273 kt/y * 0.84 --> subtract from 2030 and 2050
-- We add the additional production data for UK, CH and NO
+Aggregated product flow information at national level (nuts0).  
+Important remarks:   
+- For the reference year (2018), reference production routes and product flow are mapped. For future years, only product flow is mentioned  
+- The AIDRES 2.0 database contains in the Belgian Antwerp area both an INEOS ethane cracker and a TotalEnergies steam cracker, but they, respectively, open in 2026 and close in 2027. Therefore, we do the following:  
+  - INEOS ethane cracker (BE211) operational in 2026: 1909 kt/y * 0.84 -->  this production volume is subtracted from 2018  
+  - TOA cracker (BE211) closure in 2027: 2273 kt/y * 0.84 -->  this production volume is subtracted from 2030 and 2050  
+- Data for Switzerland, UK and Norway is added for nuts0 level, but is not available on nuts3 level  
+- The default reference year is 2018 (in line with the original AIDRES database). However, when data has been updated, more recent years apply. This holds particularly for the Netherlands and Belgium, for the non-EU27 countries Switzerland, Norway and UK, and for sectors added from JRC-IDEES  
 
 ```{r}
 aidres_2_0_results |> clean_names() |>
@@ -736,7 +754,7 @@ aidres_production_country_2018year |>
   mutate(value = case_when(sector_id == 'refineries' ~ round(value*11.92*1000,3),
                             .default = value)) |>
   mutate(unit = case_when(sector_id == 'refineries' ~ 'mwh_yr',
-                            .default = unit)) |>
+                            .default = 'kt_yr')) |>
   mutate(Industry = case_when(to_node == 'glass-container'~ paste0(Industry, '_gco'),
                               to_node == 'glass-fibre'~ paste0(Industry, '_gfi'),
                               to_node == 'glass-float'~ paste0(Industry, '_gfl'),
@@ -756,20 +774,22 @@ aidres_production_country_allyear <- aidres_production_country_allyear |>
   mutate(value = case_when(sector_id == 'refineries' ~ round(value*11.92*1000,3),
                            .default = value)) |>
   mutate(unit = case_when(sector_id == 'refineries' ~ 'mwh_yr',
-                          .default = unit)) |>
+                          .default = 'kt_yr')) |>
   pivot_wider(names_from = year, values_from = value)->prod_vol_cap_allyear
 prod_vol_cap_allyear
 ```
 
-### Production volumes at nuts3
 
-Aggregated product flow information at nuts3 level. 
-Important remarks:
-- For 2018, production routes and product flow are mapped. However, for future years only product flow is mentioned
-- Data for Switzerland, UK and Norway is not available on nuts3 level
-- The AIDRES 2.0 database contains both the INEOS ethane cracker and the TOA cracker, but they, respectively, open in 2026 and close in 2027. Therefore we do the following:
-  - INEOS ethane cracker (BE211) operational in 2026: 1909 kt/y * 0.84 --> subtract from 2018
-  - TOA cracker (BE211) closure in 2027: 2273 kt/y * 0.84 --> subtract from 2030 and 2050
+### Production volume at nuts3
+
+Aggregated product flow information at nuts3 level.  
+Important remarks:   
+- For the reference year (2018), reference production routes and product flow are mapped. For future years, only product flow is mentioned  
+- The AIDRES 2.0 database contains in the Belgian Antwerp area both an INEOS ethane cracker and a TotalEnergies steam cracker, but they, respectively, open in 2026 and close in 2027. Therefore, we do the following:  
+  - INEOS ethane cracker (BE211) operational in 2026: 1909 kt/y * 0.84 -->  this production volume is subtracted from 2018  
+  - TOA cracker (BE211) closure in 2027: 2273 kt/y * 0.84 -->  this production volume is subtracted from 2030 and 2050  
+- Data for Switzerland, UK and Norway is added for nuts0 level, but is not available on nuts3 level  
+- The default reference year is 2018 (in line with the original AIDRES database). However, when data has been updated, more recent years apply. This holds particularly for the Netherlands and Belgium, for the non-EU27 countries Switzerland, Norway and UK, and for sectors added from JRC-IDEES  
   
 ```{r}
 aidres_2_0_results |> clean_names() |>
@@ -850,6 +870,7 @@ aidres_production_country_temp_nuts3 |>
 prod_vol_cap_allyear_nuts3
 ```
 
+
 ## Life
 
 AIDRES assumes a generic 40 year lifetime for technologies.
@@ -873,12 +894,13 @@ life_prodroute_all
   
 ```
 
-## Get chlorine production data and add to technology catalogue
 
-Get chlorine production data from the Eurochlor excel (/input_data/eurochlor_data/chlorine_data_2018.xlsx) and add to the technology catalogue. The site coordinates (/input_data/eurochlor_data/chlorine_sites_coordinates.csv) are used to determine the nuts3 level.
+## Get chlorine production data and add to technology catalogue 
 
-Important remark:
-A utilization factor of 0.688 is used for chlorine (= utilization factor of first half 2025, https://www.eurochlor.org/news/november-2025-chlorine-production/))
+Get chlorine production data from the Eurochlor excel (/input_data/eurochlor_data/chlorine_data_2018.xlsx) and add to the technology catalogue. The site coordinates (/input_data/eurochlor_data/chlorine_sites_coordinates.csv) are used to determine the nuts3 code.  
+
+Important remark:  
+- A utilization factor of 0.688 is used for chlorine (= utilization factor of first half 2025, https://www.eurochlor.org/news/november-2025-chlorine-production/))  
 
 ```{r}
 country_codes <- read_xlsx(here('input_data', 'europe_country_codes', 'europe_country_code.xlsx'), sheet = 1)
@@ -967,12 +989,13 @@ prod_vol_cap_2018year <- bind_rows(prod_vol_cap_2018year, chlorine_production_20
 prod_vol_cap_allyear <- bind_rows(prod_vol_cap_allyear, chlorine_production_2030_2050_nuts0)
 ```
 
-## Get chlorine production route and add to technology catalogue
 
-Retrieve the data for the chlorine production route from '/input_data/eurochlor_data/chlorine_route.xlsx' and incorporate it into the technology catalogue. For the cost parameters and technology lifetime, the values from our TIMES-Belgium model are applied. All remaining parameters are sourced from the document “EPOC – Chemical Sector Decarbonization” available at: https://www.epocbelgium.be/sites/epoc/files/Chlorine_FactSheet_TaliehRajabloo.pdf.
+## Get chlorine production route and add to technology catalogue 
 
-Important remark:
-Although several chlorine production processes exist, the diaphragm cell process is by far the most widely used. Therefore, the diaphragm-based production route has been added to the technology catalogue.
+Retrieve the data for the chlorine production route (diaphragm cell technology) from '/input_data/eurochlor_data/chlorine_route.xlsx' and incorporate it into the technology catalogue. For the cost parameters and technology lifetime, the values from our TIMES-Belgium model are applied. All remaining parameters are sourced from the document “EPOC – Chemical Sector Decarbonization” available at:   https://www.epocbelgium.be/sites/epoc/files/Chlorine_FactSheet_TaliehRajabloo.pdf. 
+
+Important remark:  
+- Although several chlorine production processes exist, diaphragm cell technology is the most widely used. Therefore, the diaphragm-based production route has been added to the technology catalogue.  
 
 ```{r}
 
@@ -1019,12 +1042,12 @@ chlorine_ind_process_route_life$unit = 'yr'
 chlorine_ind_process_routes_co2_capture <- chlorine_process_unpivot %>% select(sector_id, to_node, Industry, variable, `2025`, `2030`,  `2040`, `2050`) %>%
   filter(variable %in% c("co2_capture")) %>%
   rename(emission = variable)
-chlorine_ind_process_routes_co2_capture$unit = 'tCO2_t'
+chlorine_ind_process_routes_co2_capture$unit = 'tco2_t'
 
 chlorine_ind_process_routes_co2_emission <- chlorine_process_unpivot %>% select(sector_id, to_node, Industry, variable, `2025`, `2030`,  `2040`, `2050`) %>%
   filter(variable %in% c("co2_emission")) %>%
   rename(emission = variable)
-chlorine_ind_process_routes_co2_emission$unit = 'tCO2_t'
+chlorine_ind_process_routes_co2_emission$unit = 'tco2_t'
 
 chlorine_ind_process_routes_capex <- chlorine_process_unpivot %>% select(sector_id, to_node, Industry, variable, `2025`, `2030`,  `2040`, `2050`) %>%
   filter(variable %in% c("capex")) %>%
@@ -1044,137 +1067,139 @@ costs_capex_perton_all <- bind_rows(costs_capex_perton_all,chlorine_ind_process_
 costs_fom_perton_all <- bind_rows(costs_fom_perton_all,chlorine_ind_process_routes_fom)
 ```
 
-# Add production, production route and CO2 emission data for non-Aidres sectors
 
-The production, production route and CO2 emission data for the following products is extracted from JRC idees: 
-- food, beverages and tobacco
-- alumina
-- primary aluminium
-- secondary aluminium
-- other non-ferrous metals
-- ceramics and other non-metallic minerals
-- paper
-- printing and media
-- pulp
-- leather and textile
-- transport equipment
-- machinery equipment
-- wood and wood products
-- other_industrial_sectors
-- other chemicals
-- pharmaceuticals
+# Add production, production route and CO2 emission data for non-AIDRES sectors 
 
-For the following products, useful energy (in MWh) is used as production unit instead of the 'production index' used in JRC-IDEES:
-- food, beverages and tobacco
-- leather and textile
-- transport equipment
-- machinery equipment
-- wood and wood products
-- other_industrial_sectors
+The production volume, production route and CO2 emission data for the following products is extracted from JRC‑IDEES-2023 (reference year 2021):  
+- food, beverages and tobacco  
+- alumina  
+- primary aluminium  
+- secondary aluminium  
+- other non-ferrous metals  
+- ceramics and other non-metallic minerals  
+- paper  
+- printing and media  
+- pulp  
+- leather and textile  
+- transport equipment 
+- machinery equipment  
+- wood and wood products  
+- other industrial sectors  
+- other chemicals  
+- pharmaceuticals  
 
-The JRC idees data extraction and pre-processing is done by the 'jrc idees processing.py' script in the 'JRC idees processing python' folder:
-  - The production capacity data is extracted from the main tabs of the JRC idees files (e.g. NMM, PPA ...)
-  - The production route energy data is extracted from the '_fec' tabs of the JRC idees files (e.g. NMM_fec, PPA_fec ...)
-  - The production route useful energy data is extracted from the '_ued' tabs of the JRC idees files (e.g. NMM_fec, PPA_fec ...)
-  - The CO2 emission data is extracted from the '_emi' tabs of the JRC idees files (e.g. NMM_fec, PPA_fec ...)
+For the following products, useful energy (in MWh) is used as production volume unit instead of the 'production index' used in JRC-IDEES:  
+- food, beverages and tobacco  
+- leather and textile  
+- transport equipment  
+- machinery equipment   
+- wood and wood products  
+- other industrial sectors  
+
+The JRC‑IDEES data extraction and pre-processing is done by the 'jrc idees processing.py' script in the 'JRC idees processing python' folder:  
+  - The production volume data is extracted from the main tabs of the JRC‑IDEES files (e.g. NMM, PPA ...)  
+  - The production route’s specific energy consumption is extracted from the '_fec' tabs of the JRC‑IDEES files (e.g. NMM_fec, PPA_fec ...)  
+  - The production route useful energy data is extracted from the '_ued' tabs of the JRC‑IDEES files (e.g. NMM_ued, PPA_ued ...)  
+  - The CO2 emission data is extracted from the '_emi' tabs of the JRC idees files (e.g. NMM_emi, PPA_emi ...)  
   
-The following parameters are calculated:
- - average (over all countries) of 'energy use per production unit' (for every energy carrier) per product
- - average (over all countries) of 'emissions per production unit' per product
- - production capacity data
+To define common (not country-specific) reference production routes, the following parameters are calculated for each product:
+ - average (over all countries) of 'energy use per unit of production' for every energy carrier 
+ - average (over all countries) of 'emissions per unit of production'  
 
-For the original production routes, the following mapping is used to map the energy carriers in JRC-idees to the energy carriers used in the energy balance and the technology catalogue ('JRC-idees carrier': 'energy balance carrier'-'technology catalogue carrier'):
-  - 'Solar and geothermal': 'heat'-'elec'
-  - 'Electricity': 'electricity'-'elec'
-  - 'LPG': 'oil_petro_products'-'HC'
-  - 'Diesel oil and liquid biofuels': 'oil_petro_products'-'HC'
-  - 'Diesel oil': 'oil_petro_products'-'HC'
-  - 'Naphtha': 'oil_petro_products'-'HC'
-  - 'Natural gas and biogas': 'natural_gas'-'CH4'
-  - 'Natural gas': 'natural_gas'-'CH4'
-  - 'Solids': 'solid_fossil_fuels'-'coal'
-  - 'Refinery gas': 'oil_petro_products'-'HC'
-  - 'Fuel oil': 'oil_petro_products'-'HC'
-  - 'Other liquids': 'oil_petro_products'-'HC'
-  - 'Derived gases': 'solid_fossil_fuels',
-  - 'Biomass and waste': 'renew_bio'-'bio'
-  - 'Distributed steam': 'steam'-'elec' or 'CH4'
-  - 'Ambient heat': 'heat'-'elec' or 'CH4'
-  - 'Coke': 'solid_fossil_fuels'-'coal'
-  Remark: both 'steam' and 'heat' are converted to either electricity or natural gas, depending on the temperature needed.
+For the reference production routes, the following mapping is used to map the energy carriers in JRC‑IDEES to the energy carriers used in the energy balance (for the gap analysis) and the technology catalogue ('JRC-idees carrier': 'energy balance carrier'-'technology catalogue carrier'):  
+  - 'Solar and geothermal': 'heat'-'elec' (see remark below)  
+  - 'Electricity': 'electricity'-'elec'  
+  - 'LPG': 'oil_petro_products'-'HC'  
+  - 'Diesel oil and liquid biofuels': 'oil_petro_products'-'HC'  
+  - 'Diesel oil': 'oil_petro_products'-'HC'  
+  - 'Naphtha': 'oil_petro_products'-'HC'  
+  - 'Natural gas and biogas': 'natural_gas'-'CH4'  
+  - 'Natural gas': 'natural_gas'-'CH4'  
+  - 'Solids': 'solid_fossil_fuels'-'coal'  
+  - 'Refinery gas': 'oil_petro_products'-'HC'  
+  - 'Fuel oil': 'oil_petro_products'-'HC'  
+  - 'Other liquids': 'oil_petro_products'-'HC'  
+  - 'Derived gases': 'solid_fossil_fuels'-‘coal’  
+  - 'Biomass and waste': 'renew_bio'-'bio'  
+  - 'Distributed steam': 'steam'-'elec' or 'CH4' (see remark below)  
+  - 'Ambient heat': 'heat'-'elec'  
+  - 'Coke': 'solid_fossil_fuels'-'coal'  
+ 
+Remark:  
+- steam and heat are provided by either electricity or natural gas, depending on the temperature needed  
+- derived gases are assumed to be provided by coal as a part of conventional steel production  
 
-For every product, an alternative production route is constructed. To replace an energy carrier by an alternative energy carrier, we always multiply the energy use by the efficiency of the original energy carrier and divide by the energy efficiency of the alternative energy carrier. E.g. part of 'Food: Oven (direct heat)' is done electrically in JRC idees, but another part uses Diesel oil and liquid biofuels, Natural gas and biogas... In this case all 'Food: Oven (direct heat)' will be done electrically, where the existing energy efficiencies in JRC idees are used for the conversion. In case of low temperature heat, we use the efficiency of an industrial heat pump to provide the heat with an efficiency of 285% (= average of Danish technology catalogue: https://ens.dk/en/analyses-and-statistics/technology-data-industrial-process-heat).
+For every product, also an alternative future production route is constructed via energy carrier substitution. To replace an energy carrier by an alternative energy carrier, we multiply the final energy consumption by the efficiency associated with the original energy carrier, and divide by the energy efficiency of associated with the alternative energy carrier. E.g. part of 'Food: Oven (direct heat)' is done electrically in JRC-IDEES, but another part uses Diesel oil and liquid biofuels, and Natural gas and biogas. In the alternative route, all 'Food: Oven (direct heat)' will be done electrically, where the existing energy efficiencies in JRC-IDEES are used for the conversion. In case of low temperature heat (< 150 °C), we use the efficiency of an industrial heat pump to provide the heat with an efficiency of 285% (= average of Danish technology catalogue: https://ens.dk/en/analyses-and-statistics/technology-data-industrial-process-heat). 
 
-The folling mapping is used to map JRC-IDEES processes to an alternative energy carrier for the alternative production route:
-  - natural gas:
-    - Mach. Eq.: Foundries
-    - Trans. Eq.: Foundries
-    - Chemicals: High-enthalpy heat processing
-    - Chemicals: Furnaces
-    - Alumina production: High-enthalpy heat
-  - electricity provided by a heat pump:
-    - Low-enthalpy heat
-    - Food: Specific process heat
-    - Food: Drying
-    - Food: Process cooling and refrigeration
-    - Paper: Stock preparation
-    - Paper: Paper machine
-    - Paper: Product finishing
-    - Textiles: Pretreatment with steam
-    - Textiles: Wet processing with steam
-    - Textiles: Drying
-    - Ceramics: Product finishing
-    - Chemicals: Process cooling
-    - Trans. Eq.: Steam processing
-    - Mach. Eq.: Steam processing
-    - Wood: Drying
-    - Wood: Specific processes with steam
-    - Other Industrial sectors: Drying
-    - Other Industrial sectors: Process Cooling
-  - electricity:
-    - Alumina production: Refining
-    - Aluminium electrolysis (smelting)
-    - Aluminium processing  (metallurgy e.g. cast house, reheating)
-    - Aluminium finishing
-    - Secondary aluminium (incl. pre-treatment, remelting)
-    - Metal processing  (metallurgy e.g. cast house, reheating)
-    - Other Metals: production
-    - Metal finishing
-    - Food: Oven (direct heat)
-    - Food: Steam processing
-    - Food: Electric machinery
-    - Pulp: Wood preparation, grinding
-    - Pulp: Pulping
-    - Pulp: Cleaning
-    - Printing and publishing
-    - Textiles: Electric general machinery
-    - Textiles: Finishing Electric
-    - Ceramics: Mixing of raw material
-    - Ceramics: Drying and sintering of raw material
-    - Ceramics: Primary production process
-    - Steel: Furnaces, refining and rolling
-    - Steel: Product finishing
-    - Trans. Eq.: Connection techniques
-    - Trans. Eq.: Heat treatment
-    - Trans. Eq.: General machinery
-    - Trans. Eq.: Product finishing
-    - Mach. Eq.: Connection techniques
-    - Mach. Eq.: Heat treatment
-    - Mach. Eq.: General machinery
-    - Mach. Eq.: Product finishing
-    - Wood: Electric mechanical processes
-    - Wood: Finishing Electric
-    - Other Industrial sectors: Steam processing
-    - Other Industrial sectors: Process heating
-    - Other Industrial sectors: Diesel motors (incl. biofuels)
-    - Other Industrial sectors: Electric machinery
-    
-The CAPEX and OPEX for the alternative production routes are calculated by the 'jrc idees processing.py' script in the 'JRC idees processing python' folder. The CAPEX and OPEX are extracted from the Danish Technology Catalogue (https://ens.dk/en/analyses-and-statistics/technology-data-industrial-process-heat) for the following technologies:
-- High-temperature heat pumps up to 150 °C										
-- Electric boiler, 10 kV, steam, 1-12 bar										
-- Boiler, gas and oil										
+Three alternative energy carriers are defined: methane, electricity powering a heat pump, and conventional electricity use. The following mapping is used to map JRC-IDEES processes under the ‘_fec’ tabs to an alternative energy carrier for the alternative production route:  
+
+| Sector | Product | Methane | Electricity (heat pump) | Electricity (conventional) |
+| --- | --- | --- | --- | --- |
+| Generic | Low-enthalpy heat | - | 1 | - |
+| Iron and steel | Steel: Furnaces, refining and rolling | - | - | 1 |
+| Iron and steel | Steel: Product finishing | - | - | 1 |
+| Non-ferrous metals | Alumina production: High-enthalpy heat | 1 | - | - |
+| Non-ferrous metals | Alumina production: Refining | - | - | 1 |
+| Non-ferrous metals | Aluminium electrolysis (smelting) | - | - | 1 |
+| Non-ferrous metals | Aluminium processing  (metallurgy e.g. cast house, reheating) | - | - | 1 |
+| Non-ferrous metals | Aluminium finishing | - | - | 1 |
+| Non-ferrous metals | Secondary aluminium (incl. pre-treatment, remelting) | - | - | 1 |
+| Non-ferrous metals | Other Metals: production | - | - | 1 |
+| Non-ferrous metals | Metal processing  (metallurgy e.g. cast house, reheating) | - | - | 1 |
+| Non-ferrous metals | Metal finishing | - | - | 1 |
+| Chemical industry | Chemicals: High-enthalpy heat processing | 1 | - | - |
+| Chemical industry | Chemicals: Furnaces | 1 | - | - |
+| Chemical industry | Chemicals: Process cooling | - | 1 | - |
+| Non-metallic mineral products | Ceramics: Mixing of raw material | - | - | 1 |
+| Non-metallic mineral products | Ceramics: Drying and sintering of raw material | - | - | 1 |
+| Non-metallic mineral products | Ceramics: Primary production process | - | - | 1 |
+| Non-metallic mineral products | Ceramics: Product finishing | - | 1 | - |
+| Pulp, paper and printing | Pulp: Wood preparation, grinding | - | - | 1 |
+| Pulp, paper and printing | Pulp: Pulping | - | - | 1 |
+| Pulp, paper and printing | Pulp: Cleaning | - | - | 1 |
+| Pulp, paper and printing | Paper: Stock preparation | - | 1 | - |
+| Pulp, paper and printing | Paper: Paper machine | - | 1 | - |
+| Pulp, paper and printing | Paper: Product finishing | - | 1 | - |
+| Pulp, paper and printing | Printing and publishing | - | - | 1 |
+| Food, beverages and tobacco | Food: Oven (direct heat) | - | - | 1 |
+| Food, beverages and tobacco | Food: Specific process heat | - | 1 | - |
+| Food, beverages and tobacco | Food: Steam processing | - | - | 1 |
+| Food, beverages and tobacco | Food: Drying | - | 1 | - |
+| Food, beverages and tobacco | Food: Process cooling and refrigeration | - | 1 | - |
+| Food, beverages and tobacco | Food: Electric machinery | - | - | 1 |
+| Transport equipment | Trans. Eq.: Foundries | 1 | - | - |
+| Transport equipment | Trans. Eq.: Connection techniques | - | - | 1 |
+| Transport equipment | Trans. Eq.: Heat treatment | - | - | 1 |
+| Transport equipment | Trans. Eq.: Steam processing | - | 1 | - |
+| Transport equipment | Trans. Eq.: General machinery | - | - | 1 |
+| Transport equipment | Trans. Eq.: Product finishing | - | - | 1 |
+| Machinery equipment | Mach. Eq.: Foundries  | 1 | - | - |
+| Machinery equipment | Mach. Eq.: Connection techniques | - | - | 1 |
+| Machinery equipment | Mach. Eq.: Heat treatment | - | - | 1 |
+| Machinery equipment | Mach. Eq.: Steam processing | - | 1 | - |
+| Machinery equipment | Mach. Eq.: General machinery | - | - | 1 |
+| Machinery equipment | Mach. Eq.: Product finishing | - | - | 1 |
+| Textiles and leather | Textiles: Pretreatment with steam  | - | 1 | - |
+| Textiles and leather | Textiles: Wet processing with steam | - | 1 | - |
+| Textiles and leather | Textiles: Electric general machinery | - | - | 1 |
+| Textiles and leather | Textiles: Drying | - | 1 | - |
+| Textiles and leather | Textiles: Finishing Electric | - | - | 1 |
+| Wood and wood products | Wood: Specific processes with steam | - | 1 | - |
+| Wood and wood products | Wood: Electric mechanical processes | - | - | 1 |
+| Wood and wood products | Wood: Drying | - | 1 | - |
+| Wood and wood products | Wood: Finishing Electric | - | - | 1 |
+| Other industrial sectors | Other Industrial sectors: Steam processing | - | - | 1 |
+| Other industrial sectors | Other Industrial sectors: Process heating | - | - | 1 |
+| Other industrial sectors | Other Industrial sectors: Drying | - | 1 | - |
+| Other industrial sectors | Other Industrial sectors: Process Cooling | - | 1 | - |
+| Other industrial sectors | Other Industrial sectors: Diesel motors (incl. biofuels) | - | - | 1 |
+| Other industrial sectors | Other Industrial sectors: Electric machinery | - | - | 1 |
 
 
+The CAPEX and OPEX for the alternative production routes are calculated by the 'jrc idees processing.py' script in the 'JRC idees processing python' folder. The CAPEX and OPEX are extracted from the Danish Technology Catalogue (https://ens.dk/en/analyses-and-statistics/technology-data-industrial-process-heat) for the following technologies:  
+- electricity powering a heat pump -> High-temperature heat pumps up to 150 °C  								 
+- conventional electricity use -> Electric boiler, 10 kV, steam, 1-12 bar  							 
+- methane -> Boiler, gas and oil  
 
 ```{r}
 proces_energy_new <- read_delim(here("input_data/processed_jrc_idees_data", "proces_energy_new.csv"), locale = locale(decimal_mark = "."))
@@ -1194,8 +1219,26 @@ production_original <- production_original %>% select("country_code", "sector_id
 CO2_emissions_original <- read_delim(here("input_data/processed_jrc_idees_data", "CO2_emissions_original.csv"), locale = locale(decimal_mark = "."))
 CO2_emissions_original <- CO2_emissions_original %>% select("sector_id", "Industry", "to_node", "emission", "unit", `2025`, `2030`, `2040`, `2050`)
 
+CO2_capture_original <- CO2_emissions_original %>%
+  mutate(
+    emission = "co2_capture",
+    `2025` = 0, 
+    `2030` = 0, 
+    `2040` = 0, 
+    `2050` = 0
+  )
+
 CO2_emissions_new <- read_delim(here("input_data/processed_jrc_idees_data", "CO2_emissions_new.csv"), locale = locale(decimal_mark = "."))
 CO2_emissions_new <- CO2_emissions_new %>% select("sector_id", "Industry", "to_node", "emission", "unit", `2025`, `2030`, `2040`, `2050`)
+
+CO2_capture_new <- CO2_emissions_new %>%
+  mutate(
+    emission = "co2_capture",
+    `2025` = 0, 
+    `2030` = 0, 
+    `2040` = 0, 
+    `2050` = 0
+  )
 
 lifetime_new <- read_delim(here("input_data/processed_jrc_idees_data", "lifetime_new.csv"), locale = locale(decimal_mark = "."))
 lifetime_original <- read_delim(here("input_data/processed_jrc_idees_data", "lifetime_original.csv"), locale = locale(decimal_mark = "."))
@@ -1219,6 +1262,15 @@ steel_finishing_CO2_new <- steel_finishing_CO2_new %>%
          `2025`, `2030`, `2040`, `2050`) %>%
    mutate(emission = "co2_emission")
 
+steel_finishing_CO2_capture_new <- steel_finishing_CO2_new %>%
+  mutate(
+    emission = "co2_capture",
+    `2025` = 0, 
+    `2030` = 0, 
+    `2040` = 0, 
+    `2050` = 0
+  )
+
 steel_finishing_lifetime_new <- read_delim(here("input_data/processed_jrc_idees_data", "lifetime_steel_finishing_new.csv"), locale = locale(decimal_mark = "."))
 
 steel_finishing_energy_original <- read_delim(here("input_data/processed_jrc_idees_data","steel_finishing_original_energy_out.csv"), locale = locale(decimal_mark = "."))
@@ -1231,6 +1283,15 @@ steel_finishing_CO2_original <- steel_finishing_CO2_original %>%
   select("sector_id", "to_node", "unit", "Industry",
          `2025`, `2030`, `2040`, `2050`) %>%
    mutate(emission = "co2_emission")
+
+steel_finishing_CO2_capture_original <- steel_finishing_CO2_original %>%
+  mutate(
+    emission = "co2_capture",
+    `2025` = 0, 
+    `2030` = 0, 
+    `2040` = 0, 
+    `2050` = 0
+  )
 
 steel_finishing_lifetime_original <- read_delim(here("input_data/processed_jrc_idees_data", "lifetime_steel_finishing_original.csv"), locale = locale(decimal_mark = "."))
 
@@ -1262,6 +1323,11 @@ emission_co2_emission_perton_all <- bind_rows(emission_co2_emission_perton_all,C
 emission_co2_emission_perton_all <- bind_rows(emission_co2_emission_perton_all,steel_finishing_CO2_new)
 emission_co2_emission_perton_all <- bind_rows(emission_co2_emission_perton_all,steel_finishing_CO2_original)
 
+emission_co2_capture_perton_all <- bind_rows(emission_co2_capture_perton_all,CO2_capture_original)
+emission_co2_capture_perton_all <- bind_rows(emission_co2_capture_perton_all,CO2_capture_new)
+emission_co2_capture_perton_all <- bind_rows(emission_co2_capture_perton_all,steel_finishing_CO2_capture_new)
+emission_co2_capture_perton_all <- bind_rows(emission_co2_capture_perton_all,steel_finishing_CO2_capture_original)
+
 life_prodroute_all <- bind_rows(life_prodroute_all,lifetime_new) 
 life_prodroute_all <- bind_rows(life_prodroute_all,lifetime_original) 
 life_prodroute_all <- bind_rows(life_prodroute_all,steel_finishing_lifetime_new) 
@@ -1273,6 +1339,7 @@ life_prodroute_all <- bind_rows(life_prodroute_all,steel_finishing_lifetime_orig
 ## writing all data in an excel workbook
 
 Save technology catalogue data to excel workbook.
+
 
 ### Creating output directory
 
@@ -1286,6 +1353,7 @@ dir.create(output_dir)
     print("Output directory already exists. Not creating a new one!")
 }
 ```
+
 
 ### Writing final Excel workbook
 
@@ -1303,6 +1371,7 @@ write_xlsx(list('ind_production_2018_nuts3' = prod_vol_cap_2018year_nuts3,
                 'ind_process_routes_fom' = costs_fom_perton_all),
            here(output_dir, 'technology_catalogue_ind_nuts0_nuts3.xlsx'))
 ```
+
 
 ### Filter out all data except HC, MeOH and NH3 + save excel file
 
@@ -1331,6 +1400,7 @@ write_xlsx(list('ind_production_2018_nuts3' = prod_vol_cap_2018year_nuts3_no_HC_
                 'ind_process_routes_fom' = costs_fom_perton_all_no_HC_NH3),
            here(output_dir, 'technology_catalogue_ind_nuts0_nuts3_no_HC_NH3.xlsx'))
 ```
+
 
 ### Filter out HC, MeOH and NH3 (and convert ton NH3 to mwh) + save excel file
 
